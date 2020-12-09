@@ -1,0 +1,110 @@
+<?php
+use kartik\grid\GridView;
+use kartik\grid\ActionColumn;
+use common\helper\Helper;
+use common\helper\Component;
+use yii\helpers\Url;
+?>
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <div class="card-widgets">
+                <button role="modal-remote" data-url="{!! Url::toRoute(['create']) !!}" class="btn btn-sm btn-success">
+                    <i class="fe-plus"></i> Thêm sản phẩm
+                </button>
+            </div>
+            <h4 class="card-title">Sản phẩm</h4>
+        </div>
+        <div class="card-body">
+            <?= GridView::widget([
+                'pjax' => true,
+                'persistResize' => true,
+                'layout' => '{items}{pager}',
+                'tableOptions' => [
+                    'class' => 'table table-sm'
+                ],
+                'pjaxSettings' => [
+                    'neverTimeout' => true,
+                    'options' => [
+                        'id' => 'product-box'
+                    ]
+                ],
+                'perfectScrollbar' => true,
+                'dataProvider' => $dataProvider,
+                'columns' => [
+                    'id',
+                    [
+                        'label' => 'Sản phẩm',
+                        'attribute' => 'avatar',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            $html = '<div class="d-flex">';
+                            $html .= "<div class='table-img-view'><img src='{$model->avatar}' class='img-fluid'></div>";
+                            $html .= '<div class="text ml-2">';
+                            $html .= "<h6 class='m-1'>{$model->sku}</h6>";
+                            $html .= "<h6 class='m-1'>{$model->category->name}</h6>";
+                            $html .= "<h6 class='m-1'>{$model->size}cm | {$model->weight}gram</h6>";
+                            $html .= '</div>';
+                            $html .= '</div>';
+                            return $html;
+                        }
+                    ],
+                    [
+                        'label' => 'Tồn kho',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return 0;
+                        }
+                    ],
+                    [
+                        'label' => 'Đã đặt',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return 0;
+                        }
+                    ],
+                    [
+                        'label' => 'Khả dụng',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return 0;
+                        }
+                    ],
+                    [
+                        'class' => ActionColumn::class,
+                        'template' => '{update}{delete}',
+                        'width' => '10%',
+                        'buttons' => [
+                            'update' => function ($url) {
+                                return Component::btnUpdate($url, null, [
+                                    'role' => 'modal-remote'
+                                ]);
+                            },
+
+                            'delete' => function ($url) {
+                                return Component::btnDelete($url);
+                            },
+
+                        ]
+                    ]
+                ]
+            ]) ?>
+        </div>
+    </div>
+
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'product-modal']) !!}
+
+@stop
+
+@section('pos_page')
+    <script>
+
+
+        $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#product-modal', '#product-box');
+            event.preventDefault();
+            modal.remote(this, null);
+        });
+
+    </script>
+@stop

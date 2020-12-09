@@ -1,0 +1,36 @@
+@php
+    use yii\helpers\Url;
+    use kartik\grid\GridView;
+    use common\helper\Helper;
+    use common\helper\Component;
+    use kartik\grid\ActionColumn;
+    use backend\models\UserModel;
+@endphp
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <div class="card-widgets">
+                <button data-url="{{Url::toRoute(['user/create'])}}"
+                        role="modal-remote" class="btn btn-success btn-sm">
+                    <i class="fe-user-plus"></i> Tạo tài khoản
+                </button>
+            </div>
+            <h4 class="card-title"><i class="fe-phone-call"></i> Liên hệ</h4>
+        </div>
+        <div class="card-body">
+
+        </div>
+    </div>
+
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'user-modal']) !!}
+@stop
+@section('pos_page')
+    <script>
+
+        $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#user-modal', '#user-box');
+            event.preventDefault();
+            modal.remote(this, null);
+        });
+    </script>
+@stop

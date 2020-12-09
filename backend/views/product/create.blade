@@ -1,0 +1,89 @@
+<?php
+
+use kartik\form\ActiveForm;
+use common\helper\Helper;
+use backend\models\UserRole;
+use kartik\select2\Select2;
+use backend\models\Categories;
+use common\helper\Component;
+
+?>
+@section('content')
+    @php($form = ActiveForm::begin())
+    <div class="row">
+        <div class="col-md-6">
+            <?= $view->render('@backend/views/parts/FileUpload.blade',[
+                'form' => $form,
+                'model' => $model,
+                'name' => 'thumb'
+            ])?>
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'sku') !!}
+            {!! $form->field($model,'category_id')->widget(Select2::className(),[
+                'data' => Categories::LISTS(),
+                'options' => ['placeholder' => 'Chọn danh mục...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                    ]
+            ]) !!}
+            {!! $form->field($model,'size')->textInput(['placeholder' => '10*20*10 '])->label('Kích thước (dài*rộng*cao)') !!}
+            {!! $form->field($model,'weight')->label('Cân nặng (gram)') !!}
+
+        </div>
+        <div class="col-md-12">
+            <hr>
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="header-title">Giá tùy chỉnh </h4>
+                <button type="button" class="btn btn-xs btn-outline-warning" id="addPrice"><i
+                            class="fe-dollar-sign"></i> thêm giá
+                </button>
+            </div>
+            <table class="table-sm" id="product-prices">
+                <thead>
+                <tr>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    @php(ActiveForm::end())
+
+@stop
+@section('js_template')
+    <script type="text/x-handlebars-template" id="html-product-price">
+        <tr>
+            <td>
+                {!! $form->field($priceModel, 'qty[]')->textInput(['type' => 'number'])->label(false) !!}
+            </td>
+            <td>
+                {!! Component::inputMoney($priceModel,$form,'price[]')->label(false)!!}
+            </td>
+            <td class="align-middle">
+                <button type="button" class="btn btn-xs btn-outline-warning" id="removePrice"><i class="fe-trash"></i>
+                </button>
+            </td>
+        </tr>
+    </script>
+@stop
+@section('pos_page')
+    <script>
+        let htmlTemplate = $('#html-product-price').html();
+        let template = Handlebars.compile(htmlTemplate);
+        //Add product price
+        $(document).on('click', '#addPrice', function () {
+            $('#product-prices > tbody').append(template(null));
+        });
+        $(document).on('click', '#removePrice', function () {
+            $(this).closest('tr').remove();
+        });
+    </script>
+@stop
+
+

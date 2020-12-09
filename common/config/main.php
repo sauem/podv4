@@ -5,14 +5,20 @@ return [
         '@npm' => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
-    'modules' => [
-        'rbac' => [
-            'class' => 'mdm\admin\Module'
-        ]
-    ],
+    'language' => 'vi',
     'components' => [
-        'authManager' => [
-            'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\DbManager'
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                ],
+            ],
+        ],
+        'formatter' => [
+            'class' => 'yii\i18n\formatter',
+            'thousandSeparator' => ',',
+            'decimalSeparator' => '.',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -39,12 +45,6 @@ return [
                     'cachePath' => '@runtime/blade_cache',
                 ],
             ],
-        ],
-        'as access' => [
-            'class' => 'mdm\admin\components\AccessControl',
-            'allowActions' => [
-                'rbac/*',
-            ]
         ],
     ],
 ];

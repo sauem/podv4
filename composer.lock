@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3862589835a0ae0be8bff912626a64a7",
+    "content-hash": "5ff103b5eef34c07d41746a57a67d47d",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
             "version": "v3.4.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:twbs/bootstrap.git",
+                "url": "https://github.com/twbs/bootstrap.git",
                 "reference": "68b0d231a13201eb14acd3dc84e51543d16e5f7e"
             },
             "dist": {
@@ -86,7 +86,7 @@
             "version": "2.0.7.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:yiisoft/jquery-pjax.git",
+                "url": "https://github.com/yiisoft/jquery-pjax.git",
                 "reference": "aef7b953107264f00234902a3880eb50dafc48be"
             },
             "dist": {
@@ -379,12 +379,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "0c26e9dece3a550f112367e26ed1a909c1aa776d"
+                "reference": "0878374ab8ca0b8541c2b7e6027e77428fe67cb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/0c26e9dece3a550f112367e26ed1a909c1aa776d",
-                "reference": "0c26e9dece3a550f112367e26ed1a909c1aa776d",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/0878374ab8ca0b8541c2b7e6027e77428fe67cb1",
+                "reference": "0878374ab8ca0b8541c2b7e6027e77428fe67cb1",
                 "shasum": ""
             },
             "require": {
@@ -435,7 +435,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-05T21:31:37+00:00"
+            "time": "2020-12-07T16:21:29+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -838,6 +838,59 @@
             "time": "2020-03-27T10:45:23+00:00"
         },
         {
+            "name": "kartik-v/yii2-detail-view",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-detail-view.git",
+                "reference": "724f71394f8060da956e221cfb1ab26362d3ddde"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-detail-view/zipball/724f71394f8060da956e221cfb1ab26362d3ddde",
+                "reference": "724f71394f8060da956e221cfb1ab26362d3ddde",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-dialog": "~1.0",
+                "kartik-v/yii2-widget-activeform": ">=1.5.7"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\detail\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Enhanced Yii 2 Detail View widget with special Bootstrap styles, ability to edit data, and more.",
+            "homepage": "https://github.com/kartik-v/yii2-detail-view",
+            "keywords": [
+                "detail",
+                "detail view",
+                "extension",
+                "form",
+                "grid",
+                "widget",
+                "yii2"
+            ],
+            "time": "2020-10-05T12:31:36+00:00"
+        },
+        {
             "name": "kartik-v/yii2-dialog",
             "version": "dev-master",
             "source": {
@@ -998,6 +1051,179 @@
                 "yii2"
             ],
             "time": "2019-05-25T07:25:02+00:00"
+        },
+        {
+            "name": "kartik-v/yii2-money",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-money.git",
+                "reference": "9b636534a1935942621a86a7f765d34d86be6b29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-money/zipball/9b636534a1935942621a86a7f765d34d86be6b29",
+                "reference": "9b636534a1935942621a86a7f765d34d86be6b29",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-krajee-base": ">=2.0.0"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\money\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "An advanced money mask input for Yii 2.0 based on jquery maskmoney plugin styled for Bootstrap 3.",
+            "homepage": "https://github.com/kartik-v/yii2-money",
+            "keywords": [
+                "bootstrap",
+                "bootstrap 3",
+                "currency",
+                "extension",
+                "format",
+                "jquery",
+                "mask",
+                "money",
+                "widget",
+                "yii2"
+            ],
+            "time": "2019-05-25T07:25:45+00:00"
+        },
+        {
+            "name": "kartik-v/yii2-widget-activeform",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-widget-activeform.git",
+                "reference": "4d578ff5508f1fc93ac8dd19cf22237216dfd5f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-activeform/zipball/4d578ff5508f1fc93ac8dd19cf22237216dfd5f9",
+                "reference": "4d578ff5508f1fc93ac8dd19cf22237216dfd5f9",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-krajee-base": ">=1.9.8"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\form\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Enhanced Yii2 active-form and active-field with full bootstrap styling support (sub repo split from yii2-widgets).",
+            "homepage": "https://github.com/kartik-v/yii2-widget-activeform",
+            "keywords": [
+                "activefield",
+                "activeform",
+                "extension",
+                "field",
+                "form",
+                "widget",
+                "yii2"
+            ],
+            "funding": [
+                {
+                    "url": "https://opencollective.com/yii2-widgets",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2019-09-05T13:48:09+00:00"
+        },
+        {
+            "name": "kartik-v/yii2-widget-select2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-widget-select2.git",
+                "reference": "dbfe450bfea42f10a5b9e6f7a0831cbdae495fb4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/dbfe450bfea42f10a5b9e6f7a0831cbdae495fb4",
+                "reference": "dbfe450bfea42f10a5b9e6f7a0831cbdae495fb4",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-krajee-base": ">=1.9",
+                "select2/select2": ">=4.0"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\select2\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Enhanced Yii2 wrapper for the Select2 jQuery plugin (sub repo split from yii2-widgets).",
+            "homepage": "https://github.com/kartik-v/yii2-widget-select2",
+            "keywords": [
+                "dropdown",
+                "extension",
+                "form",
+                "jquery",
+                "plugin",
+                "select2",
+                "widget",
+                "yii2"
+            ],
+            "funding": [
+                {
+                    "url": "https://opencollective.com/yii2-widget-select2",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2020-09-29T08:00:46+00:00"
         },
         {
             "name": "mdmsoft/yii2-admin",
@@ -1344,22 +1570,70 @@
             "time": "2020-04-21T06:43:17+00:00"
         },
         {
+            "name": "select2/select2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/select2/select2.git",
+                "reference": "1c0c2a94d1b70a185baff5b13c654411e2c01339"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/select2/select2/zipball/1c0c2a94d1b70a185baff5b13c654411e2c01339",
+                "reference": "1c0c2a94d1b70a185baff5b13c654411e2c01339",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "dist/js/select2.js"
+                    ],
+                    "styles": [
+                        "dist/css/select2.css"
+                    ],
+                    "files": [
+                        "dist/js/select2.js",
+                        "dist/js/i18n/*.js",
+                        "dist/css/select2.css"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Select2 is a jQuery based replacement for select boxes.",
+            "homepage": "https://select2.org/",
+            "funding": [
+                {
+                    "url": "https://github.com/kevin-brown",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/select2",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2020-05-02T22:37:21+00:00"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "f7d2961c858520dc83a594c66cde9d550f6d2226"
+                "reference": "b5f554a649372a16e1d9c058d43adf58b1cc8daa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/f7d2961c858520dc83a594c66cde9d550f6d2226",
-                "reference": "f7d2961c858520dc83a594c66cde9d550f6d2226",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/b5f554a649372a16e1d9c058d43adf58b1cc8daa",
+                "reference": "b5f554a649372a16e1d9c058d43adf58b1cc8daa",
                 "shasum": ""
             },
             "require": {
                 "egulias/email-validator": "^2.0",
-                "php": ">=7.2.5",
+                "php": ">=7.0.0",
                 "symfony/polyfill-iconv": "^1.0",
                 "symfony/polyfill-intl-idn": "^1.10",
                 "symfony/polyfill-mbstring": "^1.0"
@@ -1374,7 +1648,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.3-dev"
+                    "dev-master": "6.2-dev"
                 }
             },
             "autoload": {
@@ -1412,7 +1686,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-28T07:50:18+00:00"
+            "time": "2020-12-08T18:02:35+00:00"
         },
         {
             "name": "symfony/debug",
@@ -2016,12 +2290,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "52f486a707510884450df461b5a6429dd7a67379"
+                "reference": "a04209ba0d1391c828e5b2373181dac63c52ee70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/52f486a707510884450df461b5a6429dd7a67379",
-                "reference": "52f486a707510884450df461b5a6429dd7a67379",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/a04209ba0d1391c828e5b2373181dac63c52ee70",
+                "reference": "a04209ba0d1391c828e5b2373181dac63c52ee70",
                 "shasum": ""
             },
             "require": {
@@ -2098,7 +2372,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-28T11:24:18+00:00"
+            "time": "2020-12-08T17:03:37+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -2182,12 +2456,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "71bf4f20bc6dc55fc30023ddcaae7f855519e5d5"
+                "reference": "d9a5a30d1dfd33dfbd38f59df248a53e55dfec97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/71bf4f20bc6dc55fc30023ddcaae7f855519e5d5",
-                "reference": "71bf4f20bc6dc55fc30023ddcaae7f855519e5d5",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/d9a5a30d1dfd33dfbd38f59df248a53e55dfec97",
+                "reference": "d9a5a30d1dfd33dfbd38f59df248a53e55dfec97",
                 "shasum": ""
             },
             "require": {
@@ -2288,7 +2562,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-06T09:12:46+00:00"
+            "time": "2020-12-08T21:09:11+00:00"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -3261,12 +3535,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "25f7f893f0b52b7b14e244a16679d72b1f0088de"
+                "reference": "f47ece9e6e8ce74e3be04bef47f46061dc18c095"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/25f7f893f0b52b7b14e244a16679d72b1f0088de",
-                "reference": "25f7f893f0b52b7b14e244a16679d72b1f0088de",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f47ece9e6e8ce74e3be04bef47f46061dc18c095",
+                "reference": "f47ece9e6e8ce74e3be04bef47f46061dc18c095",
                 "shasum": ""
             },
             "require": {
@@ -3324,7 +3598,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2020-10-22T07:42:05+00:00"
+            "time": "2020-12-08T11:45:39+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -4074,12 +4348,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "57dd96ec2cc428a58404afe9e5331a1dc2547810"
+                "reference": "8cf02128ba30dcd840a59a6ff282c94aadf63dfa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/57dd96ec2cc428a58404afe9e5331a1dc2547810",
-                "reference": "57dd96ec2cc428a58404afe9e5331a1dc2547810",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8cf02128ba30dcd840a59a6ff282c94aadf63dfa",
+                "reference": "8cf02128ba30dcd840a59a6ff282c94aadf63dfa",
                 "shasum": ""
             },
             "require": {
@@ -4159,7 +4433,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-05T07:00:36+00:00"
+            "time": "2020-12-08T06:11:05+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -5041,12 +5315,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "4d1c896dddbc29ebecd76e819e0bdb02b55bd2aa"
+                "reference": "a3545743754dcab960a6e0145c5b4f909a406e40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/4d1c896dddbc29ebecd76e819e0bdb02b55bd2aa",
-                "reference": "4d1c896dddbc29ebecd76e819e0bdb02b55bd2aa",
+                "url": "https://api.github.com/repos/symfony/console/zipball/a3545743754dcab960a6e0145c5b4f909a406e40",
+                "reference": "a3545743754dcab960a6e0145c5b4f909a406e40",
                 "shasum": ""
             },
             "require": {
@@ -5127,7 +5401,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-05T16:13:03+00:00"
+            "time": "2020-12-08T17:04:48+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -5135,12 +5409,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "b8d8eb06b0942e84a69e7acebc3e9c1e6e6e7256"
+                "reference": "f8315dad49f6b48de98954741c65f6ff59ad15d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/b8d8eb06b0942e84a69e7acebc3e9c1e6e6e7256",
-                "reference": "b8d8eb06b0942e84a69e7acebc3e9c1e6e6e7256",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/f8315dad49f6b48de98954741c65f6ff59ad15d2",
+                "reference": "f8315dad49f6b48de98954741c65f6ff59ad15d2",
                 "shasum": ""
             },
             "require": {
@@ -5189,7 +5463,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-28T21:31:18+00:00"
+            "time": "2020-12-08T17:02:38+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -5878,12 +6152,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "723890858796e8c9e9a7f87a4d8680d8305d5c1b"
+                "reference": "d2d600fb284494bdb1270a1d19dcf27cb57e3264"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/723890858796e8c9e9a7f87a4d8680d8305d5c1b",
-                "reference": "723890858796e8c9e9a7f87a4d8680d8305d5c1b",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/d2d600fb284494bdb1270a1d19dcf27cb57e3264",
+                "reference": "d2d600fb284494bdb1270a1d19dcf27cb57e3264",
                 "shasum": ""
             },
             "require": {
@@ -5942,7 +6216,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-05T10:59:40+00:00"
+            "time": "2020-12-08T17:04:48+00:00"
         },
         {
             "name": "theseer/tokenizer",
@@ -6252,7 +6526,10 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "kartik-v/yii2-grid": 20
+        "kartik-v/yii2-grid": 20,
+        "kartik-v/yii2-widget-activeform": 20,
+        "kartik-v/yii2-detail-view": 20,
+        "kartik-v/yii2-widget-select2": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -1,0 +1,39 @@
+<?php
+
+use kartik\form\ActiveForm;
+use common\helper\Helper;
+use backend\models\UserRole;
+use kartik\select2\Select2;
+
+?>
+@section('content')
+    @php($form = ActiveForm::begin())
+    <div class="row">
+        <div class="col-md-6">
+            {!! $form->field($model,'name') !!}
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'country')->widget(Select2::className(),[
+                'data' =>Helper::countries(),
+                'options' => ['placeholder' => 'Chọn thị trường...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                    ]
+            ]) !!}
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'partner_id')->widget(Select2::className(),[
+                'data' => UserRole::LISTS(),
+                'options' => ['placeholder' => 'Chọn đối tác...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                    ]
+            ]) !!}
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'description')!!}
+        </div>
+
+    </div>
+    @php(ActiveForm::end())
+@stop
