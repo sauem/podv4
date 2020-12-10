@@ -20,7 +20,8 @@ class ProductController extends BaseController
         $searchModel = new ProductsSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
         return $this->render('index.blade', [
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
     }
 

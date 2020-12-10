@@ -16,10 +16,15 @@ use yii\helpers\Url;
             <h4 class="card-title">Sản phẩm</h4>
         </div>
         <div class="card-body">
+            {!! $view->render('search.blade',[
+                    'searchModel' => $searchModel,
+                    'containId'  => '#product-box'
+                ]) !!}
             <?= GridView::widget([
                 'pjax' => true,
                 'persistResize' => true,
                 'layout' => '{items}{pager}',
+                'responsiveWrap' => false,
                 'tableOptions' => [
                     'class' => 'table table-sm'
                 ],
@@ -52,6 +57,12 @@ use yii\helpers\Url;
                     [
                         'label' => 'Tồn kho',
                         'format' => 'html',
+                        'headerOptions' => [
+                            'class' => 'text-center'
+                        ],
+                        'contentOptions' => [
+                            'class' => 'text-middle text-18'
+                        ],
                         'value' => function ($model) {
                             return 0;
                         }
@@ -59,6 +70,12 @@ use yii\helpers\Url;
                     [
                         'label' => 'Đã đặt',
                         'format' => 'html',
+                        'headerOptions' => [
+                            'class' => 'text-center'
+                        ],
+                        'contentOptions' => [
+                            'class' => 'text-middle text-18'
+                        ],
                         'value' => function ($model) {
                             return 0;
                         }
@@ -66,8 +83,14 @@ use yii\helpers\Url;
                     [
                         'label' => 'Khả dụng',
                         'format' => 'html',
+                        'headerOptions' => [
+                            'class' => 'text-center'
+                        ],
+                        'contentOptions' => [
+                            'class' => 'text-middle text-18'
+                        ],
                         'value' => function ($model) {
-                            return 0;
+                            return 2000;
                         }
                     ],
                     [

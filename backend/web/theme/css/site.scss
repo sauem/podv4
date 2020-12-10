@@ -13,24 +13,36 @@
 .modal-body {
   padding: 0 1rem;
 }
-
+.grid-view th {
+  white-space: nowrap;
+}
+.text-middle{
+  vertical-align: middle!important;
+  text-align: center;
+}
+.text-18{
+  font-size: 18px;
+}
 .card-box {
   margin-bottom: 0px;
 }
-.table-img-view{
+
+.table-img-view {
   width: 120px;
   height: 65px;
   overflow: hidden;
   object-fit: cover;
   border-radius: 5px;
   border: 2px dashed #ccc;
-  img{
+
+  img {
     border-radius: 5px;
     display: flex;
     object-fit: cover;
     object-position: center;
   }
 }
+
 td.align-middle {
   margin-top: .5rem;
   display: flex;
@@ -69,6 +81,7 @@ td.align-middle {
     align-items: center;
     justify-content: center;
     transition: .3s ease-in-out;
+
     img {
       display: flex;
       object-fit: cover;
@@ -83,17 +96,21 @@ td.align-middle {
       right: 0;
       margin: auto;
     }
-    button{
+
+    button {
       outline: none;
       display: none;
-      i{
+
+      i {
         color: white;
         font-size: 25px;
       }
     }
+
     &:hover {
       background-color: rgba(0, 0, 0, 0.3);
-      button{
+
+      button {
         display: block;
       }
     }

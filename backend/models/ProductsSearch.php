@@ -17,8 +17,8 @@ class ProductsSearch extends Products
     public function rules()
     {
         return [
-            [['id', 'category_id', 'partner_id', 'weight', 'created_at', 'updated_at'], 'integer'],
-            [['sku', 'size'], 'safe'],
+            [['id', 'partner_id', 'weight'], 'integer'],
+            [['sku', 'size', 'category_id'], 'safe'],
         ];
     }
 
@@ -66,8 +66,9 @@ class ProductsSearch extends Products
             'updated_at' => $this->updated_at,
         ]);
 
+
         $query->andFilterWhere(['like', 'sku', $this->sku])
-            ->andFilterWhere(['like', 'size', $this->size]);
+            ->andFilterWhere(['IN', 'category_id', $this->category_id]);
 
         return $dataProvider;
     }

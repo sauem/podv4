@@ -10,6 +10,16 @@
 .modal-body {
   padding: 0 1rem; }
 
+.grid-view th {
+  white-space: nowrap; }
+
+.text-middle {
+  vertical-align: middle !important;
+  text-align: center; }
+
+.text-18 {
+  font-size: 18px; }
+
 .card-box {
   margin-bottom: 0px; }
 

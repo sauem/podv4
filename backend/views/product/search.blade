@@ -1,0 +1,50 @@
+<?php
+
+use kartik\form\ActiveForm;
+use kartik\select2\Select2;
+use backend\models\Categories;
+use yii\widgets\Pjax;
+?>
+<?php yii\widgets\Pjax::begin([
+    'id' => 'search-product',
+//    'timeout' => false,
+//    'enablePushState' => false,
+    'clientOptions' => [
+        'method' => 'GET'
+    ]
+]) ?>
+<?php $form = ActiveForm::begin([
+    'method' => 'GET',
+    'options' => ['data-pjax' => true]
+]) ?>
+<div class="row">
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'sku')->textInput(['placeholder' => 'Tên sản phẩm'])->label(false)?>
+    </div>
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'category_id')
+            ->widget(Select2::className(), [
+                'theme' => \kartik\select2\Select2::THEME_DEFAULT,
+                'data' => Categories::LISTS(),
+                'pluginOptions' => [
+                    'multiple' => true,
+                    'mode' => 'tags',
+                ]
+            ])->label(false)?>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary"><i class="fe-search"></i> Tìm kiếm</button>
+    </div>
+</div>
+<?php ActiveForm::end(); ?>
+<?php yii\widgets\Pjax::end(); ?>
+
+<?php
+$js = <<<JS
+        $("#search-product").on("pjax:end", function() {
+			$.pjax.reload({container:"$containId"});  //Reload GridView
+		});
+JS;
+
+$view->registerJS($js);
+?>

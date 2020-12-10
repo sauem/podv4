@@ -7,30 +7,45 @@
     use backend\models\UserModel;
 @endphp
 @section('content')
-    <div class="card">
-        <div class="card-header">
-            <div class="card-widgets">
-                <button data-url="{{Url::toRoute(['user/create'])}}"
-                        role="modal-remote" class="btn btn-success btn-sm">
-                    <i class="fe-user-plus"></i> Tạo tài khoản
-                </button>
-            </div>
-            <h4 class="card-title"><i class="fe-phone-call"></i> Liên hệ</h4>
-        </div>
-        <div class="card-body">
+    <div class="card-box">
+        <ul class="nav nav-tabs nav-bordered nav-justified">
+            <li class="nav-item">
+                <a href="#tab-1" data-toggle="tab" aria-expanded="false" class="nav-link active">
+                    <i class="fe-phone-call"></i> Tất cả lên hệ
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#tab-2" data-toggle="tab" aria-expanded="true" class="nav-link">
+                    <i class="fe-phone-forwarded"></i> Chờ xử lý
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#tab-3" data-toggle="tab" aria-expanded="false" class="nav-link">
+                    <i class="fe-phone-missed"></i> Chờ duyệt
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-1">
+                <?= $view->render('@backend/views/contact/tabs/default.blade', [
 
+                ])?>
+            </div>
+            <div class="tab-pane" id="tab-2">
+                <?= $view->render('@backend/views/contact/tabs/default.blade', [
+
+                ])?>
+            </div>
+            <div class="tab-pane" id="tab-3">
+                <?= $view->render('@backend/views/contact/tabs/pending.blade', [
+
+                ])?>
+            </div>
         </div>
     </div>
-
-    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'user-modal']) !!}
 @stop
 @section('pos_page')
     <script>
 
-        $(document).on('click', '[role="modal-remote"]', function (event) {
-            let modal = new ModalRemote('#user-modal', '#user-box');
-            event.preventDefault();
-            modal.remote(this, null);
-        });
     </script>
 @stop

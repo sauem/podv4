@@ -1,6 +1,7 @@
 <?php
 return [
     'adminEmail' => 'admin@example.com',
+    'bsDependencyEnabled' => false,
     'countries' => [
         [
             'name' => 'Thái Lan',
