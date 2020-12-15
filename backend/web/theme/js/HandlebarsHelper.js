@@ -14,4 +14,8 @@ Handlebars.registerHelper("money", function (value, options) {
 
     // Returns the formatted number
     return (ds ? num.replace('.', ds) : num).replace(new RegExp(re, 'g'), '$&' + ts);
-})
+});
+
+Handlebars.registerHelper("dateFormat", function (time) {
+    return moment.unix(time).format('DD/MM/YYYY');
+});

@@ -3,7 +3,7 @@
 namespace backend\models;
 
 use Yii;
-
+use common\models\BaseModel;
 /**
  * This is the model class for table "contacts_assignment".
  *
@@ -15,7 +15,7 @@ use Yii;
  * @property int $created_at
  * @property int $updated_at
  */
-class ContactsAssignment extends \common\models\BaseModel
+class ContactsAssignment extends BaseModel
 {
     /**
      * {@inheritdoc}
@@ -32,7 +32,7 @@ class ContactsAssignment extends \common\models\BaseModel
     {
         return [
             [['user_id', 'created_at', 'updated_at'], 'integer'],
-            [['created_at', 'updated_at'], 'required'],
+            [['user_id', 'phone'], 'required'],
             [['phone', 'status', 'country'], 'string', 'max' => 25],
         ];
     }
@@ -51,5 +51,20 @@ class ContactsAssignment extends \common\models\BaseModel
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(UserModel::className(), ['user_id' => 'id']);
+    }
+
+    public static function getPhoneAssign()
+    {
+        $user = Yii::$app->user->getId();
+        $model = ContactsAssignment::findOne(['user_id' => $user]);
+        if (!$model) {
+            return null;
+        }
+        return $model->phone;
     }
 }

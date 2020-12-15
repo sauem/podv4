@@ -1,0 +1,30 @@
+<?php
+
+use kartik\form\ActiveForm;
+use kartik\select2\Select2;
+use common\helper\Helper;
+use common\helper\Component;
+
+?>
+@section('content')
+    @php($form = ActiveForm::begin())
+    <div class="row">
+        <div class="col-md-12">
+            {!! $form->field($model,'product_sku')->widget(\kartik\select2\Select2::className(),[
+                'data' => \backend\models\Products::LISTS(),
+                'options' => ['placeholder' => 'Chọn sản phẩm...'],
+                'pluginOptions' =>  ['allowClear' => false]
+        ])->label('Sản phẩm') !!}
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'qty')->textInput(['type' => 'number'])->label('Số lượng') !!}
+        </div>
+        <div class="col-md-6">
+            {!! Component::inputMoney($model,$form,'total_average','đ')->label('Vốn nhập') !!}
+            {!! $form->field($model,'warehouse_id')->hiddenInput(['value' => $warehouse->id])->label(false) !!}
+        </div>
+
+    </div>
+    @php(ActiveForm::end())
+@stop
+

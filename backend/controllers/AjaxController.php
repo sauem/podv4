@@ -4,9 +4,15 @@
 namespace backend\controllers;
 
 
+use backend\models\ContactsAssignment;
 use backend\models\Media;
+use backend\models\Products;
+use backend\models\ProductsSearch;
 use backend\models\UploadForm;
+use common\helper\Helper;
+use Illuminate\Support\Arr;
 use yii\base\Exception;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -57,5 +63,66 @@ class AjaxController extends BaseController
             throw new NotFoundHttpException($exception->getMessage());
         }
         return true;
+    }
+
+    /**
+     * @throws BadRequestHttpException
+     */
+    function actionAssignPhone()
+    {
+        $phones = \Yii::$app->request->post('phones');
+        $saleID = \Yii::$app->request->post('saleID');
+
+        try {
+            if (!$phones) {
+                throw new BadRequestHttpException('không có số điện hoại nào!');
+            }
+            $data = array_map(function ($item) use ($saleID) {
+                return array_merge($item, ['user_id' => $saleID, 'created_at' => time(), 'updated_at' => time()]);
+            }, $phones);
+            \Yii::$app->db->createCommand()->batchInsert(
+                ContactsAssignment::tableName(),
+                ['phone', 'country', 'user_id', 'created_at', 'updated_at'],
+                $data)
+                ->execute();
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+        return true;
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord
+     * @throws BadRequestHttpException
+     */
+    function actionInfoProduct()
+    {
+        $sku = Products::find()->where([
+            'sku' => \Yii::$app->request->post('sku')])
+            ->orWhere(['id' => \Yii::$app->request->post('sku')])
+            ->with('category')
+            ->with('partner')
+            ->with('media')
+            ->asArray()->one();
+        if (!$sku) {
+            throw new BadRequestHttpException('Không tìm thấy sản phẩm!');
+        }
+        return [
+            'id' => $sku['id'],
+            'sku' => $sku['sku'],
+            'media' => $sku['media']['media']['url'],
+            'name' => $sku['category']['name'] . '-' . $sku['sku'],
+            'size' => $sku['size'],
+            'weight' => $sku['weight'],
+            'prices' => []
+        ];
+    }
+
+    function actionGetListProduct()
+    {
+        $searchModel = new ProductsSearch();
+        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+
+        return $dataProvider->query->with(['media', 'category', 'partner'])->asArray()->all();
     }
 }

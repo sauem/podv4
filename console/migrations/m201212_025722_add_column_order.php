@@ -12,7 +12,7 @@ class m201212_025722_add_column_order extends Migration
      */
     public function safeUp()
     {
-
+        $this->addColumn('orders_contact','country', $this->string(255)->null());
     }
 
     /**

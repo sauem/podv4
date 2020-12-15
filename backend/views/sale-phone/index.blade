@@ -1,0 +1,85 @@
+@section('content')
+    <div class="card-box">
+        <div class="row">
+            <div class="col-md-8">
+                <h5 class="text-success card-title"><i class="fe-phone-call"></i> <span
+                            onclick="copy(this)">{!! $assignPhone !!}</span> (copy)</h5>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex justify-content-between">
+                    <h5>Sale : {!! Yii::$app->user->identity->username !!}</h5>
+                    <h5>Hoàn thành hôm nay : 0/{!! Yii::$app->user->identity->phone_of_day !!}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <ul class="nav nav-tabs nav-bordered nav-justified">
+                    <li class="nav-item">
+                        <a href="#tab-1" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                            <i class="fe-phone-forwarded"></i> Chờ xử lý
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#tab-2" data-toggle="tab" aria-expanded="false" class="nav-link ">
+                            <i class="fe-phone-call"></i> Hẹn gọi lại/Thuê bao
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#tab-3" data-toggle="tab" aria-expanded="false" class="nav-link">
+                            <i class="fe-phone-missed"></i> Thất bại
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#tab-4" data-toggle="tab" aria-expanded="false" class="nav-link">
+                            <i class="fe-phone-outgoing"></i> Thành công
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    {!! $view->render('action.blade') !!}
+                    <div class="tab-pane active" id="tab-1">
+                        <?= $view->render('tabs/default.blade', [
+                            'id' => 'new',
+                            'dataProvider' => $dataProvider]) ?>
+                    </div>
+                    <div class="tab-pane" id="tab-2">
+                        <?= $view->render('tabs/default.blade', [
+                            'id' => 'callback',
+                            'dataProvider' => $contactCallback]) ?>
+                    </div>
+                    <div class="tab-pane" id="tab-3">
+                        <?= $view->render('tabs/default.blade', [
+                            'id' => 'fail',
+                            'dataProvider' => $contactFail]) ?>
+                    </div>
+                    <div class="tab-pane" id="tab-4">
+                        <?= $view->render('tabs/success.blade', [
+                            'id' => 'ok',
+                            'dataProvider' => $contactOK]) ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-box mt-4">
+        <h5 class="text-success card-title"><i class="fe-phone-call"></i> Lịch sử liên hệ: <span
+                    class="text-info">{!! $assignPhone !!}</span>
+        </h5>
+    </div>
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'order-modal' ]) !!}
+@stop
+
+@section('pos_page')
+    <script>
+
+
+        $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#order-modal', '#contact-box');
+            event.preventDefault();
+            modal.remote(this, null);
+        });
+    </script>
+@stop
+
+@php($view->registerJSFile('@web/theme/js/order.sale.js',['depends' =>  \yii\web\JqueryAsset::className()]))

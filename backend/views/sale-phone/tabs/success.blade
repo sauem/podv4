@@ -1,0 +1,82 @@
+<?php
+
+use backend\models\Contacts;
+use common\helper\Helper;
+use kartik\grid\CheckboxColumn;
+use kartik\grid\GridView;
+use kartik\grid\ActionColumn;
+use common\helper\Component;
+use yii\helpers\Html;
+use yii\helpers\Url;
+
+?>
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'pjax' => true,
+    'persistResize' => true,
+    'layout' => '{items}{pager}',
+    'responsiveWrap' => false,
+    'tableOptions' => [
+        'class' => 'table table-sm'
+    ],
+    'pjaxSettings' => [
+        'neverTimeout' => true,
+        'options' => [
+            'id' => isset($id) ? "$id-box" : 'ok-box',
+        ]
+    ],
+    'perfectScrollbar' => true,
+    'columns' => [
+        [
+            'class' => CheckboxColumn::class,
+            'checkboxOptions' => function ($model) {
+                $cog['data-phone'] = $model->phone;
+                $cog['data-country'] = $model->country;
+                return $cog;
+            }
+        ],
+        'code',
+        [
+            'attribute' => 'register_time',
+            'format' => 'html',
+            'value' => function ($model) {
+                return Helper::dateFormat($model->register_time);
+            }
+        ],
+        'name',
+        'address',
+        'partner',
+        [
+            'attribute' => 'status',
+            'format' => 'html',
+            'value' => function ($model) {
+                return Contacts::StatusLabel($model->status);
+            }
+        ],
+        'country',
+        'type',
+        [
+            'class' => ActionColumn::class,
+            'template' => '{order}{actions}',
+            'width' => '5%',
+            'buttons' => [
+                'order' => function ($url, $model) {
+                    return Html::button("<i class='fe-shopping-cart'></i> tạo đơn", [
+                        'data-pjax' => "0",
+                        'data-url' => Url::toRoute(['create', 'code' => $model->code]),
+                        'role' => 'modal-remote',
+                        'class' => 'btn-xs btn btn-success'
+                    ]);
+                },
+                'actions' => function ($model) {
+                    return Component::dropDown([
+                        '<a class="dropdown-item"><i class="fe-phone-missed"></i> Hủy đặt</a>',
+                        '<a class="dropdown-item"><i class="fe-phone-missed"></i> Trùng số</a>',
+
+                    ]);
+                },
+
+            ]
+        ]
+    ]
+]) ?>

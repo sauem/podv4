@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "transporters".
  *
  * @property int $id
- * @property int|null $name
+ * @property string|null $name
  * @property string|null $phone
  * @property string|null $address
  * @property string|null $fax
@@ -34,12 +34,12 @@ class Transporters extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['name', 'created_at', 'updated_at'], 'integer'],
             [['website', 'facebook'], 'string'],
-            [['created_at', 'updated_at'], 'required'],
+            [['name'], 'required'],
+            [['created_at', 'updated_at'], 'integer'],
+            [['name', 'note'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 25],
             [['address', 'fax'], 'string', 'max' => 50],
-            [['note'], 'string', 'max' => 255],
         ];
     }
 
@@ -50,13 +50,13 @@ class Transporters extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'phone' => 'Phone',
-            'address' => 'Address',
+            'name' => 'Tên',
+            'phone' => 'Số điện thoại',
+            'address' => 'Địa chỉ',
             'fax' => 'Fax',
             'website' => 'Website',
             'facebook' => 'Facebook',
-            'note' => 'Note',
+            'note' => 'Ghi chú',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

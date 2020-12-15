@@ -1,0 +1,111 @@
+<?php
+
+use yii\helpers\Url;
+use kartik\grid\GridView;
+use kartik\grid\ActionColumn;
+use common\helper\Component;
+use common\helper\Helper;
+use backend\models\WarehouseTransaction;
+?>
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <div class="card-widgets">
+                <button data-url="{!! Url::toRoute(['import-product', 'type' => WarehouseTransaction::TRANSACTION_IMPORT,'warehouse_id' => $warehouse->id]) !!}"
+                        role="modal-remote"
+                        class="btn btn-success btn-sm"><i class="fe-download"></i> Nhập sản phẩm
+                </button>
+                <button data-url="{!! Url::toRoute(['export-product', 'type' => WarehouseTransaction::TRANSACTION_EXPORT , 'warehouse_id' => $warehouse->id]) !!}"
+                        role="modal-remote"
+                        class="btn btn-warning btn-sm"><i class="fe-upload"></i> Xuất sản phẩm
+                </button>
+            </div>
+            <h4 class="card-title"><a href="{!! Yii::$app->request->referrer !!}"><i class="fe-arrow-left"></i> Các kho
+                    hàng</a> | #{!! $warehouse->name !!}</h4>
+        </div>
+        <div class="card-body">
+            <?= GridView::widget([
+                'pjax' => true,
+                'layout' => '{items}{pager}',
+                'tableOptions' => [
+                    'class' => 'table-sm table-hover'
+                ],
+                'pjaxSettings' => [
+                    'neverTimeout' => true,
+                    'options' => [
+                        'id' => 'warehouse-box'
+                    ]
+                ],
+                'perfectScrollbar' => true,
+                'dataProvider' => $dataProvider,
+                'columns' => [
+                    'po_code',
+                    [
+                        'label' => 'Sản phẩm',
+                        'attribute' => 'product_sku',
+                        'value' => function ($model) {
+                            return $model->product->sku;
+                        }
+                    ],
+                    [
+                        'label' => 'Loại sản phẩm',
+                        'value' => function ($model) {
+                            return $model->product->category->name;
+                        }
+                    ],
+                    [
+                        'attribute' => 'transaction_type',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return WarehouseTransaction::TransactionLabel($model->transaction_type);
+                        }
+                    ],
+                    [
+                        'label' => 'Giá vốn',
+                        'attribute' => 'total_average',
+                        'value' => function ($model) {
+                            return Helper::formatCUR($model->total_average, 'đ');
+                        }
+                    ],
+                    [
+                        'label' => 'Vốn/đơn vị',
+                        'value' => function ($model) {
+                            return Helper::formatCUR($model->total_average / $model->qty, 'đ');
+                        }
+                    ],
+                    [
+                        'class' => ActionColumn::class,
+                        'template' => '{update}{delete}',
+                        'width' => '12%',
+                        'buttons' => [
+                            'update' => function ($url, $model) {
+                                $url = Url::toRoute(['update-transaction', 'id' => $model->id, 'type' => $model->transaction_type]);
+                                return Component::btnUpdate($url, null, [
+                                    'role' => 'modal-remote'
+                                ]);
+                            },
+                            'delete' => function ($url, $model) {
+                                $url = Url::toRoute(['delete-transaction', 'id' => $model->id]);
+                                return Component::btnDelete($url, null, [
+                                    'role' => 'modal-remote'
+                                ]);
+                            },
+                        ]
+                    ]
+                ],
+
+            ]) ?>
+        </div>
+    </div>
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'transaction-modal']) !!}
+@stop
+@section('pos_page')
+    <script>
+
+        $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#transaction-modal', '#warehouse-box');
+            event.preventDefault();
+            modal.remote(this, null);
+        });
+    </script>
+@stop

@@ -1,0 +1,10 @@
+<script id="phones-template" type="text/x-handlebars-template">
+    @{{#each this}}
+    <span  class="badge badge-info my-1 p-2">
+            @{{phone}} | @{{country}}
+            <a href="javascript:;" class="text-warning" onclick="new approvePhone().removePhone(@{{ phone }})">
+                <i class="fa fa-times"></i>
+            </a>
+        </span>
+    @{{/each}}
+</script>

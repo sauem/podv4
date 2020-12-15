@@ -1,4 +1,6 @@
 function removeImage(url) {
+
+
     let del = confirm('Xoá ảnh này?');
     if (del) {
         $.ajax({
@@ -7,7 +9,10 @@ function removeImage(url) {
             type: 'POST',
             url: AJAX_PATH.removeFile,
             success: function (res) {
-                alert('ads');
+                $('.upload-wraper').find('.image-view').empty();
+                $('.upload-wraper').find('.note').show();
+                $('.upload-wraper').find('.loading').hide();
+                $('.upload-wraper').find('.input-model').val('');
             },
             error: function (error) {
                 console.log(error);

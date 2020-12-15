@@ -1,157 +1,92 @@
-function removeImage(url) {
-
-
-    let del = confirm('Xoá ảnh này?');
-    if (del) {
-        $.ajax({
-            data: {url: url},
-            cache: false,
-            type: 'POST',
-            url: AJAX_PATH.removeFile,
-            success: function (res) {
-                $('.upload-wraper').find('.image-view').empty();
-                $('.upload-wraper').find('.note').show();
-                $('.upload-wraper').find('.loading').hide();
-                $('.upload-wraper').find('.input-model').val('');
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
+const toastr = {
+    warning: (text = "content", heading = "Cảnh báo!") => {
+        $.toast({
+            heading: heading,
+            text: text,
+            hideAfter: 3000,
+            icon: 'warning',
+            loaderBg: "#5ba035",
+            position: "top-right",
+            showHideTransition: 'slide',
+            // stack: 1
+        })
+    },
+    success: (text = "content", heading = "Thông báo!") => {
+        $.toast({
+            heading: heading,
+            text: text,
+            hideAfter: 3000,
+            icon: 'success',
+            loaderBg: "#5ba035",
+            position: "top-right",
+            showHideTransition: 'slide',
+            //  stack: 1
+        })
+    },
+    error: (text = "content", heading = "Lỗi!") => {
+        $.toast({
+            heading: heading,
+            text: text,
+            hideAfter: 3000,
+            icon: 'error',
+            loaderBg: "#f7b84b",
+            position: "top-right",
+            showHideTransition: 'slide',
+            // stack: 1
+        })
+    },
+    info: (text = "content", heading = "Chú ý!") => {
+        $.toast({
+            heading: heading,
+            text: text,
+            hideAfter: 3000,
+            icon: 'info',
+            loaderBg: "#5ba035",
+            position: "top-right",
+            showHideTransition: 'slide',
+            //    stack: 1
+        })
     }
-
+}
+function copy(element) {
+    let _phone = $(element).text();
+    let _input = document.createElement('input');
+    _input.setAttribute('type','hidden');
+    _phone = _phone.replace('(copy)').trim();
+    $("body").append(_input);
+    $(_input).val(_phone).select();
+    document.execCommand("copy");
+    $(_input).remove();
+    toastr.success("Đã coppy số điện thoại " + _phone + " vào clipboard!");
 }
 
-function handleChange(evt) {
+const toUnicode = str => {
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
+    str = str.replace(/đ/g, 'd');
+    str = str.replace(/_/g, '-');
+    str = str.replace(/ +/g, '-');
+    str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, '');
+    str = str.replace(/\u02C6|\u0306|\u031B/g, '');
+    return str;
+};
 
-    this.config = {
-        maxSize: 2000000,
-        uploadURL: AJAX_PATH.uploadURL,
-        type: ['image/jpeg', 'image/jpg', 'image/png'],
-        loadingContent: '<div class="loading spinner-border text-secondary m-2" role="status"></div>'
-    }
-    this.file = $(evt)[0].files[0];
-    this.size = $(evt).data('size');
-    this.type = $(evt).data('type');
-    this.config.size = this.size !== "undefined" | null || "" ? this.size : this.config.size;
-    this.config.type = this.type !== "undefined" | null || "" ? this.type : this.config.type;
+function changeCurrency(symbol) {
 
-    this.uploadWrap = $('.upload-wraper');
-    this.uploadPicker = $(this.uploadWrap).find('.file-upload');
-    this.noteText = $(this.uploadWrap).find('.note');
-    this.imageView = $(this.uploadWrap).find('.image-view');
-    this.inputModel = $(this.uploadWrap).find('.input-model');
-    this.clear = (function () {
-        this.removeImage();
-        this.hideLoading();
-        $(this.inputModel).val('');
+    $("input").each(function (index, obj) {
+        let a;
+        if (a = $(obj).attr('data-krajee-maskmoney')) {
+            let cfg = eval(a);
+            cfg.prefix = symbol + " ";
+            let id = '#' + $(obj).attr('id') + '-disp';
+            $(id).maskMoney('destroy');
+            $(id).maskMoney('init', cfg);
+            $(id).maskMoney('mask', $(obj).val());
+        }
     });
 
-    this.validInput = function () {
-        if (!this.file) {
-            this.clear();
-        }
-        if (this.file.size > this.config.size) {
-            alert(`File upload phải nhỏ hơn ${this.config.size}`);
-            this.clear();
-            return false;
-        }
-        if (!this.config.type.includes(this.file.type)) {
-            alert(`File upload không đúng định dạng!`);
-            this.clear();
-            return false;
-        }
-        return true;
-    }
-
-    this.hideNote = function () {
-        $(this.noteText).hide();
-    }
-    this.showNote = function () {
-        $(this.noteText).show();
-    }
-    this.setLoading = function () {
-        $(this.uploadPicker).append(this.config.loadingContent);
-    }
-    this.hideLoading = function () {
-        $(this.uploadPicker).find('.loading').remove();
-    }
-    this.setImage = function (url) {
-        this.hideLoading();
-        $(this.imageView).append(`<img src="${url}" class="img-fluid">`);
-    }
-    this.removeImage = function () {
-        $(this.imageView).empty();
-        $(this.imageView).find('img').remove();
-        this.showNote();
-    }
-
-    function beforeUpload() {
-        this.hideNote();
-        this.setLoading();
-        this.validInput();
-    }
-
-    this.setInputValue = function (val) {
-        $(this.inputModel).val(val);
-    }
-
-    function uploadFileSuccess(response) {
-        let instance = this;
-        this.setImage(response.url);
-        this.setInputValue(response.id);
-
-        let button = document.createElement('button');
-        button.innerHTML = '<i class="fe-trash"></i>';
-        button.setAttribute('class', 'btn btn-xs');
-        button.setAttribute('type', 'button');
-        button.setAttribute('style', 'position:absolute;top:0;right:0;bottom:0;left:0;margin:auto;');
-        button.addEventListener('click', function () {
-            let del = confirm('Xoá ảnh này?');
-            if (del) {
-                $.ajax({
-                    data: {url: response.url},
-                    cache: false,
-                    type: 'POST',
-                    url: AJAX_PATH.removeFile,
-                    success: function (res) {
-                        instance.clear();
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
-            }
-        });
-        $(this.imageView).append(button);
-    }
-
-
-    this.doUpload = function () {
-        let instance = this;
-        let formData = new FormData();
-        formData.append('file', this.file);
-        try {
-            $.ajax({
-                type: 'POST',
-                url: this.config.uploadURL,
-                data: formData,
-                processData: false,
-                contentType: false,
-                beforeSend: function () {
-                    return beforeUpload.call(instance);
-                },
-                success: function (response) {
-                    uploadFileSuccess.call(instance, response);
-                },
-                error: function (response) {
-                    uploadFileError.call(instance, response);
-                }
-            });
-        } catch (e) {
-            console.warn(e.responseText);
-        }
-    }
-    this.clear();
-    this.doUpload();
-}
+};

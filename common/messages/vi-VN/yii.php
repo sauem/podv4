@@ -19,7 +19,7 @@
 return [
     ' and ' => '',
     '"{attribute}" does not support operator "{operator}".' => '',
-    '(not set)' => '--',
+    '(not set)' => '',
     'Action not found.' => '',
     'Aliases available: {aliases}' => '',
     'An internal server error occurred.' => '',

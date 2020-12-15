@@ -1,0 +1,58 @@
+<?php
+use backend\models\Contacts;
+use backend\models\UserRole;use kartik\form\ActiveForm;
+use kartik\select2\Select2;
+
+?>
+<?php yii\widgets\Pjax::begin([
+    'id' => 'search-contact',
+    'timeout' => false,
+    'enablePushState' => false,
+    'clientOptions' => [
+        'method' => 'POST'
+    ]]);
+?>
+<?php $form = ActiveForm::begin([
+    'method' => 'POST',
+    'options' => ['data-pjax' => true]
+]) ?>
+<div class="row">
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'name')->textInput(['placeholder' => 'Mã, tên, SĐT'])->label(false)?>
+    </div>
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'partner')
+            ->widget(Select2::className(), [
+                'theme' => Select2::THEME_DEFAULT,
+                'data' => UserRole::LISTS(),
+                'pluginOptions' => [
+                    'multiple' => true,
+                    'mode' => 'tags',
+                ]
+            ])->label(false)?>
+    </div>
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'status')
+            ->widget(Select2::className(), [
+                'theme' => Select2::THEME_DEFAULT,
+                'data' => Contacts::STATUS,
+                'pluginOptions' => [
+                    'multiple' => true,
+                    'mode' => 'tags',
+                ]
+            ])->label(false)?>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary"><i class="fe-search"></i> Tìm kiếm</button>
+    </div>
+</div>
+<?php ActiveForm::end(); ?>
+<?php yii\widgets\Pjax::end(); ?>
+<?php
+$js = <<<JS
+        $("#search-contact").on("pjax:end", function() {
+			$.pjax.reload({container:"$containId"});  //Reload GridView
+		});
+JS;
+$view->registerJS($js);
+?>

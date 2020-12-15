@@ -160,7 +160,8 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
 
     /**
      * Set size of modal
-     * large/normal/small
+     * large/normal/small/full
+     * modal-full-width
      */
     this.setSize = function (size) {
         $(this.dialog).removeClass('modal-lg');
@@ -169,6 +170,10 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
             $(this.dialog).addClass('modal-lg');
         else if (size == 'small')
             $(this.dialog).addClass('modal-sm');
+        else if (size == 'full')
+            $(this.dialog).addClass('modal-full-width');
+        else if (size == 'xl')
+            $(this.dialog).addClass('modal-xl');
         else if (size !== 'normal')
             console.warn("Not define size" + size);
     }
@@ -296,7 +301,6 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
 
         if (response.footer !== undefined)
             this.setFooter(response.footer);
-
         /**
          * Process when modal have form
          */

@@ -1,0 +1,178 @@
+<?php
+use kartik\grid\GridView;
+use kartik\grid\ActionColumn;
+use yii\helpers\Url;
+use common\helper\Component;
+use yii\helpers\Html;
+use common\helper\Helper;
+?>
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <div class="card-widgets">
+                <button data-url="{!! Url::toRoute(['create']) !!}"
+                        role="modal-remote"
+                        class="btn btn-success btn-sm"><i class="fe-plus"></i> Thêm kho
+                </button>
+            </div>
+            <h4 class="card-title"><i class="mdi mdi-warehouse"></i> Kho hàng</h4>
+        </div>
+        <div class="card-body">
+            <?= GridView::widget([
+                'pjax' => true,
+                'layout' => '{items}{pager}',
+                'tableOptions' => [
+                    'class' => 'table-sm table-hover'
+                ],
+                'pjaxSettings' => [
+                    'neverTimeout' => true,
+                    'options' => [
+                        'id' => 'warehouse-box'
+                    ]
+                ],
+                'perfectScrollbar' => true,
+                'dataProvider' => $dataProvider,
+                'columns' => [
+                    'name',
+                    [
+                        'attribute' => 'country',
+                        'value' => function ($model) {
+                            return Helper::countryName($model->country);
+                        }
+                    ],
+                    'status',
+                    'note',
+                    [
+                        'class' => ActionColumn::class,
+                        'template' => '{view}{update}{delete}',
+                        'width' => '12%',
+                        'buttons' => [
+                            'view' => function ($url, $model) {
+                                return Component::btnView($url);
+                            },
+                            'update' => function ($url) {
+                                return Component::btnUpdate($url, null, [
+                                    'role' => 'modal-remote'
+                                ]);
+                            },
+
+                            'delete' => function ($url) {
+                                return Component::btnDelete($url);
+                            },
+                        ]
+                    ]
+                ],
+
+            ]) ?>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title"><i class="mdi mdi-warehouse"></i> Kho Sản phẩm</h4>
+        </div>
+        <div class="card-body">
+            <?= GridView::widget([
+                'pjax' => true,
+                'layout' => '{items}{pager}',
+                'tableOptions' => [
+                    'class' => 'table-sm table-hover'
+                ],
+                'pjaxSettings' => [
+                    'neverTimeout' => true,
+                    'options' => [
+                        'id' => 'warehouse-box'
+                    ]
+                ],
+                'perfectScrollbar' => true,
+                'dataProvider' => $product_warehouse,
+                'columns' => [
+                    [
+                        'label' => 'Loại sản phẩm',
+                        'value' => function ($model) {
+                            return $model['name'];
+                        }
+                    ],
+                    [
+                        'label' => 'Sản phẩm',
+                        'value' => function ($model) {
+                            return $model['sku'];
+                        }
+                    ],
+                    [
+                        'label' => 'Nhập',
+                        'value' => function ($model) {
+                            return $model['import'] ? Helper::formatCUR($model['import'], null, 0) : '--';
+                        }
+                    ],
+                    [
+                        'label' => 'Xuất bán',
+                        'value' => function ($model) {
+                            return $model['export'] ? Helper::formatCUR($model['export'], null, 0) : '--';
+                        }
+                    ],
+                    [
+                        'label' => 'Hoàn',
+                        'value' => function ($model) {
+                            return $model['refund'] ? Helper::formatCUR($model['refund'], null, 0) : '--';
+                        }
+                    ],
+                    [
+                        'label' => 'Hỏng',
+                        'value' => function ($model) {
+                            return $model['broken'] ? Helper::formatCUR($model['broken'], null, 0) : '--';
+                        }
+                    ],
+                    [
+                        'label' => 'Xuất kho khác',
+                        'value' => function ($model) {
+                            return isset($model['export_diff']) ? Helper::formatCUR($model['export_diff'], null, 0) : '--';
+                        }
+                    ],
+                    [
+                        'label' => 'Tồn',
+                        'value' => function ($model) {
+                            $inventory = $model['import'] + $model['refund'] - $model['export'] + $model['broken'];
+                            return Helper::formatCUR($inventory, null, 0);
+                        }
+                    ],
+                    [
+                        'label' => 'Chưa xuất hàng',
+                        'value' => function ($model) {
+                            return isset($model['orderItems']) ? Helper::formatCUR($model['orderItems']['pending'], null, 0) : '--';
+                        }
+                    ],
+                    [
+                        'label' => 'Đang chuyển hàng',
+                        'value' => function ($model) {
+                            return '--';
+                        }
+                    ],
+                    [
+                        'label' => 'Đã chuyển hàng',
+                        'value' => function ($model) {
+                            return '--';
+                        }
+                    ],
+                ],
+
+            ]) ?>
+        </div>
+    </div>
+
+
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'warehouse-modal']) !!}
+
+@stop
+
+@section('pos_page')
+    <script>
+
+        $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#warehouse-modal', '#warehouse-box');
+            event.preventDefault();
+            modal.remote(this, null);
+        });
+    </script>
+@stop

@@ -1,0 +1,39 @@
+@section('content')
+
+    <div class="card-box">
+        <ul class="nav nav-tabs nav-bordered nav-justified">
+            <li class="nav-item">
+
+                <a href="#tab-1" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                    Chưa chuyển hàng (0)
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#tab-2" data-toggle="tab" aria-expanded="false" class="nav-link ">
+                    Chờ chuyển hàng (0)
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#tab-3" data-toggle="tab" aria-expanded="false" class="nav-link">
+                    Đang chuyển hàng (0)
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#tab-4" data-toggle="tab" aria-expanded="false" class="nav-link">
+                    Đã chuyển hàng (0)
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active show">
+                <?=  $view->render('tabs/default.blade', [
+                    'dataProvider' => $waitShippingContact,
+                    'id' => 'new'
+                ]) ?>
+            </div>
+        </div>
+    </div>
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'vendor-modal']) !!}
+@stop
+
+@php($view->registerJSFile('@web/theme/js/order.vendor.js',['depends' =>  \yii\web\JqueryAsset::className()]))

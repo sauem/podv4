@@ -4,14 +4,16 @@
 namespace backend\controllers;
 
 
+use backend\models\Contacts;
 use backend\models\Media;
 use backend\models\UploadForm;
+use common\helper\Helper;
 use yii\base\Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class AjaxController extends BaseController
+class AjaxImportController extends BaseController
 {
     public function init()
     {
@@ -20,42 +22,19 @@ class AjaxController extends BaseController
     }
 
     /**
-     * @return \backend\models\Media|bool
+     * @return bool
      * @throws BadRequestHttpException
      */
-    function actionUploadFile()
+    public function actionContact()
     {
-        $model = new UploadForm();
-        if (\Yii::$app->request->isPost) {
-
-            try {
-                $model->load(\Yii::$app->request->post(), "");
-                return $model->upload();
-            } catch (Exception $e) {
-                throw new BadRequestHttpException($e->getMessage());
+        $data = \Yii::$app->request->post('row');
+        $model = new Contacts();
+        if ($model->load($data, '')) {
+            if (!$model->save()) {
+                throw new BadRequestHttpException(Helper::firstError($model));
             }
-        }
-        throw new BadRequestHttpException("Post only");
-    }
-
-    /**
-     * @return bool
-     * @throws NotFoundHttpException
-     */
-    function actionRemoveFile()
-    {
-        $model = Media::findOne(['url' => \Yii::$app->request->post('url')]);
-        try {
-            if (!$model) {
-                throw new NotFoundHttpException('Không tìm thấy ảnh!');
-            }
-            if (file_exists(UPLOAD_PATH . str_replace('static/', '', $model->url))) {
-                unlink(UPLOAD_PATH . str_replace('static/', '', $model->url));
-                $model->delete();
-            }
-        } catch (\Exception $exception) {
-            throw new NotFoundHttpException($exception->getMessage());
         }
         return true;
     }
+
 }

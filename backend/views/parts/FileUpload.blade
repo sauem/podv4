@@ -1,7 +1,7 @@
 <div class="upload-wraper">
     <label>Hình ảnh {!! isset($label) ? $label : 'sản phẩm' !!}</label>
     <div class="file-upload mb-2">
-        <div class="note {{$model->avatar && $model->thumb ? 'd-none' : ''}}">
+        <div class="note" style="{{$model->avatar && $model->thumb ? 'display:none' : ''}}">
             <i class="fe-upload"></i>
             <p>Nhấn hoặc kéo thả ảnh vào đây</p>
         </div>

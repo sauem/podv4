@@ -1,0 +1,232 @@
+<?php
+use common\helper\Helper;
+use kartik\select2\Select2;
+use yii\bootstrap\Html;
+use yii\helpers\Url;
+use yii\web\JsExpression;
+use yii\web\View;
+use common\helper\Component;
+
+$formatJs = <<< 'JS'
+let formatRepo = function (repo) {
+    if (repo.loading) {
+        return repo.text;
+    }
+    const {sku , size, weight ,partner, media , category } = repo;
+
+    let markup = `<div class="row">`;
+        markup += `<div class="col-3"><div class="small-thumb"><img src="${media.media.url}" width="100%"></div></div>`;
+        markup += `<div class="col-9">`;
+        markup += `<b>${category.country}-${partner.username}-${category.name}-${sku}</b>`;
+        markup += `<br>${size}cm | ${weight}gram`;
+        markup += `</div>`;
+        markup += `</div>`;
+    return '<div style="overflow:hidden;">' + markup + '</div>';
+};
+let formatRepoSelection = function (repo) {
+    return repo.sku;
+}
+JS;
+
+// Register the formatting script
+$view->registerJs($formatJs, View::POS_HEAD);
+
+
+$resultsJs = <<< JS
+function (data, params) {
+    params.page = params.page || 1;
+    return {
+        results: data,
+        pagination: {
+            more: (params.page * 30) < data.total_count
+        }
+    };
+}
+JS;
+?>
+@section('content')
+    @php($form = \kartik\form\ActiveForm::begin())
+    {!! $form->errorSummary($model) !!}
+    <div class="row">
+        <div class="col-md-5">
+            <h4 class="card-title"><i class="fe-user-x"></i> Thông tin khách hàng</h4>
+            <div class="row">
+                <div class="col-12">
+                    <?= $form->field($model, 'name')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'phone')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'email')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'zipcode')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'address')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'district')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'city')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'country')->widget(Select2::className(), [
+                        'data' => Helper::countries(),
+                        'options' => ['placeholder' => 'Chọn quốc gia', 'class' => 'country-select'],
+                        'pluginOptions' => ['allowClear' => true]
+                    ])?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'payment_method')->widget(Select2::className(), [
+                        'data' => [
+                            1 => 'SHIP COD',
+                            2 => 'Chuyển khoản'
+                        ],
+                        'options' => ['placeholder' => 'Chọn phương thức thanh toán'],
+                        'pluginOptions' => ['allowClear' => true]
+                    ])?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'shipping_cost')->textInput([
+                        'data-toggle' => 'input-mask',
+                        'data-mask-format' => '#,##0.00',
+                        'data-reverse' => 'true',
+                        'id' => 'input-shipping-cost'
+                    ])?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'order_source')->widget(Select2::className(), [
+                        'data' => Helper::countries(),
+                        'options' => ['placeholder' => 'Chọn nguồn liên hệ'],
+                        'pluginOptions' => ['allowClear' => true]
+                    ])?>
+                </div>
+                <div class="col-12">
+                    <?= $form->field($model, 'note')->textarea()?>
+                    <?= $form->field($model, 'vendor_note')->textarea()?>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-7">
+            <h4 class="card-title"><i class="fe-box"></i> Sản phẩm</h4>
+            <div class="row">
+                <div class="col-md-7">
+                    <?= Select2::widget([
+                        'name' => 'sku',
+                        'options' => ['id' => 'product-sku', 'placeholder' => 'Chọn sản phẩm...'],
+                        'theme' => Select2::THEME_MATERIAL,
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'minimumInputLength' => 1,
+                            'ajax' => [
+                                'url' => Url::toRoute(['/ajax/get-list-product']),
+                                'dataType' => 'json',
+                                'delay' => 250,
+                                'data' => new JsExpression('function(params) { console.log(params); return {name:params.term, page: params.page}; }'),
+                                'processResults' => new JsExpression($resultsJs),
+                                'cache' => true
+                            ],
+                            'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                            'templateResult' => new JsExpression('formatRepo'),
+                            'templateSelection' => new JsExpression('formatRepoSelection'),
+                        ]
+                    ])?>
+                </div>
+                <div class="col-md-5">
+                    <?=  Html::button('Thêm sản phẩm', ['id' => 'btn-add-product', 'class' => 'btn btn-flat btn-success'])?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="mt-2 align-content-center table table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th width="50%">Sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="result-sku-list">
+
+                        </tbody>
+                        <tfoot>
+                        <tr class="text-center">
+                            <th colspan="2">Tổng tiền:</th>
+                            <th colspan="2">
+                                <div class="input-group">
+                                    <input name="total_price" id="total-price-input"
+                                           type="text"
+                                           required
+                                           class="form-control"
+                                           data-toggle="input-mask"
+                                           data-mask-format="#,##0.00"
+                                           data-reverse="true">
+                                    <div class="input-group-append">
+                                        <p class="currency-input input-group-text">Đ</p>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr class="text-center">
+                            <th colspan="2">Phí vận chuyển</th>
+                            <th colspan="2"><span id="total-ship-text"></span></th>
+                        </tr>
+                        <tr class="text-center">
+                            <th colspan="2">Tổng đơn</th>
+                            <th colspan="2">
+                                <span id="total-bill-text"></span>
+                                <input name="total_bill" type="hidden">
+                            </th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @php(\kartik\form\ActiveForm::end())
+    {!! $view->render('template/sku-template.blade') !!}
+@stop
+@section('pos_page')
+    <script>
+        $(document).ready(function () {
+
+            let order = new orderSaleForm();
+            $(document).on('click', '#btn-add-product', function () {
+
+                let id = $('#product-sku').val();
+                order.addProductItem(id);
+            });
+
+            $(document).on('click', '.btn-remove-product', function () {
+                let sku = $(this).data('sku');
+                order.removeProductItem(sku, this);
+            });
+
+            $(document).on('change', '.input-product-price', function () {
+                let val = $(this).val();
+                val = val.replaceAll(',', '');
+                let sku = $(this).data('sku');
+                order.setItemPrice(sku, val);
+            });
+
+            $(document).on('change', '.input-product-qty', function () {
+
+            });
+            $(document).on('change', '#input-shipping-cost', function () {
+                order.setShippingCost($(this).val());
+            });
+
+            $(document).on('change', '#total-price-input', function () {
+                order.setTotalPrice($(this).val());
+            });
+        });
+
+
+    </script>
+@stop

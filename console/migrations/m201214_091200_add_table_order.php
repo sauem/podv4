@@ -12,7 +12,8 @@ class m201214_091200_add_table_order extends Migration
      */
     public function safeUp()
     {
-
+        $this->addColumn('orders_contact', 'total_bill', $this->double(15.2)->defaultValue(0));
+        $this->addColumn('orders_contact', 'total_price', $this->double(15.2)->defaultValue(0));
     }
 
     /**

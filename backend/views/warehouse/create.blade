@@ -1,0 +1,26 @@
+<?php
+
+use kartik\form\ActiveForm;
+use kartik\select2\Select2;
+use common\helper\Helper;
+?>
+@section('content')
+    @php($form = ActiveForm::begin())
+    <div class="row">
+        <div class="col-md-6">
+            {!! $form->field($model,'name')->label('Tên kho') !!}
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'country')->widget(Select2::className(),[
+                'data' => Helper::countries(),
+                'options' => ['placeholder'  => 'Chọn quốc gia..'],
+                'pluginOptions' => ['allowClear' => true]
+            ])->label('Quốc gia') !!}
+        </div>
+        <div class="col-12">
+            {!! $form->field($model,'note')->textarea()->label('Ghi chú') !!}
+        </div>
+    </div>
+    @php(ActiveForm::end())
+@stop
+

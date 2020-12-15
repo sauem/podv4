@@ -12,7 +12,7 @@ class m201210_104046_add_column_contact extends Migration
      */
     public function safeUp()
     {
-
+        $this->addColumn('contacts', 'type', $this->string(255)->null());
     }
 
     /**

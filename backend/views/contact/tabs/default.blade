@@ -1,1 +1,55 @@
-HELLO
+<?php
+
+use kartik\grid\CheckboxColumn;
+use kartik\grid\GridView;
+use kartik\grid\ActionColumn;
+
+?>
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'pjax' => true,
+    'persistResize' => true,
+    'layout' => '{items}{pager}',
+    'responsiveWrap' => false,
+    'tableOptions' => [
+        'class' => 'table table-sm'
+    ],
+    'pjaxSettings' => [
+        'neverTimeout' => true,
+        'options' => [
+            'id' => 'contact-box',
+        ]
+    ],
+    'perfectScrollbar' => true,
+    'columns' => [
+        [
+            'class' => CheckboxColumn::class,
+            'checkboxOptions' => function ($model) {
+                $cog['data-phone'] = $model->phone;
+                $cog['data-country'] = $model->country;
+                return $cog;
+            }
+        ],
+        'code',
+        'register_time',
+        'phone',
+        'name',
+        'address',
+        'partner',
+        'status',
+        'country',
+        'type',
+        [
+            'class' => ActionColumn::class,
+            'template' => '{view}{edit}',
+            'buttons' => [
+                'view' => function ($model) {
+
+                },
+                'edit' => function ($model) {
+
+                }
+            ]
+        ]
+    ]
+]) ?>

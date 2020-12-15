@@ -4,7 +4,13 @@
 namespace backend\controllers;
 
 
-class ImportController
+class ImportController extends BaseController
 {
 
+    function actionIndex($module)
+    {
+        return $this->render('index.blade', [
+            'module' => $module
+        ]);
+    }
 }

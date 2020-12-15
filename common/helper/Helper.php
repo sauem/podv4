@@ -14,6 +14,21 @@ class Helper
         exit;
     }
 
+    static function toFloat($number)
+    {
+        return str_replace(',', '', $number);
+    }
+
+    static function formatCUR($num, $symbol = '', $decimal = 2)
+    {
+        return number_format($num, $decimal, '.', ',') . $symbol;
+    }
+
+    static function makeUpperString($str)
+    {
+        return strtoupper(static::toLower($str));
+    }
+
     static function firstError($model)
     {
         $modelErrs = $model->getFirstErrors();
@@ -23,10 +38,10 @@ class Helper
         return "No error founded";
     }
 
-    static function dateFormat($time)
+    static function dateFormat($time, $timestamp = false)
     {
         if (is_numeric($time)) {
-            return date('d-m-Y', $time);
+            return date('d-m-Y' . ($timestamp ? ' H:i:s' : ''), $time);
         }
         return $time;
     }
@@ -63,5 +78,12 @@ class Helper
         return ArrayHelper::getValue([
             'product' => '/theme/images/default.jpg'
         ], $name);
+    }
+
+    static function makeCodeIncrement($lastID, $country = "VN", $prefix = '#CC')
+    {
+        $defaultCode = $prefix . $country . "0000000";
+        $maxLen = strlen($lastID);
+        return substr_replace($defaultCode, $lastID, -$maxLen);
     }
 }

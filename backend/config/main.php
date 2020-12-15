@@ -24,34 +24,7 @@ return [
         ],
         'rbac' => [
             'class' => Module::class,
-            'layout' => 'right-menu',
-        ],
-        'filemanager' => [
-            'class' => 'pendalf89\filemanager\Module',
-            // Upload routes
-            'routes' => [
-                // Base absolute path to web directory
-                'baseUrl' => '',
-                // Base web directory url
-                'basePath' => UPLOAD_PATH,
-                // Path for uploaded files in web directory
-                'uploadPath' => '',
-            ],
-            // Thumbnails info
-            'thumbs' => [
-                'small' => [
-                    'name' => 'small',
-                    'size' => [100, 100],
-                ],
-                'medium' => [
-                    'name' => 'medium',
-                    'size' => [300, 200],
-                ],
-                'large' => [
-                    'name' => 'large',
-                    'size' => [500, 400],
-                ],
-            ],
+            'layout' => 'left-menu',
         ],
     ],
     'components' => [
@@ -88,16 +61,24 @@ return [
                 'yii\web\JqueryAsset' => [
                     'js' => [
                         '/theme/js/jquery.js',
+                        '/theme/libs/moment/min/moment.min.js',
+                        '/theme/js/handlebars.js',
+                        '/theme/js/HandlebarsHelper.js',
                         '/theme/libs/chart.js/Chart.bundle.min.js'
                     ]
+                ],
+                'kartik\form\ActiveFormAsset' => [
+                    'bsDependencyEnabled' => false
                 ],
                 'yii\bootstrap\BootstrapAsset' => [
                     'sourcePath' => null,
                     'css' => [
                         '/theme/css/bootstrap.min.css',
-                       // 'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css'
+                        #'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css'
                     ],
-                    'js' => []
+                    'js' => [
+                        '/theme/js/bootstrap.js'
+                    ]
                 ],
             ],
         ],
@@ -107,10 +88,13 @@ return [
             'rules' => $rules,
         ],
     ],
+
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'rbac/*',
+            'site/logout',
+            'site/login'
         ]
     ],
     'params' => $params,

@@ -33,7 +33,7 @@ class Warehouse extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['created_at', 'updated_at'], 'required'],
+            [['name', 'country'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
             [['name', 'note'], 'string', 'max' => 255],
             [['country'], 'string', 'max' => 50],
@@ -48,10 +48,10 @@ class Warehouse extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'country' => 'Country',
-            'status' => 'Status',
-            'note' => 'Note',
+            'name' => 'Tên kho',
+            'country' => 'Thị trường',
+            'status' => 'Trạng thái',
+            'note' => 'Ghi chú',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

@@ -1,0 +1,41 @@
+<script id="sku-template" type="text/x-handlebars-template">
+    <tr class="order-item">
+        <td>
+            <div class="d-flex">
+                <div class="small-thumb">
+                    <img src="@{{ media }}"/>
+                </div>
+                <div class="ml-1 text-td">
+                    <p>Tên : @{{ name }}</p>
+                    <p>Thuộc tính: @{{ size }} cm/@{{ weight }}gram</p>
+                    <p>Khả dụng: @{{ available }}</p>
+                </div>
+            </div>
+            <input type="hidden" name="items[@{{ sku }}][sku]" value="@{{ sku }}">
+        </td>
+        <td>
+            <input name="items[@{{ sku }}][qty]"
+                   type="text"
+                   required
+                   data-sku="@{{ sku }}"
+                   class="form-control input-product-qty">
+        </td>
+        <td>
+            <input id="total-price"
+                   name="items[@{{ sku }}][price]"
+                   type="text"
+                   required
+                   data-sku="@{{ sku }}"
+                   class="form-control input-product-price"
+                   data-toggle="input-mask"
+                   data-mask-format="#,##0.00"
+                   data-reverse="true">
+        </td>
+        <td>
+            <button data-sku="@{{ sku }}" type="button"
+                    class="btn btn-sm btn-warning btn-remove-product">
+                <i class="fe-trash"></i>
+            </button>
+        </td>
+    </tr>
+</script>

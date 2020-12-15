@@ -4,6 +4,7 @@ namespace backend\models;
 
 use common\helper\Helper;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "products".
@@ -25,6 +26,7 @@ class Products extends \common\models\BaseModel
     public $prices;
     public $thumb;
     public $avatar;
+    public $name;
 
     public static function tableName()
     {
@@ -39,7 +41,7 @@ class Products extends \common\models\BaseModel
         return [
             [['sku', 'category_id'], 'required'],
             [['category_id', 'partner_id', 'weight', 'created_at', 'updated_at'], 'integer'],
-            [['sku', 'size'], 'string', 'max' => 255],
+            [['sku', 'size', 'name'], 'string', 'max' => 255],
             [['sku'], 'unique'],
             [['prices', 'thumb', 'avatar'], 'safe'],
         ];
@@ -58,13 +60,19 @@ class Products extends \common\models\BaseModel
         return $this->hasOne(Categories::className(), ['id' => 'category_id']);
     }
 
+    public function getPartner()
+    {
+        return $this->hasOne(UserModel::className(), ['id' => 'partner_id']);
+    }
+
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-            'sku' => 'Tên sản phẩm',
+            'sku' => 'Mã sản phẩm',
             'category_id' => 'Danh mục',
             'partner_id' => 'Đối tác',
+            'name' => 'Tên sản phẩm',
             'size' => 'Kích thước',
             'weight' => 'Cân nặng',
             'created_at' => 'Created At',
@@ -104,6 +112,13 @@ class Products extends \common\models\BaseModel
             $this->addError('partner_id', 'Không tìm thấy danh mục!');
             return false;
         }
-        $this->sku = $category->name . '-' . $this->sku;
+        $this->name = $category->name . '-' . $this->sku;
     }
+
+    public static function LISTS()
+    {
+        $all = Products::find()->all();
+        return ArrayHelper::map($all, 'sku', 'sku');
+    }
+
 }
