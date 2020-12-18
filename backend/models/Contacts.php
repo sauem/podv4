@@ -181,14 +181,24 @@ class Contacts extends \common\models\BaseModel
      * @param $status
      * @throws BadRequestHttpException
      */
-    public static function updateStatus($code, $status)
+    public static function updateStatus($code, $order)
     {
-        $model = Contacts::findOne(['code' => $code]);
-        if (!$model) {
-            throw new BadRequestHttpException('Không tồn tại đơn hàng này!');
+        try {
+            $model = Contacts::findOne(['code' => $code]);
+            if (!$model) {
+                throw new BadRequestHttpException('Không tồn tại đơn hàng này!');
+            }
+            $model->name = $order->name;
+            $model->phone = $order->phone;
+            $model->email = $order->email;
+            $model->zipcode = $order->email;
+            $model->address = $order->address;
+            $model->country = $order->country;
+            $model->status = self::STATUS_OK;
+            return $model->save();
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
         }
-        $model->status = $status;
-        return $model->save();
     }
 
     public static function generateKey($phone, $partner, $option)

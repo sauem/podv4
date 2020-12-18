@@ -48,16 +48,20 @@ const toastr = {
         })
     }
 }
-function copy(element) {
-    let _phone = $(element).text();
-    let _input = document.createElement('input');
-    _input.setAttribute('type','hidden');
-    _phone = _phone.replace('(copy)').trim();
-    $("body").append(_input);
-    $(_input).val(_phone).select();
+
+function copy(id) {
+    let text = document.getElementById(id).innerText;
+    let elem = document.createElement("textarea");
+    document.body.appendChild(elem);
+    if (text.slice(0, 1) == 0) {
+        elem.value = text;
+    } else {
+        elem.value = `0${text}`;
+    }
+    elem.select();
     document.execCommand("copy");
-    $(_input).remove();
-    toastr.success("Đã coppy số điện thoại " + _phone + " vào clipboard!");
+    document.body.removeChild(elem);
+    toastr.success("Đã coppy số điện thoại " + text + " vào clipboard!");
 }
 
 const toUnicode = str => {

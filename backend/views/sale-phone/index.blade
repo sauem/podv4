@@ -1,3 +1,6 @@
+<?php
+use yii\helpers\Url;
+?>
 @section('content')
     <?php \yii\widgets\Pjax::begin([
         'options' => [
@@ -11,7 +14,7 @@
         <div class="row">
             <div class="col-md-8">
                 <h5 class="text-success card-title"><i class="fe-phone-call"></i> <span
-                            onclick="copy(this)">{!! $assignPhone !!}</span> (copy)</h5>
+                            onclick="copy(this.id)" id="phone">{!! $assignPhone !!}</span> (copy)</h5>
             </div>
             <div class="col-md-4">
                 <div class="d-flex justify-content-between">
@@ -29,43 +32,33 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#tab-2" data-toggle="tab" aria-expanded="false" class="nav-link ">
+                        <a data-url="{!! Url::toRoute(['callback']) !!}" href="#tab-2" data-toggle="tab"
+                           aria-expanded="false" class="nav-link ">
                             <i class="fe-phone-call"></i> Hẹn gọi lại/Thuê bao
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#tab-3" data-toggle="tab" aria-expanded="false" class="nav-link">
+                        <a data-url="{!! Url::toRoute(['fail']) !!}" href="#tab-3" data-toggle="tab"
+                           aria-expanded="false" class="nav-link">
                             <i class="fe-phone-missed"></i> Thất bại
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#tab-4" data-toggle="tab" aria-expanded="false" class="nav-link">
+                        <a data-url="{!! Url::toRoute(['success']) !!}" href="#tab-4" data-toggle="tab"
+                           aria-expanded="false" class="nav-link">
                             <i class="fe-phone-outgoing"></i> Thành công
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    {!! $view->render('action.blade') !!}
                     <div class="tab-pane active" id="tab-1">
                         <?= $view->render('tabs/default.blade', [
                             'id' => 'new',
                             'dataProvider' => $dataProvider]) ?>
                     </div>
-                    <div class="tab-pane" id="tab-2">
-                        <?= $view->render('tabs/default.blade', [
-                            'id' => 'callback',
-                            'dataProvider' => $contactCallback]) ?>
-                    </div>
-                    <div class="tab-pane" id="tab-3">
-                        <?= $view->render('tabs/default.blade', [
-                            'id' => 'fail',
-                            'dataProvider' => $contactFail]) ?>
-                    </div>
-                    <div class="tab-pane" id="tab-4">
-                        <?= $view->render('tabs/success.blade', [
-                            'id' => 'ok',
-                            'dataProvider' => $contactOK]) ?>
-                    </div>
+                    <div class="tab-pane" id="tab-2"></div>
+                    <div class="tab-pane" id="tab-3"></div>
+                    <div class="tab-pane" id="tab-4"></div>
                 </div>
             </div>
         </div>
@@ -81,8 +74,7 @@
 
 @section('pos_page')
     <script>
-
-
+        initToggleTab();
         $(document).on('click', '[role="modal-remote"]', function (event) {
             let modal = new ModalRemote('#order-modal', '#sale-box');
             event.preventDefault();

@@ -11,6 +11,7 @@ use yii\helpers\Url;
 
 ?>
 @section('content')
+    {!! $view->render('../action.blade') !!}
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'pjax' => true,
@@ -23,7 +24,7 @@ use yii\helpers\Url;
         'pjaxSettings' => [
             'neverTimeout' => true,
             'options' => [
-                'id' => isset($id) ? "$id-box" : 'ok-box',
+                'id' => isset($id) ? "$id-box" : 'default-box',
             ]
         ],
         'perfectScrollbar' => true,
@@ -47,6 +48,7 @@ use yii\helpers\Url;
             'name',
             'address',
             'partner',
+            'option',
             [
                 'attribute' => 'status',
                 'format' => 'html',
@@ -54,18 +56,23 @@ use yii\helpers\Url;
                     return Contacts::StatusLabel($model->status);
                 }
             ],
-            'country',
-            'type',
             [
                 'class' => ActionColumn::class,
-                'template' => '{actions}',
+                'template' => '{order}{actions}',
                 'width' => '12%',
                 'buttons' => [
+                    'order' => function ($url, $model) {
+                        return Html::button("<i class='fe-shopping-cart'></i> tạo đơn", [
+                            'data-pjax' => "0",
+                            'data-url' => Url::toRoute(['create', 'code' => $model->code]),
+                            'role' => 'modal-remote',
+                            'class' => 'btn-xs btn btn-success'
+                        ]);
+                    },
                     'actions' => function ($url, $model) {
                         return Component::dropDown([
-                            '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`cancel`,this)"  class="dropdown-item"><i class="fe-x"></i> Hủy đơn</a>',
-                            '<a class="dropdown-item"><i class="fe-edit"></i> Sửa</a>',
-                            '<a class="dropdown-item"><i class="fe-lock"></i> Khóa sửa</a>',
+                            '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`cancel`,this)" class="dropdown-item"><i class="fe-phone-missed"></i> Hủy đặt</a>',
+                            '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`duplicate`,this)" class="dropdown-item"><i class="fe-phone-missed"></i> Trùng số</a>',
 
                         ]);
                     },

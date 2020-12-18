@@ -4,6 +4,7 @@ namespace backend\models;
 
 use Yii;
 use common\models\BaseModel;
+
 /**
  * This is the model class for table "contacts_assignment".
  *
@@ -20,6 +21,10 @@ class ContactsAssignment extends BaseModel
     /**
      * {@inheritdoc}
      */
+    const STATUS_PENDING = 'pending';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_COMPLETED = 'completed';
+
     public static function tableName()
     {
         return 'contacts_assignment';
@@ -66,5 +71,24 @@ class ContactsAssignment extends BaseModel
             return null;
         }
         return $model->phone;
+    }
+
+
+    public static function nextAssignment($phone)
+    {
+        $phoneAssign = ContactsAssignment::findOne(['phone' => $phone, 'user_id' => Yii::$app->user->getId()]);
+        if ($phoneAssign && static::hasComplete($phone)) {
+            $phoneAssign->status = ContactsAssignment::STATUS_COMPLETED;
+            return $phoneAssign->save();
+        }
+    }
+
+    public static function hasComplete($phone)
+    {
+        $contact = Contacts::findAll(['phone' => $phone, 'status' => Contacts::STATUS_NEW]);
+        if (count($contact) > 0) {
+            return false;
+        }
+        return true;
     }
 }

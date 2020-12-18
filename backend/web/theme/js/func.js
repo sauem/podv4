@@ -12,6 +12,37 @@ $(document).on('hide.bs.modal', '.modal', function () {
     window.ORDER_ITEMS = [];
 })
 
+
+const initToggleTab = function () {
+    let toggleTab = $('a[data-toggle="tab"]');
+    toggleTab.off('shown.bs.tab');
+    toggleTab.on('shown.bs.tab', function (e) {
+
+        let activeTab = $(e.target);
+        let url = activeTab.attr('data-url');
+        if (typeof (url) == 'undefined') {
+            return;
+        }
+        let container = $(activeTab.attr('href'));
+        container.html('<div class="text-center"><div class="spinner-border text-secondary m-2" role="status"></div></div>');
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.status === 1) {
+                    container.html(data.content);
+                    activeTab.removeAttr('data-url');
+                }
+            },
+            error: function (e) {
+                console.log(e.statusText);
+            }
+        });
+    });
+}
+
+
 function initMaskMoney() {
     $(document).ready(function () {
         $('[data-toggle="input-mask"]').each(function (a, e) {

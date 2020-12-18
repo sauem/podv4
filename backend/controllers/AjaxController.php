@@ -78,11 +78,15 @@ class AjaxController extends BaseController
                 throw new BadRequestHttpException('không có số điện hoại nào!');
             }
             $data = array_map(function ($item) use ($saleID) {
-                return array_merge($item, ['user_id' => $saleID, 'created_at' => time(), 'updated_at' => time()]);
+                return array_merge($item, [
+                    'user_id' => $saleID,
+                    'status' => ContactsAssignment::STATUS_PENDING,
+                    'created_at' => time(),
+                    'updated_at' => time()]);
             }, $phones);
             \Yii::$app->db->createCommand()->batchInsert(
                 ContactsAssignment::tableName(),
-                ['phone', 'country', 'user_id', 'created_at', 'updated_at'],
+                ['phone', 'country', 'user_id', 'status', 'created_at', 'updated_at'],
                 $data)
                 ->execute();
         } catch (\Exception $exception) {

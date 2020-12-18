@@ -6,6 +6,7 @@ namespace backend\controllers;
 
 use backend\models\Contacts;
 use backend\models\ContactsAssignment;
+use backend\models\ContactsLogStatus;
 use backend\models\ContactsSearch;
 use backend\models\OrdersContact;
 use backend\models\OrdersContactSku;
@@ -17,50 +18,83 @@ use yii\web\BadRequestHttpException;
 
 class SalePhoneController extends BaseController
 {
-    public function actionIndex()
+    public $assignPhone;
+
+    public function __construct($id, $module, $config = [])
     {
-        $searchModel = new ContactsSearch();
+        parent::__construct($id, $module, $config);
         $assignPhone = ContactsAssignment::getPhoneAssign();
         if (!$assignPhone) {
             \Yii::$app->session->setFlash('warning', 'Hiện tại bạn chưa có số điện thoại nào!');
         }
+        $this->assignPhone = $assignPhone;
+    }
+
+    public function actionIndex()
+    {
+        $searchModel = new ContactsSearch();
         $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
             'ContactsSearch' => [
                 'status' => [Contacts::STATUS_NEW],
-                'phone' => $assignPhone
+                'phone' => $this->assignPhone
             ]
         ]));
-        $contactOK = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
+        return $this->render('index.blade', [
+            'dataProvider' => $dataProvider,
+            'assignPhone' => $this->assignPhone,
+        ]);
+    }
+
+    public function actionCallback()
+    {
+        $searchModel = new ContactsSearch();
+
+        $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
             'ContactsSearch' => [
-                'status' => [Contacts::STATUS_OK],
-                'phone' => $assignPhone
+                'status' => [
+                    Contacts::STATUS_PENDING,
+                    Contacts::STATUS_CALLBACK
+                ],
+                'phone' => $this->assignPhone
             ]
         ]));
-        $contactFail = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
+        return static::responseRemote('tabs/holdup.blade', [
+            'dataProvider' => $dataProvider,
+            'id' => 'callback'
+        ]);
+    }
+
+    public function actionFail()
+    {
+        $searchModel = new ContactsSearch();
+        $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
             'ContactsSearch' => [
                 'status' => [
                     Contacts::STATUS_CANCEL,
                     Contacts::STATUS_DUPLICATE,
                     Contacts::STATUS_NUMBER_FAIL
                 ],
-                'phone' => $assignPhone
+                'phone' => $this->assignPhone
             ]
         ]));
-        $contactCallback = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
-            'ContactsSearch' => [
-                'status' => [
-                    Contacts::STATUS_PENDING,
-                    Contacts::STATUS_CALLBACK
-                ],
-                'phone' => $assignPhone
-            ]
-        ]));
-        return $this->render('index.blade', [
+        return static::responseRemote('tabs/holdup.blade', [
             'dataProvider' => $dataProvider,
-            'assignPhone' => $assignPhone,
-            'contactOK' => $contactOK,
-            'contactCallback' => $contactCallback,
-            'contactFail' => $contactFail
+            'id' => 'fail'
+        ]);
+    }
+
+    public function actionSuccess()
+    {
+        $searchModel = new ContactsSearch();
+
+        $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
+            'ContactsSearch' => [
+                'status' => [Contacts::STATUS_OK],
+                'phone' => $this->assignPhone
+            ]
+        ]));
+        return static::responseRemote('tabs/success.blade', [
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -89,8 +123,14 @@ class SalePhoneController extends BaseController
         if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
             try {
                 if ($model->save()) {
-                    Contacts::updateStatus($code, Contacts::STATUS_OK);
+                    //Update new info contact
+                    Contacts::updateStatus($code, $model);
+                    // Save contact call log
+                    ContactsLogStatus::saveRecord($code, $model->phone, $model->status);
+                    //save item order product
                     OrdersContactSku::saveItems($model->id, \Yii::$app->request->post('items'));
+                    //check user has finish current phone
+                    ContactsAssignment::nextAssignment($model->phone);
                     $transaction->commit();
                     return static::responseSuccess();
                 }

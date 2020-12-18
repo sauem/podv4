@@ -116,6 +116,10 @@ async function changeStatus(model, status, element = null) {
     if (element) {
         ids = $(element).data('key');
     }
+    if (ids.length <= 0) {
+        toastr.warning('Không có contact nào được chọn!');
+        return false;
+    }
     await swal.fire({
         text: `Đổi trạng thái lựa chọn sang ${status}`,
         type: 'info',
