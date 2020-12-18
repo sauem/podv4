@@ -1,0 +1,44 @@
+<script id="{{$module}}-template" type="text/x-handlebars-template">
+    <button onclick="actionSave('{{$module}}')" class="btn btn-sm float-right btn-success"><i class="fe-save"></i> Lưu
+        tracking ID
+    </button>
+    <table id="contact-table" class="table table-sm table-hover">
+        <thead>
+        <tr>
+            <th>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input">
+                    <label class="custom-control-label">&nbsp;</label>
+                </div>
+            </th>
+            <th></th>
+            <th>Contact code</th>
+            <th>Ngày nhận hàng hoàn</th>
+            <th>Mã vận đơn của đối tác vận chuyển</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{{#each this}}
+        <tr data-key="@{{ @index }}">
+            <td>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input">
+                    <label class="custom-control-label">&nbsp;</label>
+                </div>
+            </td>
+            <td>
+                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+            </td>
+            <td>@{{code}}</td>
+            <td>@{{ refund_time }}</td>
+            <td>@{{ transport_partner_code }}</td>
+            <td>@{{ sku }}</td>
+            <td>@{{ qty }}</td>
+        </tr>
+        @{{/each}}
+        </tbody>
+    </table>
+</script>

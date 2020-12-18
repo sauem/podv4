@@ -14,7 +14,7 @@ class TransportersController extends BaseController
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Transporters::find()
+            'query' => Transporters::find()->groupBy('transporter_parent')
         ]);
         return $this->render('index.blade', [
             'dataProvider' => $dataProvider

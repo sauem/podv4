@@ -1,3 +1,6 @@
+<?php
+use yii\helpers\Url;
+?>
 @section('content')
     <div class="card-box">
         {!! $view->render('search.blade',[
@@ -7,47 +10,74 @@
     <div class="card-box">
         <ul class="nav nav-tabs nav-bordered nav-justified">
             <li class="nav-item">
-
                 <a href="#tab-1" data-toggle="tab" aria-expanded="true" class="nav-link active">
-                    Chưa chuyển hàng ({!! $waitShippingContact->getTotalCount () !!})
+                    Chưa chuyển hàng ({!! $waitShippingOrder->getTotalCount () !!})
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#tab-2" data-toggle="tab" aria-expanded="false" class="nav-link ">
-                    Chờ chuyển hàng ({!! $pendingShippingContact->getTotalCount() !!})
+                <a href="#tab-2" data-url="<?= Url::toRoute(['pending'])?>" data-toggle="tab" aria-expanded="false"
+                   class="nav-link ">
+                    Chờ chuyển hàng ({!! $pendingShippingOrder->getTotalCount() !!})
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#tab-3" data-toggle="tab" aria-expanded="false" class="nav-link">
+                <a href="#tab-3" data-url="<?= Url::toRoute(['status'])?>" data-toggle="tab" aria-expanded="false"
+                   class="nav-link">
                     Trạng thái chuyển hàng ({!! $statusShippingOrder->getTotalCount() !!})
                 </a>
             </li>
         </ul>
         <div class="tab-content">
-            <div id="tab-1" class="tab-pane active show">
+            <div id="tab-1" class="tab-pane active">
                 <?=  $view->render('tabs/default.blade', [
-                    'dataProvider' => $waitShippingContact,
+                    'dataProvider' => $waitShippingOrder,
                     'id' => 'new',
                     'searchModel' => $searchModel
                 ]) ?>
             </div>
             <div id="tab-2" class="tab-pane">
-                <?=  $view->render('tabs/group.blade', [
-                    'dataProvider' => $pendingShippingContact,
-                    'id' => 'pending',
-                    'searchModel' => $searchModel
-                ]) ?>
+
             </div>
             <div id="tab-3" class="tab-pane">
-                <?=  $view->render('tabs/group.blade', [
-                    'dataProvider' => $statusShippingOrder,
-                    'id' => 'pending',
-                    'searchModel' => $searchModel
-                ]) ?>
+
             </div>
         </div>
     </div>
     {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'vendor-modal']) !!}
+@stop
+
+@section('pos_page')
+    <script>
+        $(function () {
+            let toggleTab = $('a[data-toggle="tab"]');
+            toggleTab.off('shown.bs.tab');
+            toggleTab.on('shown.bs.tab', function (e) {
+
+                let activeTab = $(e.target);
+                let url = activeTab.attr('data-url');
+                if (typeof (url) == 'undefined') {
+                    return;
+                }
+                let container = $(activeTab.attr('href'));
+                container.html('<div class="text-center"><div class="spinner-border text-secondary m-2" role="status"></div></div>');
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if (data.status === 1) {
+                            container.html(data.content);
+                            activeTab.removeAttr('data-url');
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e.statusText);
+                    }
+                });
+            });
+        });
+
+    </script>
 @stop
 
 @php($view->registerJSFile('@web/theme/js/order.vendor.js',['depends' =>  \yii\web\JqueryAsset::className()]))

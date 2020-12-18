@@ -1,6 +1,10 @@
 const MODULE_CONTACT = 'contact';
 const MODULE_CONTACT_LOG = 'contact-log';
 const MODULE_PRODUCT = 'product';
+const MODULE_TRACKING = 'tracking';
+const MODULE_REFUND = 'refund';
+const MODULE_PAID = 'paid';
+const MODULE_CROSSED = 'crossed';
 
 async function handleReadExcel(evt) {
     this.file = $(evt)[0].files[0];
@@ -161,6 +165,16 @@ function processRow(sheet) {
         case MODULE_CONTACT:
             columnLength = 15;
             break;
+        case MODULE_TRACKING:
+        case MODULE_REFUND:
+            columnLength = 5;
+            break;
+        case MODULE_CROSSED:
+            columnLength = 4;
+            break;
+        case MODULE_PAID:
+            columnLength = 6;
+            break;
     }
     let row = getRow(sheet, rowIndex, columnLength);
     while (row !== null) {
@@ -175,6 +189,14 @@ function processRow(sheet) {
 const mappingModel = (module, row) => {
     let item = null;
     switch (module) {
+        case MODULE_TRACKING:
+            item = trackingModel();
+            item.code = row[0] ? row[0].v : null;
+            item.transport_partner = row[1] ? row[1].v : null;
+            item.sub_transport = row[2] ? row[2].v : null;
+            item.transport_partner_code = row[3] ? row[3].v : null;
+            item.sub_transport_code = row[4] ? row[4].v : null;
+            break;
         case MODULE_CONTACT:
             item = contactModel();
             item.register_time = row[0] ? getTimer(row[0].v) : null;
@@ -193,9 +215,74 @@ const mappingModel = (module, row) => {
             item.utm_content = row[13] ? row[13].v : null;
             item.type = row[14] ? toUnicode(row[14].v).toLowerCase() : null;
             break;
+        case MODULE_REFUND:
+            item = refundModel();
+            item.code = row[0] ? row[0].v : null;
+            item.refund_time = row[1] ? getTimer(row[1].v) : null;
+            item.transport_partner_code = row[2] ? row[2].v : null;
+            item.sku = row[3] ? row[3].v : null;
+            item.qty = row[4] ? row[4].v : null;
+            break;
+        case MODULE_PAID:
+            item = paidModel();
+            item.code = row[0] ? row[0].v : null;
+            item.transport_partner_code = row[1] ? row[1].v : null;
+            item.time_shipped_success = row[2] ? getTimer(row[2].v) : null;
+            item.cod_cost = row[3] ? row[3].v : null;
+            item.collection_fee = row[4] ? row[4].v : null;
+            item.transport_fee = row[5] ? row[5].v : null;
+            break;
+        case MODULE_CROSSED:
+            item = paidModel();
+            item.code = row[0] ? row[0].v : null;
+            item.remittance_date = row[1] ? getTimer(row[1].v) : null;
+            item.partner = row[2] ? row[2].v : null;
+            item.cross_check_code = row[3] ? row[3].v : null;
+            break;
     }
     return item;
 };
+
+function refundModel() {
+    return {
+        code: null,
+        refund_time: null,
+        transport_partner_code: null,
+        sku: null,
+        qty: null
+    }
+}
+
+function paidModel() {
+    return {
+        code: null,
+        time_shipped_success: null,
+        transport_partner_code: null,
+        cod_cost: null,
+        collection_fee: null,
+        transport_fee: null
+    }
+}
+
+
+function crossedModel() {
+    return {
+        code: null,
+        remittance_date: null,
+        partner: null,
+        cross_check_code: null,
+    }
+}
+
+function trackingModel() {
+    return {
+        code: null,
+        transport_partner: null,
+        transport_partner_code: null,
+        sub_transport: null,
+        sub_transport_code: null
+    }
+}
 
 function contactModel() {
     return {

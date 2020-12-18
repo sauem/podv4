@@ -21,19 +21,16 @@ class OrderController extends BaseController
     {
 
         $contactOrder = new OrdersContactSearch();
-
         $waitShippingOrder = $contactOrder->search(array_merge(\Yii::$app->request->queryParams, [
             'OrdersContactSearch' => [
                 'status' => [OrdersContact::STATUS_NEW]
             ]
         ]));
-
         $pendingShippingOrder = $contactOrder->search(array_merge(\Yii::$app->request->queryParams, [
             'OrdersContactSearch' => [
                 'status' => [OrdersContact::STATUS_PENDING]
             ]
         ]));
-
         $statusShippingOrder = $contactOrder->search(array_merge(\Yii::$app->request->queryParams, [
             'OrdersContactSearch' => [
                 'status' => [
@@ -50,10 +47,47 @@ class OrderController extends BaseController
         ]));
 
         return $this->render('index.blade', [
-            'waitShippingContact' => $waitShippingOrder,
-            'pendingShippingContact' => $pendingShippingOrder,
+            'waitShippingOrder' => $waitShippingOrder,
+            'pendingShippingOrder' => $pendingShippingOrder,
             'statusShippingOrder' => $statusShippingOrder,
             'searchModel' => $contactOrder
+        ]);
+    }
+
+    public function actionPending()
+    {
+        $searchModel = new OrdersContactSearch();
+        $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
+            'OrdersContactSearch' => [
+                'status' => [OrdersContact::STATUS_PENDING]
+            ]
+        ]));
+        $dataProvider->sort = false;
+        return self::responseRemote('tabs/pending.blade', [
+            'dataProvider' => $dataProvider
+        ]);
+    }
+
+    public function actionStatus()
+    {
+        $searchModel = new OrdersContactSearch();
+        $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
+            'OrdersContactSearch' => [
+                'status' => [
+                    OrdersContact::STATUS_SHIPPED,
+                    OrdersContact::STATUS_SHIPPING,
+                    OrdersContact::STATUS_REFUND,
+                    OrdersContact::STATUS_CANCEL,
+                    OrdersContact::STATUS_UNCROSS,
+                    OrdersContact::STATUS_CROSSED,
+                    OrdersContact::STATUS_PAYED,
+                    OrdersContact::STATUS_UNPAID
+                ]
+            ]
+        ]));
+        $dataProvider->setSort(false);
+        return self::responseRemote('tabs/status.blade', [
+            'dataProvider' => $dataProvider
         ]);
     }
 

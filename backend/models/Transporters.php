@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
  * @property string|null $note
  * @property int $created_at
  * @property int $updated_at
+ * @property int|null $transporter_parent
  */
 class Transporters extends \common\models\BaseModel
 {
@@ -37,7 +38,7 @@ class Transporters extends \common\models\BaseModel
         return [
             [['website', 'facebook'], 'string'],
             [['name'], 'required'],
-            [['created_at', 'updated_at'], 'integer'],
+            [['created_at', 'updated_at', 'transporter_parent'], 'integer'],
             [['name', 'note'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 25],
             [['address', 'fax'], 'string', 'max' => 50],

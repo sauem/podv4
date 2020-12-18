@@ -37,4 +37,17 @@ class AjaxImportController extends BaseController
         return true;
     }
 
+    /**
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public function actionTrackingNumber()
+    {
+        $data = \Yii::$app->request->post('row');
+        $model = Contacts::findOne(['code' => $data['code']]);
+        if (!$model) {
+            throw new BadRequestHttpException('Không tìm thấy đơn hàng!');
+        }
+        return true;
+    }
 }

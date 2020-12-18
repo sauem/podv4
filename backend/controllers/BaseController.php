@@ -97,6 +97,7 @@ class BaseController extends Controller
             return [
                 'content' => \Yii::$app->view->renderAjax('@backend/views/' . \Yii::$app->controller->id . '/' . $view, $params),
                 'footer' => $footer,
+                'status' => 1,
                 'title' => $title,
                 'size' => $size
             ];

@@ -1,0 +1,46 @@
+<script id="{{$module}}-template" type="text/x-handlebars-template">
+    <button onclick="actionSave('{{$module}}')" class="btn btn-sm float-right btn-success"><i class="fe-save"></i> Lưu
+        tracking ID
+    </button>
+    <table id="contact-table" class="table table-sm table-hover">
+        <thead>
+        <tr>
+            <th>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input">
+                    <label class="custom-control-label">&nbsp;</label>
+                </div>
+            </th>
+            <th></th>
+            <th>Contact code</th>
+            <th>Đối tác vận chuyển</th>
+            <th>Ngày chuyển hàng thành công</th>
+            <th>Tiền COD</th>
+            <th>Phí thu hộ</th>
+            <th>Phí vận chuyển</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{{#each this}}
+        <tr data-key="@{{ @index }}">
+            <td>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input">
+                    <label class="custom-control-label">&nbsp;</label>
+                </div>
+            </td>
+            <td>
+                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+            </td>
+            <td>@{{code}}</td>
+            <td>@{{ transport_partner_code }}</td>
+            <td>@{{ time_shipped_success }}</td>
+            <td>@{{ cod_cost }}</td>
+            <td>@{{ collection_fee }}</td>
+            <td>@{{ transport_fee }}</td>
+        </tr>
+        @{{/each}}
+        </tbody>
+    </table>
+</script>

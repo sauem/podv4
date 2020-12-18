@@ -26,6 +26,7 @@ use yii\helpers\Html;
     ],
     'pjaxSettings' => [
         'neverTimeout' => true,
+        'enablePushState' => false,
         'options' => [
             'id' => isset($id) ? "$id-box" : 'default-box'
         ]
