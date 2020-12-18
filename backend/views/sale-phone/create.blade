@@ -6,16 +6,17 @@ use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\web\View;
 use common\helper\Component;
-
-$formatJs = <<< 'JS'
+use backend\models\Payments;
+$formatJs = <<<'JS'
 let formatRepo = function (repo) {
     if (repo.loading) {
-        return repo.text;
+        return repo.sku;
     }
     const {sku , size, weight ,partner, media , category } = repo;
+    let url =  media != null ? media.media.url : '/theme/images/default.jpg';
 
     let markup = `<div class="row">`;
-        markup += `<div class="col-3"><div class="small-thumb"><img src="${media.media.url}" width="100%"></div></div>`;
+        markup += `<div class="col-3"><div class="small-thumb"><img src="${url}" width="100%"></div></div>`;
         markup += `<div class="col-9">`;
         markup += `<b>${category.country}-${partner.username}-${category.name}-${sku}</b>`;
         markup += `<br>${size}cm | ${weight}gram`;
@@ -81,10 +82,7 @@ JS;
                 </div>
                 <div class="col-md-6">
                     <?= $form->field($model, 'payment_method')->widget(Select2::className(), [
-                        'data' => [
-                            1 => 'SHIP COD',
-                            2 => 'Chuyển khoản'
-                        ],
+                        'data' => Payments::LISTS(),
                         'options' => ['placeholder' => 'Chọn phương thức thanh toán'],
                         'pluginOptions' => ['allowClear' => true]
                     ])?>
@@ -126,7 +124,7 @@ JS;
                                 'url' => Url::toRoute(['/ajax/get-list-product']),
                                 'dataType' => 'json',
                                 'delay' => 250,
-                                'data' => new JsExpression('function(params) { console.log(params); return {name:params.term, page: params.page}; }'),
+                                'data' => new JsExpression('function(params) { return {name:params.term, page: params.page}; }'),
                                 'processResults' => new JsExpression($resultsJs),
                                 'cache' => true
                             ],

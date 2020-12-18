@@ -28,26 +28,33 @@ class ProductController extends BaseController
     public function actionCreate()
     {
         $model = new Products();
-        $priceModel = new ProductsPrice();
+        //$priceModel = new ProductsPrice();
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
         try {
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
                 if ($model->save()) {
-                    MediaObj::saveObject($model->thumb, $model->id, MediaObj::OBJECT_PRODUCT);
+                    if ($model->thumb) {
+                        MediaObj::saveObject($model->thumb, $model->id, MediaObj::OBJECT_PRODUCT);
+                    }
+                    ProductsPrice::savePrice($model->sku, \Yii::$app->request->post('prices'));
                     $transaction->commit();
                     return static::responseSuccess();
                 }
             }
         } catch (\Exception $exception) {
             $transaction->rollBack();
-            return static::responseSuccess($exception->getMessage());
+            \Yii::$app->session->setFlash('warning', $exception->getMessage());
         }
         return static::responseRemote('create.blade', [
             'model' => $model,
-            'priceModel' => $priceModel,
+            //'priceModel' => $priceModel,
         ], 'Thêm sản phẩm', parent::footer());
     }
 
+    /**
+     * @param $id
+     * @return array|string
+     */
     public function actionUpdate($id)
     {
         $model = Products::findOne($id);
@@ -57,6 +64,7 @@ class ProductController extends BaseController
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
                 if ($model->save()) {
                     MediaObj::saveObject($model->thumb, $model->id, MediaObj::OBJECT_PRODUCT);
+                    ProductsPrice::savePrice($model->sku, \Yii::$app->request->post('prices'));
                     $transaction->commit();
                     return static::responseSuccess();
                 }

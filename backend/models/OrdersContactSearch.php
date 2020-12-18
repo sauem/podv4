@@ -14,6 +14,7 @@ class OrdersContactSearch extends OrdersContact
     /**
      * {@inheritdoc}
      */
+    public $items;
     public function rules()
     {
         return [
@@ -77,7 +78,7 @@ class OrdersContactSearch extends OrdersContact
             ->andFilterWhere(['like', 'order_source', $this->order_source])
             ->andFilterWhere(['like', 'note', $this->note])
             ->andFilterWhere(['like', 'vendor_note', $this->vendor_note])
-            ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['IN', 'status', $this->status])
             ->andFilterWhere(['like', 'country', $this->country]);
 
         return $dataProvider;

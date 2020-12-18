@@ -75,7 +75,7 @@ class ContactsSearch extends Contacts
             ->andFilterWhere(['like', 'note', $this->note])
             ->andFilterWhere(['like', 'partner', $this->partner])
             ->andFilterWhere(['like', 'hash_key', $this->hash_key])
-            ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['IN', 'status', $this->status])
             ->andFilterWhere(['like', 'country', $this->country])
             ->andFilterWhere(['like', 'utm_source', $this->utm_source])
             ->andFilterWhere(['like', 'utm_medium', $this->utm_medium])

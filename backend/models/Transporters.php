@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "transporters".
@@ -60,5 +61,11 @@ class Transporters extends \common\models\BaseModel
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    public static function LISTS()
+    {
+        $all = Transporters::find()->asArray()->all();
+        return ArrayHelper::map($all, 'id', 'name');
     }
 }

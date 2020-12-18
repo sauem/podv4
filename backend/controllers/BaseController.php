@@ -79,17 +79,17 @@ class BaseController extends Controller
 
     }
 
-    static function responseSuccess($message = '')
+    static function responseSuccess($forceReload = 1, $forceClose = 1, $message = '')
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         return [
-            'forceReload' => 1,
-            'forceClose' => 1,
+            'forceReload' => $forceReload,
+            'forceClose' => $forceClose,
             'message' => $message
         ];
     }
 
-    static function responseRemote($view, $params, $title = null, $footer = null,$size = 'normal')
+    static function responseRemote($view, $params, $title = null, $footer = null, $size = 'normal')
     {
         if (\Yii::$app->request->isAjax) {
             \Yii::$app->layout = 'blank.blade';
@@ -103,7 +103,9 @@ class BaseController extends Controller
         }
         return \Yii::$app->view->render('@backend/views/' . \Yii::$app->controller->id . '/' . $view, $params);
     }
-    public function footer($note = '* các trường bắt buộc!'){
-        return '<div class="d-flex w-100 justify-content-between"><button class="btn btn-secondary" data-dismiss="modal" >Đóng</button><div><span class="mr-3 text-warning">'.$note.'</span><button class="btn btn-success" type="submit">Lưu</button></div></div>';
+
+    public function footer($note = '* các trường bắt buộc!')
+    {
+        return '<div class="d-flex w-100 justify-content-between"><button class="btn btn-secondary" data-dismiss="modal" >Đóng</button><div><span class="mr-3 text-warning">' . $note . '</span><button class="btn btn-success" type="submit">Lưu</button></div></div>';
     }
 }

@@ -57,21 +57,14 @@ use yii\helpers\Url;
         'type',
         [
             'class' => ActionColumn::class,
-            'template' => '{order}{actions}',
+            'template' => '{actions}',
             'width' => '5%',
             'buttons' => [
-                'order' => function ($url, $model) {
-                    return Html::button("<i class='fe-shopping-cart'></i> tạo đơn", [
-                        'data-pjax' => "0",
-                        'data-url' => Url::toRoute(['create', 'code' => $model->code]),
-                        'role' => 'modal-remote',
-                        'class' => 'btn-xs btn btn-success'
-                    ]);
-                },
                 'actions' => function ($model) {
                     return Component::dropDown([
-                        '<a class="dropdown-item"><i class="fe-phone-missed"></i> Hủy đặt</a>',
-                        '<a class="dropdown-item"><i class="fe-phone-missed"></i> Trùng số</a>',
+                        '<a class="dropdown-item"><i class="fe-x"></i> Hủy đơn</a>',
+                        '<a class="dropdown-item"><i class="fe-edit"></i> Sửa</a>',
+                        '<a class="dropdown-item"><i class="fe-lock"></i> Khóa sửa</a>',
 
                     ]);
                 },

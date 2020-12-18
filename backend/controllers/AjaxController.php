@@ -125,4 +125,23 @@ class AjaxController extends BaseController
 
         return $dataProvider->query->with(['media', 'category', 'partner'])->asArray()->all();
     }
+
+    /**
+     * @return mixed
+     * @throws BadRequestHttpException
+     */
+    public function actionChangeStatus()
+    {
+        $model = \Yii::$app->request->post('model');
+        $status = \Yii::$app->request->post('status');
+        $key = \Yii::$app->request->post('ids');
+
+        try {
+            $model = new \ReflectionClass("backend\models\\$model");
+            $model = $model->newInstanceWithoutConstructor();
+            $model::updateAll(['status' => $status], ['id' => $key]);
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+    }
 }

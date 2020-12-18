@@ -1,0 +1,8 @@
+<?php
+use kartik\form\ActiveForm;
+?>
+@section('content')
+    <?php $form  = ActiveForm::begin()?>
+        <?= $form->field($model,'checking_number')->label('Tracking ID')?>
+    <?php ActiveForm::end()?>
+@stop

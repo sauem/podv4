@@ -3,6 +3,8 @@
 namespace backend\models;
 
 use Yii;
+use yii\web\BadRequestHttpException;
+use common\helper\Helper;
 
 /**
  * This is the model class for table "products_price".
@@ -32,7 +34,7 @@ class ProductsPrice extends \common\models\BaseModel
         return [
             [['qty', 'created_at', 'updated_at'], 'integer'],
             [['price'], 'number'],
-            [['created_at', 'updated_at'], 'required'],
+            [['qty', 'price', 'sku'], 'required'],
             [['sku'], 'string', 'max' => 255],
         ];
     }
@@ -52,8 +54,25 @@ class ProductsPrice extends \common\models\BaseModel
         ];
     }
 
-    public static function addMultiplePrice()
+    /**
+     * @param $sku
+     * @param array $prices
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public static function savePrice($sku, $prices = [])
     {
-
+        if (!empty($prices)) {
+            foreach ($prices as $price) {
+                $model = new ProductsPrice();
+                $model->sku = $sku;
+                $model->price = Helper::toFloat($price['price']);
+                $model->qty = $price['qty'];
+                if (!$model->save()) {
+                    throw new BadRequestHttpException(Helper::firstError($model));
+                }
+            }
+            return true;
+        }
     }
 }

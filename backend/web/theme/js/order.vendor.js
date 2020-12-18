@@ -1,7 +1,7 @@
 function HandleOrder() {
 
-    this.create = function (modalId , boxId, button) {
+    this.create = function (modalId, boxId, button, data) {
         let modal = new ModalRemote(modalId, boxId);
-        modal.remote(button, null);
+        modal.remote(button, data);
     }
 }

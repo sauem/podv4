@@ -110,3 +110,37 @@ function orderSaleForm() {
         }
     }
 }
+
+async function changeStatus(model, status, element = null) {
+    let ids = $('.grid-view').yiiGridView("getSelectedRows");
+    if (element) {
+        ids = $(element).data('key');
+    }
+    await swal.fire({
+        text: `Đổi trạng thái lựa chọn sang ${status}`,
+        type: 'info',
+        showCancelButton: true,
+        cancelButtonText: 'Hủy',
+        confirmButtonText: 'Đồng ý',
+    }).then(res => {
+        if (res.value) {
+            try {
+                const res = service(model, status, ids);
+                $.pjax.reload('div[id*="-box"]', {});
+            } catch (e) {
+                toastr.warning(e.message);
+            }
+        }
+    })
+
+    async function service(model, status, ids) {
+        return $.ajax({
+            url: AJAX_PATH.changeStatus,
+            data: {model, status, ids},
+            type: 'POST',
+            cache: false
+        });
+    }
+
+
+}

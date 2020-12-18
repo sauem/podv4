@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Url;
+use yii\helpers\ArrayHelper;use yii\helpers\Url;
 use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
 use common\helper\Component;
@@ -44,15 +44,16 @@ use backend\models\WarehouseTransaction;
                         'label' => 'Sản phẩm',
                         'attribute' => 'product_sku',
                         'value' => function ($model) {
-                            return $model->product->sku;
+                            return ArrayHelper::getValue($model->product, 'sku', '--');
                         }
                     ],
                     [
                         'label' => 'Loại sản phẩm',
                         'value' => function ($model) {
-                            return $model->product->category->name;
+                            return isset($model->product) ? $model->product->category->name : '--';
                         }
                     ],
+                    'qty',
                     [
                         'attribute' => 'transaction_type',
                         'format' => 'html',

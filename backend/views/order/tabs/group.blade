@@ -7,12 +7,11 @@ use backend\models\OrdersContact;
 use common\helper\Helper;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use common\helper\Component;
 ?>
 
 <div class="my-2">
-    <button data-url="{!! Url::toRoute(['create']) !!}" id="createOrderVendor" class="btn btn-sm btn-success"><i
-                class="fe-shopping-cart"></i> Tạo đơn
-    </button>
+
 </div>
 
 <?= GridView::widget([
@@ -27,18 +26,11 @@ use yii\helpers\Html;
     'pjaxSettings' => [
         'neverTimeout' => true,
         'options' => [
-            'id' => isset($id) ? "$id-box" : 'default-box'
+            'id' => 'default-box'
         ]
     ],
     'perfectScrollbar' => true,
     'columns' => [
-        [
-            'class' => CheckboxColumn::class,
-            'checkboxOptions' => function ($model) {
-                $cog['data-code'] = $model->code;
-                return $cog;
-            }
-        ],
         [
             'attribute' => 'code',
             'format' => 'html',
@@ -46,6 +38,7 @@ use yii\helpers\Html;
                 return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
             }
         ],
+        'checking_number',
         'name',
         'phone',
         [
@@ -60,6 +53,20 @@ use yii\helpers\Html;
             'format' => 'html',
             'value' => function ($model) {
                 return '--';
+            }
+        ],
+        [
+            'attribute' => 'warehouse_id',
+            'format' => 'html',
+            'value' => function ($model) {
+                return $model->warehouse->name;
+            }
+        ],
+        [
+            'attribute' => 'transport_id',
+            'format' => 'html',
+            'value' => function ($model) {
+                return $model->transporter->name;
             }
         ],
         [
@@ -83,21 +90,16 @@ use yii\helpers\Html;
                 return Helper::formatCUR($model->total_bill, '', 2);
             }
         ],
+        [
+            'class' => ActionColumn::class,
+            'template' => '{update}',
+            'width' => '5%',
+            'buttons' => [
+                'update' => function ($url, $model) {
+                    return Component::btnUpdate($url);
+                },
+
+            ]
+        ]
     ]
 ]) ?>
-
-<?php
-$js = <<<JS
-    $(document).on("click", "#createOrderVendor", function() {
-        let ids = $('#w1').yiiGridView("getSelectedRows");
-
-        if(ids.length <= 0){
-            toastr.warning('Chọn 1 đơn hàng để thực hiện thao tác!');
-            return false;
-        }
-        let order = new HandleOrder();
-        order.create('#vendor-modal', '#new-box', this, {ids});
-    });
-JS;
-$view->registerJs($js);
-?>

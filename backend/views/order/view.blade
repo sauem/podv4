@@ -1,0 +1,213 @@
+<?php
+
+use common\helper\Helper;
+use yii\helpers\Url;
+?>
+@section('content')
+    <?php \yii\widgets\Pjax::begin(); ?>
+    <div id="order-detail-box" class="card">
+        <div class="card-header">
+            <h4 class="card-title"><a href="{!! Url::toRoute(['index']) !!}"><i class="fe-arrow-left"></i> Danh sách đơn</a> | #{!! $model->code !!}</h4>
+            <button class="btn btn-xs btn-info"><i class="fe-edit"></i> Sửa đơn</button>
+            <button class="btn btn-xs btn-warning"><i class="fe-repeat"></i> Hoàn đơn</button>
+            <button class="btn btn-xs btn-danger"><i class="fe-x"></i> Hủy đơn</button>
+            <button role="modal-remote" data-url="{!! Url::toRoute(['update-tracking-id' ,'code' => $model->code]) !!}"
+                    class="btn btn-xs btn-success"><i class="fe-sliders"></i> Cập nhập tracking ID
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">Tình trạng đơn hàng</h4>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">ORDER ID:</h5>
+                                        <p>{!! $model->code !!}</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">Tracking ID: </h5>
+                                        <p>{!! $model->checking_number ? $model->checking_number :  '---' !!}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="track-order-list">
+                                <ul class="list-unstyled">
+                                    <li class="completed">
+                                        <h5 class="mt-0 mb-1">Ngày chốt đơn</h5>
+                                        <p class="text-muted">{!! Helper::dateFormat($model->created_at, true) !!}</p>
+                                    </li>
+                                    <li class="completed">
+                                        <h5 class="mt-0 mb-1">Đã chuyển hàng</h5>
+                                        <p class="text-muted">April 22 2019 <small class="text-muted">12:16 AM</small>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <span class="active-dot dot"></span>
+                                        <h5 class="mt-0 mb-1">Đã thanh toán</h5>
+                                        <p class="text-muted">April 22 2019 <small class="text-muted">05:16 PM</small>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <h5 class="mt-0 mb-1"> Đã đối soát</h5>
+                                        <p class="text-muted">Estimated delivery within 3 days</p>
+                                    </li>
+                                </ul>
+
+                                <div class="text-center mt-4">
+                                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">Sản phẩm đơn hàng {!! $model->code !!}</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-centered mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Ảnh</th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Tổng tiền</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @isset($model->skuItems)
+                                        @if(!empty($model->skuItems))
+                                            @php
+                                                    @endphp
+                                            @foreach($model->skuItems as $item)
+                                                <tr>
+                                                    <th scope="row">{!! $item->product->name !!}</th>
+                                                    <td>
+                                                        <img src="{!! !Helper::isEmpty($item->product->media) ? $item->product->media->media->url : Helper::defaultImage() !!}"
+                                                             alt="product-img" width="64">
+                                                    </td>
+                                                    <td>{!! $item->qty !!}</td>
+                                                    <td>{!! $item->price / $item->qty !!}</td>
+                                                    <td>{!! $item->price !!}</td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    @endisset
+
+
+                                    <tr>
+                                        <th scope="row" colspan="4" class="text-right">Tổng tiền :</th>
+                                        <td>
+                                            <div class="font-weight-bold">{!! $model->total_price ? $model->total_price : '0'!!}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" colspan="4" class="text-right">Phí vận chuyển :</th>
+                                        <td>{!! $model->shipping_cost ? $model->shipping_cost : '0' !!}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" colspan="4" class="text-right">Tổng hóa đơn :</th>
+                                        <td>
+                                            <div class="font-weight-bold">{!! $model->total_bill ? $model->total_bill : '0' !!}</div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">Thông tin vận chuyển</h4>
+
+                            <h5 class="font-family-primary font-weight-semibold">{!! $model->name !!}</h5>
+                            <p class="mb-2"><span
+                                        class="font-weight-semibold mr-2">Địa chỉ:</span> {!! $model->address !!}
+                            <p class="mb-2"><span
+                                        class="font-weight-semibold mr-2">Tỉnh/Thành phố:</span> {!! Helper::countryName($model->country) !!}
+                            <p class="mb-2"><span
+                                        class="font-weight-semibold mr-2">Quận/Huyện:</span> {!! $model->district !!}
+                            <p class="mb-2"><span
+                                        class="font-weight-semibold mr-2">Mã bưu chính:</span> {!! $model->zipcode !!}
+                            </p>
+                            <p class="mb-2"><span
+                                        class="font-weight-semibold mr-2">Số điện thoại:</span> {!! $model->phone !!}
+                            </p>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">Thông tin thanh toán</h4>
+
+                            <ul class="list-unstyled mb-0">
+                                <li>
+                                    <p class="mb-2"><span class="font-weight-semibold mr-2">Payment Type:</span> Credit
+                                        Card
+                                    </p>
+                                    <p class="mb-2"><span class="font-weight-semibold mr-2">Provider:</span> Visa ending
+                                        in
+                                        2851
+                                    </p>
+                                    <p class="mb-2"><span class="font-weight-semibold mr-2">Valid Date:</span> 02/2020
+                                    </p>
+                                    <p class="mb-0"><span class="font-weight-semibold mr-2">CVV:</span> xxx</p>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">Thông tin giao hàng</h4>
+
+                            <div class="text-center">
+                                <i class="mdi mdi-truck-fast h2 text-muted"></i>
+                                <h5>
+                                    <b>{!! !Helper::isEmpty($model->transporter) ? $model->transporter->name : '---' !!}</b>
+                                </h5>
+                                <p class="mb-1"><span class="font-weight-semibold">Order ID :</span> xxxx235</p>
+                                <p class="mb-0"><span class="font-weight-semibold">Phương thức thanh toán :</span>
+                                    {!! !Helper::isEmpty($model->payment) ? $model->payment->name : '---' !!}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+
+            </div>
+        </div>
+    </div>
+    <?php \yii\widgets\Pjax::end();?>
+    {!! $view->render('@backend/views/parts/Modal.blade',['id'  =>'tracking-modal']) !!}
+@stop
+
+@section('pos_page')
+    <script>
+
+        $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#tracking-modal', '#order-detail-box');
+            event.preventDefault();
+            modal.remote(this, null);
+        });
+    </script>
+@stop

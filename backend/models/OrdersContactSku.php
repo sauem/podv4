@@ -68,7 +68,9 @@ class OrdersContactSku extends \common\models\BaseModel
     {
         return $this->hasOne(OrdersContact::className(), ['id' => 'order_id']);
     }
-
+    public function getProduct(){
+        return $this->hasOne(Products::className(),['sku' => 'sku']);
+    }
     /**
      * @param $orderId
      * @param array $items

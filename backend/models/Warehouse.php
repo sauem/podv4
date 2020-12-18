@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "warehouse".
@@ -65,5 +66,11 @@ class Warehouse extends \common\models\BaseModel
     public function getWarehouseTransactions()
     {
         return $this->hasMany(WarehouseTransaction::className(), ['warehouse_id' => 'id']);
+    }
+
+    public static function LISTS()
+    {
+        $all = Warehouse::find()->asArray()->all();
+        return ArrayHelper::map($all, 'id', 'name');
     }
 }

@@ -5,14 +5,15 @@ use common\helper\Helper;
 use backend\models\UserRole;
 use kartik\select2\Select2;
 use backend\models\Categories;
-use common\helper\Component;
+use common\helper\Component;use yii\helpers\Html;
 
 ?>
 @section('content')
     @php($form = ActiveForm::begin())
+    <?= $form->errorSummary($model);?>
     <div class="row">
         <div class="col-md-6">
-            <?= $view->render('@backend/views/parts/FileUpload.blade',[
+            <?= $view->render('@backend/views/parts/FileUpload.blade', [
                 'form' => $form,
                 'model' => $model,
                 'name' => 'thumb'
@@ -60,10 +61,19 @@ use common\helper\Component;
     <script type="text/x-handlebars-template" id="html-product-price">
         <tr>
             <td>
-                {!! $form->field($priceModel, 'qty[]')->textInput(['type' => 'number'])->label(false) !!}
+                <input name="prices[@{{ index }}][qty]"
+                       type="text"
+                       required
+                       class="form-control">
             </td>
             <td>
-                {!! Component::inputMoney($priceModel,$form,'price[]')->label(false)!!}
+                <input name="prices[@{{ index }}][price]"
+                       type="text"
+                       required
+                       class="form-control"
+                       data-toggle="input-mask"
+                       data-mask-format="#,##0.00"
+                       data-reverse="true">
             </td>
             <td class="align-middle">
                 <button type="button" class="btn btn-xs btn-outline-warning" id="removePrice"><i class="fe-trash"></i>
@@ -77,10 +87,14 @@ use common\helper\Component;
         let htmlTemplate = $('#html-product-price').html();
         let template = Handlebars.compile(htmlTemplate);
         //Add product price
+        let index = 0;
         $(document).on('click', '#addPrice', function () {
-            $('#product-prices > tbody').append(template(null));
+            index++;
+            $('#product-prices > tbody').append(template({index: index}));
+            initMaskMoney();
         });
         $(document).on('click', '#removePrice', function () {
+            index--;
             $(this).closest('tr').remove();
         });
     </script>

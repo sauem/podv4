@@ -41,7 +41,7 @@ class Helper
     static function dateFormat($time, $timestamp = false)
     {
         if (is_numeric($time)) {
-            return date('d-m-Y' . ($timestamp ? ' H:i:s' : ''), $time);
+            return date('d-m-Y', $time) . ($timestamp ? ' <small class="text-muted">' . date('H:i:s') . '</small>' : '');
         }
         return $time;
     }
@@ -85,5 +85,13 @@ class Helper
         $defaultCode = $prefix . $country . "0000000";
         $maxLen = strlen($lastID);
         return substr_replace($defaultCode, $lastID, -$maxLen);
+    }
+
+    static function isEmpty($val)
+    {
+        if (!$val || $val === '' || $val === null || empty($val)) {
+            return true;
+        }
+        return false;
     }
 }

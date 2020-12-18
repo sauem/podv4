@@ -1,0 +1,77 @@
+@php
+    use common\helper\Component;
+    use common\helper\Helper;
+    use kartik\grid\GridView;
+    use kartik\grid\ActionColumn;
+    use yii\helpers\Url;
+@endphp
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <div class="card-widgets">
+                <button role="modal-remote" data-url="{!! Url::toRoute(['create']) !!}" class="btn btn-sm btn-success">
+                    <i class="fe-plus"></i> Thêm
+                </button>
+            </div>
+            <h4 class="card-title"><i class="fe-box"></i> Loại sản phẩm</h4>
+        </div>
+        <div class="card-body">
+            <?= GridView::widget([
+                'pjax' => true,
+                'layout' => '{items}{pager}',
+                'tableOptions' => [
+                    'class' => 'table-sm table-hover'
+                ],
+                'pjaxSettings' => [
+                    'neverTimeout' => true,
+                    'options' => [
+                        'id' => 'payment-box'
+                    ]
+                ],
+                'perfectScrollbar' => true,
+                'dataProvider' => $dataProvider,
+                'columns' => [
+                    'id',
+                    'name',
+                    'description',
+                    [
+                        'attribute' => 'created_at',
+                        'value' => function ($model) {
+                            return Helper::dateFormat($model->created_at);
+                        }
+                    ],
+                    [
+                        'class' => ActionColumn::class,
+                        'template' => '{update}{delete}',
+                        'width' => '10%',
+                        'buttons' => [
+                            'update' => function ($url) {
+                                return Component::btnUpdate($url, null, [
+                                    'role' => 'modal-remote'
+                                ]);
+                            },
+
+                            'delete' => function ($url) {
+                                return Component::btnDelete($url);
+                            },
+
+                        ]
+                    ]
+                ]
+            ]) ?>
+        </div>
+    </div>
+
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'payment-modal']) !!}
+@stop
+
+@section('pos_page')
+    <script>
+
+        $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#payment-modal', '#payment-box');
+            event.preventDefault();
+            modal.remote(this, null);
+        });
+    </script>
+@stop

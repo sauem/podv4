@@ -12,19 +12,19 @@ use yii\helpers\Url;
 ?>
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
-    'pjax' => true,
+//  'pjax' => true,
     'persistResize' => true,
     'layout' => '{items}{pager}',
     'responsiveWrap' => false,
     'tableOptions' => [
         'class' => 'table table-sm'
     ],
-    'pjaxSettings' => [
-        'neverTimeout' => true,
-        'options' => [
-            'id' => isset($id) ? "$id-box" : 'default-box',
-        ]
-    ],
+//    'pjaxSettings' => [
+//        'neverTimeout' => true,
+//        'options' => [
+//            'id' => isset($id) ? "$id-box" : 'default-box',
+//        ]
+//    ],
     'perfectScrollbar' => true,
     'columns' => [
         [
@@ -46,6 +46,7 @@ use yii\helpers\Url;
         'name',
         'address',
         'partner',
+        'option',
         [
             'attribute' => 'status',
             'format' => 'html',
@@ -53,8 +54,6 @@ use yii\helpers\Url;
                 return Contacts::StatusLabel($model->status);
             }
         ],
-        'country',
-        'type',
         [
             'class' => ActionColumn::class,
             'template' => '{order}{actions}',
@@ -68,10 +67,10 @@ use yii\helpers\Url;
                         'class' => 'btn-xs btn btn-success'
                     ]);
                 },
-                'actions' => function ($model) {
+                'actions' => function ($url, $model) {
                     return Component::dropDown([
-                        '<a class="dropdown-item"><i class="fe-phone-missed"></i> Hủy đặt</a>',
-                        '<a class="dropdown-item"><i class="fe-phone-missed"></i> Trùng số</a>',
+                        '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`cancel`)" class="dropdown-item"><i class="fe-phone-missed"></i> Hủy đặt</a>',
+                        '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`duplicate`)" class="dropdown-item"><i class="fe-phone-missed"></i> Trùng số</a>',
 
                     ]);
                 },

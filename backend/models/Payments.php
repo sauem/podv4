@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "payments".
@@ -29,7 +30,7 @@ class Payments extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['name', 'created_at', 'updated_at'], 'required'],
+            [['name'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
             [['name', 'description'], 'string', 'max' => 255],
         ];
@@ -47,5 +48,11 @@ class Payments extends \common\models\BaseModel
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    public static function LISTS()
+    {
+        $all = Payments::find()->asArray()->all();
+        return ArrayHelper::map($all, 'id', 'name');
     }
 }

@@ -1,4 +1,12 @@
 @section('content')
+    <?php \yii\widgets\Pjax::begin([
+        'options' => [
+            'id' => 'sale-box',
+            'timeout' => false,
+            'enablePushState' => false,
+            'clientOptions' => ['method' => 'POST']
+        ]
+    ])?>
     <div class="card-box">
         <div class="row">
             <div class="col-md-8">
@@ -67,6 +75,7 @@
                     class="text-info">{!! $assignPhone !!}</span>
         </h5>
     </div>
+    <?php \yii\widgets\Pjax::end()?>
     {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'order-modal' ]) !!}
 @stop
 
@@ -75,7 +84,7 @@
 
 
         $(document).on('click', '[role="modal-remote"]', function (event) {
-            let modal = new ModalRemote('#order-modal', '#contact-box');
+            let modal = new ModalRemote('#order-modal', '#sale-box');
             event.preventDefault();
             modal.remote(this, null);
         });
