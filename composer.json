@@ -27,7 +27,8 @@
         "kartik-v/yii2-widget-select2": "dev-master",
         "kartik-v/yii2-money": "*",
         "kartik-v/yii2-date-range": "dev-master",
-        "2amigos/yii2-chartjs-widget": "~2.0"
+        "2amigos/yii2-chartjs-widget": "~2.0",
+        "yii2tech/spreadsheet": "^1.0@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

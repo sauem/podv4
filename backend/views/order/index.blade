@@ -2,11 +2,7 @@
 use yii\helpers\Url;
 ?>
 @section('content')
-    <div class="card-box">
-        {!! $view->render('search.blade',[
-            'searchModel' => $searchModel
-        ]) !!}
-    </div>
+
     <?php \yii\widgets\Pjax::begin([
         'options' => [
             'id' => 'default-box'

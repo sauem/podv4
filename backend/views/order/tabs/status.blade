@@ -10,6 +10,10 @@ use yii\helpers\Html;
 use common\helper\Component;
 ?>
 @section('content')
+    {!! $view->render('search-status.blade',[
+           'searchModel' => $searchModel
+       ]) !!}
+
     <div class="my-2 btn-group">
         <a href="{!! Url::toRoute(['/import','module' => 'refund']) !!}" class="btn btn-sm btn-outline-warning"><i
                     class="fe-check-square"></i> Nhập đơn hoàn

@@ -11,19 +11,27 @@ use common\helper\Component;
 ?>
 
 @section('content')
+    {!! $view->render('search-pending.blade',[
+            'searchModel' => $searchModel
+        ]) !!}
+
     <div class="my-2">
         <a href="{!! Url::toRoute(['/import','module' => 'tracking']) !!}" class="btn btn-sm btn-success"><i
                     class="fe-shopping-cart"></i> Nhập mã vận chuyển
+        </a>
+        <a href="javascript:;" onclick="exportOrderSelect()" class="btn btn-sm btn-info"><i
+                    class="fe-download-cloud"></i> Xuất đơn đã chọn
         </a>
     </div>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'pjax' => true,
+        'options' => ['id' => 'w2'],
         'persistResize' => true,
         'layout' => '{items}{pager}',
         'responsiveWrap' => false,
         'tableOptions' => [
-            'class' => 'table table-sm'
+            'class' => 'table table-sm',
         ],
         'pjaxSettings' => [
             'neverTimeout' => true,
@@ -34,6 +42,14 @@ use common\helper\Component;
         ],
         'perfectScrollbar' => true,
         'columns' => [
+            [
+                'class' => CheckboxColumn::class,
+                'checkboxOptions' => function ($model) {
+                    $cog['data-code'] = $model->code;
+                    $cog['data-pjax'] = '0';
+                    return $cog;
+                }
+            ],
             [
                 'attribute' => 'code',
                 'format' => 'html',

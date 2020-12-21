@@ -64,7 +64,8 @@ class OrderController extends BaseController
         ]));
         $dataProvider->sort = false;
         return self::responseRemote('tabs/pending.blade', [
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
     }
 
@@ -87,7 +88,8 @@ class OrderController extends BaseController
         ]));
         $dataProvider->setSort(false);
         return self::responseRemote('tabs/status.blade', [
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
     }
 

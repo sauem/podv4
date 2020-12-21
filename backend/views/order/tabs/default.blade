@@ -9,6 +9,10 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 ?>
 
+{!! $view->render('search-default.blade',[
+           'searchModel' => $searchModel
+       ]) !!}
+
 <div class="my-2">
     <button data-url="{!! Url::toRoute(['create']) !!}" id="createOrderVendor" class="btn btn-sm btn-success"><i
                 class="fe-shopping-cart"></i> Tạo đơn
