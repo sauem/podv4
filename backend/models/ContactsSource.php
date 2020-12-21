@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\behaviors\SluggableBehavior;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -30,12 +31,21 @@ class ContactsSource extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['name', 'slug'], 'required'],
+            [['name'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
             [['name', 'slug'], 'string', 'max' => 255],
         ];
     }
-
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+            ],
+        ];
+    }
     /**
      * {@inheritdoc}
      */
@@ -43,8 +53,8 @@ class ContactsSource extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'slug' => 'Slug',
+            'name' => 'Tên',
+            'slug' => 'Key',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

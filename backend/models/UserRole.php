@@ -37,7 +37,7 @@ class UserRole extends UserModel
         return ArrayHelper::map($roles, 'name', 'name');
     }
 
-    public function LISTS($role = UserRole::ROLE_PARTNER)
+    public static function LISTS($role = UserRole::ROLE_PARTNER)
     {
         $users = UserModel::find()->joinWith([
             'position' => function ($query) use ($role) {

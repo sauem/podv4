@@ -12,13 +12,14 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web/theme';
     public $css = [
+        'libs/c3/c3.min.css',
         'libs/bootstrap-select/css/bootstrap-select.min.css',
         'libs/jquery-toast-plugin/jquery.toast.min.css',
         'libs/flatpickr/flatpickr.min.css',
         'libs/selectize/css/selectize.bootstrap3.css',
         'css/app.min.css',
         'css/icons.min.css',
-        'css/site.css'
+        'css/site.css?v=2.0'
     ];
     public $js = [
         'js/vendor.js',
@@ -33,6 +34,8 @@ class AppAsset extends AssetBundle
         'libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js',
         'libs/jquery-mask-plugin/jquery.mask.min.js',
         'libs/autonumeric/autoNumeric-min.js',
+        'libs/d3/d3.min.js',
+        'libs/c3/c3.min.js',
         'js/pages/form-wizard.init.js',
         'js/app.min.js',
         'js/main.js',

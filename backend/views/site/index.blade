@@ -2,12 +2,99 @@
 
 /* @var $this yii\web\View */
 
+use dosamigos\chartjs\ChartJs;
+
 $this->title = 'My Yii Application';
 ?>
 @section('content')
-<div class="row">
-    <div class="col-12">
-        HELLO
+    <div class="card-box">
+        <div class="row mb-3">
+            <div class="col-12 text-center">
+                <h4 class="text-danger">Bộ lọc</h4>
+            </div>
+            <div class="col-md-3">
+                <select title="Marketer"
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[marketer][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($marketers))
+                        @foreach($marketers as $id => $name)
+                            <option value="{{$id}}">{{$name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select title="Nguồn liên hệ"
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[contact_source][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($sources))
+                        @foreach($sources as $slug => $name)
+                            <option value="{{$slug}}">{{$name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select title="Sản phẩm"
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[product][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($products))
+                        @foreach($products as $sku => $name)
+                            <option value="{{$sku}}">{{$name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="col-md-3">
+                <?= \kartik\daterange\DateRangePicker::widget([
+                    'name' => 'filter[register_time]',
+                    'presetDropdown' => true,
+                    'hideInput' => true,
+                    'pluginOptions' => [
+                        'locale' => [
+                            'format' => 'd/m/Y',
+                            'separator' => ' - '
+                        ]
+                    ]
+                ])?>
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-12 text-center">
+                <h4 class="text-danger">Chỉ số</h4>
+            </div>
+            <div class="col-1">
+                <p class="text-danger"><b>Chú thích</b></p>
+            </div>
+            <div class="col-2">
+                <p><b>C3: Tổng số đơn hàng</b></p>
+            </div>
+            <div class="col-2">
+                <p><b>C8: Tổng đơn hàng OK</b></p>
+            </div>
+            <div class="col">
+                <p><b>C11: Tổng đơn hàng chuyển thành công</b></p>
+            </div>
+            <div class="col">
+                <p><b>C13: Tổng đơn hàng đã chuyển tiền cho đối tác</b></p>
+            </div>
+        </div>
+        <div id="result-sales" class="row align-items-center justify-content-around text-center">
+
+        </div>
     </div>
-</div>
+@stop
+@section('pos_page')
+    <script>
+
+    </script>
 @stop

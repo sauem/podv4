@@ -174,6 +174,8 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
             $(this.dialog).addClass('modal-full-width');
         else if (size == 'xl')
             $(this.dialog).addClass('modal-xl');
+        else if (size == 'md')
+            $(this.dialog).addClass('modal-md');
         else if (size !== 'normal')
             console.warn("Not define size" + size);
     }

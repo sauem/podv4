@@ -2,6 +2,10 @@
 
 namespace backend\controllers;
 
+use backend\models\ContactsSource;
+use backend\models\Products;
+use backend\models\UserRole;
+use common\helper\Helper;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -30,7 +34,14 @@ class SiteController extends BaseController
 
     public function actionIndex()
     {
-        return $this->render('index.blade');
+        $sources = ContactsSource::LISTS();
+        $products = Products::LISTS();
+        $marketers = UserRole::LISTS(UserRole::ROLE_MARKETER);
+        return $this->render('index.blade', [
+            'sources' => $sources,
+            'products' => $products,
+            'marketers' => $marketers
+        ]);
     }
 
 

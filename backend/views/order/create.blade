@@ -7,20 +7,27 @@ use backend\models\Transporters;
     <?php $form = \kartik\form\ActiveForm::begin();?>
     <?= $form->errorSummary($model)?>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <?= $form->field($model, 'warehouse_id')->widget(Select2::className(), [
                 'data' => Warehouse::LISTS(),
                 'options' => ['placeholder' => 'Chọn kho...'],
                 'pluginOptions' => ['allowClear' => true]
             ])->label('Kho hàng')?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <?= $form->field($model, 'transport_id')->widget(Select2::className(), [
+                'data' => Transporters::LISTS(),
+                'options' => ['placeholder' => 'Chọn đối tác vận chuyển...'],
+                'pluginOptions' => ['allowClear' => true]
+            ])->label('Đối tác vận chuyển')?>
+            <?= $form->field($model, 'ids')->hiddenInput(['value' => $ids])->label(false)?>
+        </div>
+        <div class="col-md-4">
+            <?= $form->field($model, 'sub_transport_id')->widget(Select2::className(), [
                 'data' => Transporters::LISTS(),
                 'options' => ['placeholder' => 'Chọn đơn vị vận chuyển...'],
                 'pluginOptions' => ['allowClear' => true]
             ])->label('Đơn vị vận chuyển')?>
-            <?= $form->field($model, 'ids')->hiddenInput(['value' => $ids])->label(false)?>
         </div>
     </div>
     <?php \kartik\form\ActiveForm::end()?>

@@ -13,7 +13,7 @@
             </th>
             <th></th>
             <th>Contact code</th>
-            <th>Đối tác vận chuyển</th>
+            <th>Mã vận chuyển của đối tác vận chuyển</th>
             <th>Ngày chuyển hàng thành công</th>
             <th>Tiền COD</th>
             <th>Phí thu hộ</th>
@@ -34,8 +34,8 @@
                 <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
             </td>
             <td>@{{code}}</td>
-            <td>@{{ transport_partner_code }}</td>
-            <td>@{{ time_shipped_success }}</td>
+            <td>@{{ checking_number }}</td>
+            <td>@{{dateFormat time_shipped_success }}</td>
             <td>@{{ cod_cost }}</td>
             <td>@{{ collection_fee }}</td>
             <td>@{{ transport_fee }}</td>

@@ -64,9 +64,15 @@ class Transporters extends \common\models\BaseModel
         ];
     }
 
+    public function getPartner()
+    {
+        return $this->hasOne(Transporters::className(), ['transporter_parent' => 'id']);
+    }
+
     public static function LISTS()
     {
-        $all = Transporters::find()->asArray()->all();
+        $query = Transporters::find();
+        $all = $query->asArray()->all();
         return ArrayHelper::map($all, 'id', 'name');
     }
 }

@@ -64,20 +64,6 @@ use common\helper\Component;
                 }
             ],
             [
-                'attribute' => 'warehouse_id',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::isEmpty($model->warehouse) ? '---' : $model->warehouse->name;
-                }
-            ],
-            [
-                'attribute' => 'transport_id',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::isEmpty($model->transporter) ? '---' : $model->transporter->name;
-                }
-            ],
-            [
                 'attribute' => 'status',
                 'format' => 'html',
                 'value' => function ($model) {

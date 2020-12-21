@@ -16,7 +16,7 @@ $(document).on('hide.bs.modal', '.modal', function () {
 const initToggleTab = function () {
     let toggleTab = $('a[data-toggle="tab"]');
     toggleTab.off('shown.bs.tab');
-    toggleTab.on('shown.bs.tab', function (e) {
+    $(document).on('shown.bs.tab', toggleTab, function (e) {
 
         let activeTab = $(e.target);
         let url = activeTab.attr('data-url');

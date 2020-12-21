@@ -14,6 +14,10 @@
   &.modal-xl {
     max-width: 80vw;
   }
+
+  &.modal-md {
+    max-width: 50vw;
+  }
 }
 
 .modal-body {
@@ -86,8 +90,9 @@ td.align-middle {
   display: flex;
   align-items: center;
 }
-td .text-td{
-  p{
+
+td .text-td {
+  p {
     margin-bottom: 0px;
     font-size: 12px;
 
@@ -100,6 +105,7 @@ td .text-td{
   overflow: hidden;
   border-radius: 5px;
   border: solid 1px #ccc;
+
   img {
     width: 100%;
     height: 100%;
@@ -178,7 +184,7 @@ td .text-td{
 
 @media (max-width: 467px) {
   .modal-dialog {
-    &.modal-xl {
+    &.modal-xl, &.modal-md {
       max-width: 100%;
     }
   }

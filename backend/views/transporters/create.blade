@@ -4,13 +4,21 @@ use kartik\form\ActiveForm;
 use common\helper\Helper;
 use backend\models\UserRole;
 use kartik\select2\Select2;
+use backend\models\Transporters;
 
 ?>
 @section('content')
     @php($form = ActiveForm::begin())
     <div class="row">
-        <div class="col-md-12">
-            {!! $form->field($model,'name') !!}
+        <div class="col-md-6">
+            {!! $form->field($model,'name')->label('Đơn vị vận chuyển') !!}
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'transporter_parent')->widget(Select2::className(),[
+                'data' => Transporters::LISTS(),
+                'options' => ['placeholder'=> 'chọn đối tác vận chuyển...'],
+                'pluginOptions' => ['allowClear' => true]
+            ])->label('Đối tác vận chuyển') !!}
         </div>
         <div class="col-md-6">
             {!! $form->field($model,'phone') !!}

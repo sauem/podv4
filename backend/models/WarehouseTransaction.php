@@ -133,7 +133,7 @@ class WarehouseTransaction extends \common\models\BaseModel
         if (empty($skuItems)) {
             throw new BadRequestHttpException('Đơn hàng chưa có sản phẩm!');
         }
-        
+
         foreach ($skuItems as $item) {
             $warehouse = WarehouseTransaction::findAll(['warehouse_id' => $order->warehouse_id, 'product_sku' => $item->sku]);
             if (!$warehouse) {
@@ -141,5 +141,10 @@ class WarehouseTransaction extends \common\models\BaseModel
             }
 
         }
+    }
+
+    public static function updateWarehouse()
+    {
+
     }
 }

@@ -1,0 +1,17 @@
+<?php
+
+use kartik\form\ActiveForm;
+use common\helper\Helper;
+use backend\models\UserRole;
+use kartik\select2\Select2;
+
+?>
+@section('content')
+    @php($form = ActiveForm::begin())
+    <div class="row">
+        <div class="col-12">
+            {!! $form->field($model,'name') !!}
+        </div>
+    </div>
+    @php(ActiveForm::end())
+@stop

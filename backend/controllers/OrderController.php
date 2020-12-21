@@ -113,6 +113,7 @@ class OrderController extends BaseController
                         $order->status = OrdersContact::STATUS_PENDING;
                         $order->transport_id = $model->transport_id;
                         $order->warehouse_id = $model->warehouse_id;
+                        $order->sub_transport_id = $model->sub_transport_id;
                         $order->order_time = time();
                         if (!$order->save()) {
                             throw new BadRequestHttpException(Helper::firstError($order));
@@ -130,7 +131,7 @@ class OrderController extends BaseController
         return static::responseRemote('create.blade', [
             'model' => $model,
             'ids' => implode(',', $ids),
-        ], 'Tạo đơn vận chuyển', $this->footer());
+        ], 'Tạo đơn vận chuyển', $this->footer(),'md');
     }
 
     /**

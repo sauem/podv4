@@ -9,6 +9,8 @@
 
 .modal-dialog.modal-xl {
   max-width: 80vw; }
+.modal-dialog.modal-md {
+  max-width: 50vw; }
 
 .modal-body {
   padding: 0 1rem; }
@@ -132,7 +134,7 @@ td .text-td p {
         display: block; }
 
 @media (max-width: 467px) {
-  .modal-dialog.modal-xl {
+  .modal-dialog.modal-xl, .modal-dialog.modal-md {
     max-width: 100%; } }
 
 /*# sourceMappingURL=site.css.map */

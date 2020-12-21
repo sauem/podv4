@@ -194,8 +194,8 @@ const mappingModel = (module, row) => {
             item.code = row[0] ? row[0].v : null;
             item.transport_partner = row[1] ? row[1].v : null;
             item.sub_transport = row[2] ? row[2].v : null;
-            item.transport_partner_code = row[3] ? row[3].v : null;
-            item.sub_transport_code = row[4] ? row[4].v : null;
+            item.checking_number = row[3] ? row[3].v : null;
+            item.sub_transport_tracking = row[4] ? row[4].v : null;
             break;
         case MODULE_CONTACT:
             item = contactModel();
@@ -218,15 +218,15 @@ const mappingModel = (module, row) => {
         case MODULE_REFUND:
             item = refundModel();
             item.code = row[0] ? row[0].v : null;
-            item.refund_time = row[1] ? getTimer(row[1].v) : null;
-            item.transport_partner_code = row[2] ? row[2].v : null;
+            item.time_refund_success = row[1] ? getTimer(row[1].v) : null;
+            item.checking_number = row[2] ? row[2].v : null;
             item.sku = row[3] ? row[3].v : null;
             item.qty = row[4] ? row[4].v : null;
             break;
         case MODULE_PAID:
             item = paidModel();
             item.code = row[0] ? row[0].v : null;
-            item.transport_partner_code = row[1] ? row[1].v : null;
+            item.checking_number = row[1] ? row[1].v : null;
             item.time_shipped_success = row[2] ? getTimer(row[2].v) : null;
             item.cod_cost = row[3] ? row[3].v : null;
             item.collection_fee = row[4] ? row[4].v : null;
@@ -246,8 +246,8 @@ const mappingModel = (module, row) => {
 function refundModel() {
     return {
         code: null,
-        refund_time: null,
-        transport_partner_code: null,
+        time_refund_success: null,
+        checking_number: null,
         sku: null,
         qty: null
     }
@@ -257,7 +257,7 @@ function paidModel() {
     return {
         code: null,
         time_shipped_success: null,
-        transport_partner_code: null,
+        checking_number: null,
         cod_cost: null,
         collection_fee: null,
         transport_fee: null
@@ -278,9 +278,9 @@ function trackingModel() {
     return {
         code: null,
         transport_partner: null,
-        transport_partner_code: null,
+        checking_number: null,
         sub_transport: null,
-        sub_transport_code: null
+        sub_transport_tracking: null
     }
 }
 

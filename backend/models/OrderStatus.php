@@ -11,13 +11,14 @@ class OrderStatus extends OrdersContact
 {
     public $warehouse_id;
     public $transport_id;
+    public $sub_transport_id;
     public $ids;
 
     public function rules()
     {
         return [
             [['warehouse_id', 'transport_id'], 'required'],
-            [['warehouse_id', 'transport_id', 'ids'], 'safe']
+            [['warehouse_id', 'transport_id', 'ids', 'sub_transport_id'], 'safe']
         ];
     }
 

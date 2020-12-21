@@ -37,6 +37,7 @@ use yii\helpers\Html;
             'class' => CheckboxColumn::class,
             'checkboxOptions' => function ($model) {
                 $cog['data-code'] = $model->code;
+                $cog['data-pjax'] = '0';
                 return $cog;
             }
         ],
@@ -74,14 +75,14 @@ use yii\helpers\Html;
             'label' => 'Phí vận chuyển',
             'format' => 'html',
             'value' => function ($model) {
-                return Helper::formatCUR($model->shipping_cost, '', 2);
+                return Helper::formatCUR($model->shipping_cost,'',0);
             }
         ],
         [
             'label' => 'Tổng đơn',
             'format' => 'html',
             'value' => function ($model) {
-                return Helper::formatCUR($model->total_bill, '', 2);
+                return Helper::formatCUR($model->total_bill,'',0);
             }
         ],
     ]
@@ -97,7 +98,7 @@ $js = <<<JS
             return false;
         }
         let order = new HandleOrder();
-        order.create('#vendor-modal', '#new-box', this, {ids});
+        order.create('#vendor-modal', '#default-box', this, {ids});
     });
 JS;
 $view->registerJs($js);

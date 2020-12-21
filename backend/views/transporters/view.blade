@@ -1,0 +1,81 @@
+@php
+    use common\helper\Component;
+    use common\helper\Helper;
+    use kartik\grid\GridView;
+    use kartik\grid\ActionColumn;
+    use yii\helpers\Url;
+    use kartik\form\ActiveForm;
+    use backend\models\UserRole;
+    use kartik\select2\Select2;
+    use backend\models\Transporters;
+
+@endphp
+@section('content')
+    @php($form = ActiveForm::begin())
+    <div class="row">
+        <div class="col-md-6">
+            {!! $form->field($model,'name')->label('Đơn vị vận chuyển') !!}
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'transporter_parent')->widget(Select2::className(),[
+                'data' => Transporters::LISTS(),
+                'options' => ['placeholder'=> 'chọn đối tác vận chuyển...'],
+                'pluginOptions' => ['allowClear' => true]
+            ])->label('Đối tác vận chuyển') !!}
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'phone') !!}
+        </div>
+        <div class="col-md-6">
+            {!! $form->field($model,'address') !!}
+        </div>
+        <div class="col-md-12">
+            {!! $form->field($model,'note')->textarea() !!}
+        </div>
+    </div>
+    @php(ActiveForm::end())
+
+    <?= GridView::widget([
+        'pjax' => true,
+        'layout' => '{items}{pager}',
+        'tableOptions' => [
+            'class' => 'table-sm table-hover'
+        ],
+        'pjaxSettings' => [
+            'neverTimeout' => true,
+            'options' => [
+                'id' => 'transporter-box'
+            ]
+        ],
+        'perfectScrollbar' => true,
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            'name',
+            'phone',
+            'address',
+            'website',
+            [
+                'class' => ActionColumn::class,
+                'template' => '{view}{update}{delete}',
+                'width' => '10%',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Component::btnView($url, null, [
+                            'role' => 'modal-remote'
+                        ]);
+                    },
+                    'update' => function ($url) {
+                        return Component::btnUpdate($url, null, [
+                            'role' => 'modal-remote'
+                        ]);
+                    },
+
+                    'delete' => function ($url) {
+                        return Component::btnDelete($url);
+                    },
+
+                ]
+            ]
+        ]
+    ]) ?>
+@stop
