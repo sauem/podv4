@@ -61,7 +61,7 @@ $this->title = 'My Yii Application';
                     'hideInput' => true,
                     'pluginOptions' => [
                         'locale' => [
-                            'format' => 'd/m/Y',
+                            'format' => 'DD/MM/YYYY',
                             'separator' => ' - '
                         ]
                     ]
@@ -91,10 +91,18 @@ $this->title = 'My Yii Application';
         <div id="result-sales" class="row align-items-center justify-content-around text-center">
 
         </div>
+        <div class="sales-chart">
+            <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP C8 C11</h4>
+            <canvas id="sales-canvas" style="height: 400px">
+
+            </canvas>
+            <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP CONTACT</h4>
+            <canvas id="sales-canvas" style="height: 400px">
+
+            </canvas>
+        </div>
     </div>
 @stop
 @section('pos_page')
-    <script>
-
-    </script>
+    <script src="/theme/js/sales-report.js?v={!! time() !!}"></script>
 @stop
