@@ -1,12 +1,11 @@
 <?php
 
-use kartik\form\ActiveForm;
+use kartik\daterange\DateRangePicker;use kartik\form\ActiveForm;
 use common\helper\Helper;
 use backend\models\UserRole;
 use kartik\select2\Select2;
 use backend\models\Categories;
 use common\helper\Component;use yii\helpers\Html;
-
 ?>
 @section('content')
     @php($form = ActiveForm::begin())
@@ -18,19 +17,43 @@ use common\helper\Component;use yii\helpers\Html;
                 'model' => $model,
                 'name' => 'thumb'
             ])?>
+
         </div>
         <div class="col-md-6">
-            {!! $form->field($model,'sku') !!}
-            {!! $form->field($model,'category_id')->widget(Select2::className(),[
+            <?= $form->field($model, 'sku')  ?>
+            <?= $form->field($model, 'category_id')->widget(Select2::className(), [
                 'data' => Categories::LISTS(),
-                'options' => ['placeholder' => 'Chọn danh mục...'],
+                'options' => ['placeholder' => 'Chọn loại sản phẩm...'],
                 'pluginOptions' => [
                     'allowClear' => true
+                ]
+            ])  ?>
+            <?= $form->field($model, 'size')->textInput(['placeholder' => '10*20*10 '])->label('Kích thước (dài*rộng*cao)') ?>
+            <?= $form->field($model, 'weight')->label('Cân nặng (gram)')  ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'marketer_id')->widget(Select2::className(), [
+                'data' => UserRole::LISTS(UserRole::ROLE_MARKETER),
+                'options' => ['placeholder' => 'Chọn marketer...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ]
+            ])->label('Marketer') ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'marketer_time')->widget(DateRangePicker::className(), [
+                #'presetDropdown' => true,
+                'hideInput' => true,
+                'pluginOptions' => [
+                    'locale' => [
+                        'format' => 'DD/MM/YYYY',
+                        'separator' => ' - '
                     ]
-            ]) !!}
-            {!! $form->field($model,'size')->textInput(['placeholder' => '10*20*10 '])->label('Kích thước (dài*rộng*cao)') !!}
-            {!! $form->field($model,'weight')->label('Cân nặng (gram)') !!}
-
+                ]
+            ])?>
+        </div>
+        <div class="col-12">
+            DANH SÁCH MARKETER
         </div>
         <div class="col-md-12">
             <hr>

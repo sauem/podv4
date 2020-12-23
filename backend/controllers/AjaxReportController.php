@@ -7,6 +7,7 @@ namespace backend\controllers;
 use backend\models\Contacts;
 use backend\models\OrdersContact;
 use backend\models\OrdersContactSearch;
+use common\helper\Helper;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
 
@@ -38,7 +39,21 @@ class AjaxReportController extends BaseController
             $product = ArrayHelper::getValue($filter, 'product', []);
             $source = ArrayHelper::getValue($filter, 'source', []);
             $time_register = ArrayHelper::getValue($filter, 'time_register', '');
-
+            if ($time_register) {
+                $time_register = explode(' - ', $time_register);
+                $startTime = Helper::timer($time_register[0]);
+                $endTime = Helper::timer($time_register[1]);
+                $query->where(['between', 'register_time', $startTime, $endTime]);
+            } else {
+                $query->where('register_time <= NOW() AND register_time >= DATE_SUB(register_time, INTERVAL 7 DAY)');
+            }
+            if ($source) {
+                $query->filterWhere(['IN', 'type', $source]);
+            }
+            if ($product) {
+                $query->innerJoin('products', 'products.partner_name = contacts.partner');
+                $query->filterWhere(['IN', 'sku', $product]);
+            }
         }
         return $query->asArray()->all();
     }

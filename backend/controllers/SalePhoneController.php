@@ -130,7 +130,7 @@ class SalePhoneController extends BaseController
                     //save item order product
                     OrdersContactSku::saveItems($model->id, \Yii::$app->request->post('items'));
                     //check user has finish current phone
-                    ContactsAssignment::nextAssignment($model->phone);
+                    ContactsAssignment::completeAssignment($model->phone);
                     $transaction->commit();
                     return static::responseSuccess();
                 }

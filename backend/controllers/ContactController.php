@@ -22,11 +22,10 @@ class ContactController extends BaseController
 
         $waitingContact = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
             'ContactsSearch' => [
-                'status' => [Contacts::STATUS_NEW]
+                'contacts.status' => [Contacts::STATUS_NEW]
             ]
         ]));
-        $waitingContact->query->groupBy('phone');
-
+        $waitingContact->query->groupBy('contacts.phone');
         return $this->render('index.blade', [
             'model' => $model,
             'searchModel' => $searchModel,

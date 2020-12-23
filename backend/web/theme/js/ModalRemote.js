@@ -166,6 +166,9 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
     this.setSize = function (size) {
         $(this.dialog).removeClass('modal-lg');
         $(this.dialog).removeClass('modal-sm');
+        $(this.dialog).removeClass('modal-full-width');
+        $(this.dialog).removeClass('modal-xl');
+        $(this.dialog).removeClass('modal-md');
         if (size == 'large')
             $(this.dialog).addClass('modal-lg');
         else if (size == 'small')

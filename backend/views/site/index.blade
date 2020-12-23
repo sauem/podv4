@@ -13,10 +13,10 @@ $this->title = 'My Yii Application';
                 <h4 class="text-danger">Bộ lọc</h4>
             </div>
             <div class="col-md-3">
-                <select title="Marketer"
+                <select title="Sale..."
                         data-actions-box="true"
                         data-live-search="true"
-                        name="filter[marketer][]" class="selectpicker"
+                        name="filter[sale][]" class="selectpicker"
                         multiple data-selected-text-format="count"
                         data-style="btn-light">
                     @if(!empty($marketers))
@@ -66,6 +66,22 @@ $this->title = 'My Yii Application';
                         ]
                     ]
                 ])?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <select title="Marketer..."
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[marketer][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($marketers))
+                        @foreach($marketers as $id => $name)
+                            <option value="{{$id}}">{{$name}}</option>
+                        @endforeach
+                    @endif
+                </select>
             </div>
         </div>
         <div class="row align-items-center">

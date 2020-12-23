@@ -3,6 +3,7 @@
 namespace common\helper;
 
 use yii\helpers\ArrayHelper;
+use function GuzzleHttp\Psr7\str;
 
 class Helper
 {
@@ -93,5 +94,14 @@ class Helper
             return true;
         }
         return false;
+    }
+
+    static function timer($string)
+    {
+        if (strtotime($string)) {
+            return strtotime($string);
+        }
+        $time = \DateTime::createFromFormat('m-d-Y', $string)->format('m-d-Y');
+        return strtotime($time);
     }
 }

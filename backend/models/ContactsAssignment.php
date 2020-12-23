@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\helper\Helper;
 use Yii;
 use common\models\BaseModel;
 
@@ -60,27 +61,45 @@ class ContactsAssignment extends BaseModel
 
     public function getUser()
     {
-        return $this->hasOne(UserModel::className(), ['user_id' => 'id']);
+        return $this->hasOne(UserModel::className(), ['id' => 'user_id']);
     }
 
     public static function getPhoneAssign()
     {
         $user = Yii::$app->user->getId();
-        $model = ContactsAssignment::findOne(['user_id' => $user]);
+        $model = ContactsAssignment::findOne(['user_id' => $user, 'status' => ContactsAssignment::STATUS_PROCESSING]);
         if (!$model) {
-            return null;
+            $model = self::nextAssignment();
+            if (!$model) {
+                return false;
+            }
         }
         return $model->phone;
     }
 
+    public static function nextAssignment()
+    {
+        $model = ContactsAssignment::find()
+            ->where(['user_id' => Yii::$app->user->getId()])
+            ->andFilterWhere(['<>', 'status', ContactsAssignment::STATUS_COMPLETED])->one();
+        if (!$model) {
+            return false;
+        }
+        $model->status = ContactsAssignment::STATUS_PROCESSING;
+        $model->save();
+        return $model;
+    }
 
-    public static function nextAssignment($phone)
+    public static function completeAssignment($phone)
     {
         $phoneAssign = ContactsAssignment::findOne(['phone' => $phone, 'user_id' => Yii::$app->user->getId()]);
+
         if ($phoneAssign && static::hasComplete($phone)) {
             $phoneAssign->status = ContactsAssignment::STATUS_COMPLETED;
+            self::nextAssignment();
             return $phoneAssign->save();
         }
+        return false;
     }
 
     public static function hasComplete($phone)

@@ -140,7 +140,9 @@ function approvePhone() {
         let saleID = $(this.form).find('select[name="user_id"]').val();
         try {
             const r = await this.service(saleID);
-            console.log(r);
+            $.pjax.reload('#contact-box', {});
+            this.modal.modal('hide');
+
         } catch (e) {
             console.log(e);
         }

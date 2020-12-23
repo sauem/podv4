@@ -1,8 +1,10 @@
 <?php
 
+use common\helper\Helper;
 use kartik\grid\CheckboxColumn;
 use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
+use backend\models\Contacts;
 
 ?>
 <?= GridView::widget([
@@ -30,14 +32,39 @@ use kartik\grid\ActionColumn;
                 return $cog;
             }
         ],
-        'code',
-        'register_time',
+        [
+            'attribute' => 'code',
+            'format' => 'html',
+            'value' => function ($model) {
+                return "<b class='text-info'>$model->code</b><br>".Helper::dateFormat($model->register_time);
+            }
+        ],
+        [
+            'label' => 'Sale',
+            'format' => 'html',
+            'value' => function ($model) {
+                return Helper::isEmpty($model->sale) ? '--' : $model->sale->user->username;
+            }
+        ],
         'phone',
         'name',
-        'address',
+        'option',
         'partner',
-        'status',
-        'country',
+        [
+            'attribute' => 'status',
+            'format' => 'html',
+            'value' => function ($model) {
+                return Contacts::StatusLabel($model->status);
+            }
+        ],
+        [
+            'attribute' => 'country',
+            'format' => 'html',
+            'value' => function ($model) {
+                return Helper::countryName($model->country);
+            }
+        ],
+
         'type',
         [
             'class' => ActionColumn::class,
