@@ -3,6 +3,7 @@
 namespace common\helper;
 
 use yii\helpers\ArrayHelper;
+use yii2mod\settings\models\SettingModel;
 use function GuzzleHttp\Psr7\str;
 
 class Helper
@@ -13,6 +14,11 @@ class Helper
         var_dump($model);
         echo "</pre>";
         exit;
+    }
+
+    static function string($str)
+    {
+        return rtrim($str, ', ');
     }
 
     static function toFloat($number)
@@ -43,6 +49,14 @@ class Helper
     {
         if (is_numeric($time)) {
             return date('d-m-Y', $time) . ($timestamp ? ' <small class="text-muted">' . date('H:i:s') . '</small>' : '');
+        }
+        return $time;
+    }
+
+    static function toDate($time)
+    {
+        if (is_numeric($time)) {
+            return date('d/m/Y H:i:s', $time);
         }
         return $time;
     }
@@ -96,6 +110,14 @@ class Helper
         return false;
     }
 
+    static function isNull($val)
+    {
+        if (!$val || $val === '' || $val === null || empty($val)) {
+            return "";
+        }
+        return $val;
+    }
+
     static function timer($string)
     {
         if (strtotime($string)) {
@@ -103,5 +125,11 @@ class Helper
         }
         $time = \DateTime::createFromFormat('m-d-Y', $string)->format('m-d-Y');
         return strtotime($time);
+    }
+
+    static function setting($name)
+    {
+        $bk = SettingModel::findOne(['section' => "Common", "key" => $name]);
+        return ArrayHelper::getValue($bk, 'value');
     }
 }
