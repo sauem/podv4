@@ -37,7 +37,36 @@
         </div>
     </div>
     <div id="result-import" class="card-box"></div>
-    <div class="card-box table-responsive" id="file-view-result"></div>
+    <div class="card-box">
+        <ul class="nav nav-tabs nav-bordered nav-justified">
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-1" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                    Xem trước dữ liệu
+                </a>
+            </li>
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-2" data-toggle="tab" aria-expanded="false" class="nav-link">
+                    Dữ liệu lỗi
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-1">
+                <div class="card-box table-responsive" id="file-view-result"></div>
+            </div>
+            <div class="tab-pane" id="tab-2">
+                <table id="errors-table" class="table table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th>Dòng thứ</th>
+                        <th>Nguyên nhân lỗi</th>
+                    </tr>
+                    </thead>
+                    <tbody id="errors-result"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 @stop
 @section('pos_page')
     <script id="progress-template" type="text/x-handlebars-template">
@@ -56,19 +85,7 @@
              aria-valuenow="@{{ progressPercent }}" aria-valuemin="0" aria-valuemax="100">@{{progressPercent}}%
         </div>
     </script>
-    {!! $view->render('@backend/views/import/template/' . $module . '-template.blade',['module' => $module]) !!}
+    {!! $view->render('template/' . $module . '-template.blade',['module' => $module]) !!}
+    {!! $view->render('template/errors-template.blade') !!}
 @stop
-@php($view->registerCssFile("@web/theme/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css",['depends' => [\yii\bootstrap\BootstrapAsset::className()], 'media' => 'print',],'css-print-theme'))
-@php($view->registerCssFile("@web/theme/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css",['depends' => [\yii\bootstrap\BootstrapAsset::className()], 'media' => 'print',],'css-print-theme'))
-@php($view->registerCssFile("@web/theme/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css",['depends' => [\yii\bootstrap\BootstrapAsset::className()], 'media' => 'print',],'css-print-theme'))
-
-@php($view->registerJsFile('@web/theme/js/import.js',['depends' =>  \yii\web\JqueryAsset::className()]))
-@php($view->registerJsFile('@web/theme/libs/datatables.net/js/jquery.dataTables.min.js',['depends' =>  \yii\web\JqueryAsset::className()]))
-@php($view->registerJsFile('@web/theme/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js',['depends' =>  \yii\web\JqueryAsset::className()]))
-@php($view->registerJsFile('@web/theme/libs/datatables.net-responsive/js/dataTables.responsive.min.js',['depends' =>  \yii\web\JqueryAsset::className()]))
-@php($view->registerJsFile('@web/theme/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js',['depends' =>  \yii\web\JqueryAsset::className()]))
-@php($view->registerJsFile('@web/theme/libs/datatables.net-buttons/js/dataTables.buttons.min.js',['depends' =>  \yii\web\JqueryAsset::className()]))
-@php($view->registerJsFile('@web/theme/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js',['depends' =>  \yii\web\JqueryAsset::className()]))
-@php($view->registerJsFile('@web/theme/libs/datatables.net-buttons/js/buttons.html5.min.js',['depends' =>  \yii\web\JqueryAsset::className()]))
-@php($view->registerJsFile('@web/theme/libs/datatables.net-keytable/js/dataTables.keyTable.min.js',['depends' =>  \yii\web\JqueryAsset::className()]))
-@php($view->registerJsFile('@web/theme/libs/datatables.net-select/js/dataTables.select.min.js',['depends' =>  \yii\web\JqueryAsset::className()]))
+{!! $view->render('@backend/views/parts/dataTable.blade') !!}

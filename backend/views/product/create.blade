@@ -28,10 +28,6 @@ use common\helper\Component;use yii\helpers\Html;
                     'allowClear' => true
                 ]
             ])  ?>
-            <?= $form->field($model, 'size')->textInput(['placeholder' => '10*20*10 '])->label('Kích thước (dài*rộng*cao)') ?>
-            <?= $form->field($model, 'weight')->label('Cân nặng (gram)')  ?>
-        </div>
-        <div class="col-md-6">
             <?= $form->field($model, 'marketer_id')->widget(Select2::className(), [
                 'data' => UserRole::LISTS(UserRole::ROLE_MARKETER),
                 'options' => ['placeholder' => 'Chọn marketer...'],
@@ -39,10 +35,7 @@ use common\helper\Component;use yii\helpers\Html;
                     'allowClear' => true
                 ]
             ])->label('Marketer') ?>
-        </div>
-        <div class="col-md-6">
             <?= $form->field($model, 'marketer_time')->widget(DateRangePicker::className(), [
-                #'presetDropdown' => true,
                 'hideInput' => true,
                 'pluginOptions' => [
                     'locale' => [
@@ -51,6 +44,12 @@ use common\helper\Component;use yii\helpers\Html;
                     ]
                 ]
             ])?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'size')->textInput(['placeholder' => '10*20*10 '])->label('Kích thước (dài*rộng*cao)') ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'weight')->label('Cân nặng (gram)')  ?>
         </div>
         <div class="col-12">
             DANH SÁCH MARKETER
@@ -72,6 +71,39 @@ use common\helper\Component;use yii\helpers\Html;
                 </tr>
                 </thead>
                 <tbody>
+                <?php
+                $prices = $model->itemPrices;
+                if (!Helper::isEmpty($prices)) {
+                foreach ($prices as $k => $price) {
+                ?>
+                <tr>
+                    <td>
+                        <input name="prices[{{ $k }}][qty]"
+                               type="text"
+                               required
+                               value="{{$price->qty}}"
+                               class="form-control">
+                    </td>
+                    <td>
+                        <input name="prices[{{ $k }}][price]"
+                               type="text"
+                               value="{{$price->price}}"
+                               required
+                               class="form-control"
+                               data-toggle="input-mask"
+                               data-mask-format="#,##0.00"
+                               data-reverse="true">
+                    </td>
+                    <td class="align-middle">
+                        <button type="button" class="btn btn-xs btn-outline-warning" id="removePrice"><i
+                                    class="fe-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <?php
+                }
+                }
+                ?>
                 </tbody>
             </table>
         </div>

@@ -3,7 +3,6 @@
 namespace backend\models;
 
 use common\helper\Helper;
-use phpDocumentor\Reflection\Types\Self_;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -36,6 +35,8 @@ use yii\web\BadRequestHttpException;
  * @property string|null $short_link
  * @property int $created_at
  * @property int $updated_at
+ * @property string|null $type
+ * @property string|null $category
  */
 class Contacts extends \common\models\BaseModel
 {
@@ -73,7 +74,7 @@ class Contacts extends \common\models\BaseModel
         return [
             [['register_time', 'phone'], 'required'],
             [['register_time', 'created_at', 'updated_at'], 'integer'],
-            [['option', 'type'], 'string'],
+            [['option', 'type','category'], 'string'],
             [['code', 'name', 'email', 'address', 'zipcode', 'ip', 'note', 'partner', 'hash_key', 'country', 'utm_source', 'utm_medium', 'utm_content', 'utm_term', 'utm_campaign', 'link', 'short_link'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 25],
             [['status'], 'string', 'max' => 50],
@@ -100,6 +101,7 @@ class Contacts extends \common\models\BaseModel
             'note' => 'Ghi chú',
             'partner' => 'Đối tác',
             'hash_key' => 'Hash Key',
+            'category' => 'Loại sản phẩm',
             'status' => 'Trạng thái',
             'country' => 'Quốc gia',
             'utm_source' => 'Utm Source',
@@ -109,7 +111,7 @@ class Contacts extends \common\models\BaseModel
             'utm_campaign' => 'Utm Campaign',
             'link' => 'Link',
             'short_link' => 'Short Link',
-            'type' => 'Phân loại',
+            'type' => 'Loại contact',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

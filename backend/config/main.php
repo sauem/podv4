@@ -16,6 +16,7 @@ return [
     'bootstrap' => ['log'],
     'layout' => 'main.blade',
     'modules' => [
+
         'gii' => [
             'class' => \yii\gii\Module::class,
         ],
@@ -26,8 +27,14 @@ return [
             'class' => Module::class,
             'layout' => 'left-menu',
         ],
+        'settings' => [
+            'class' => 'yii2mod\settings\Module',
+        ],
     ],
     'components' => [
+        'settings' => [
+            'class' => 'yii2mod\settings\components\Settings',
+        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\DbManager'
         ],
@@ -74,7 +81,7 @@ return [
                     'sourcePath' => null,
                     'css' => [
                         '/theme/css/bootstrap.min.css',
-                        #'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css'
+                        //'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css'
                     ],
                     'js' => [
                         '/theme/js/bootstrap.js'
@@ -94,7 +101,8 @@ return [
         'allowActions' => [
             'rbac/*',
             'site/logout',
-            'site/login'
+            'site/login',
+            'site/web-settings'
         ]
     ],
     'params' => $params,

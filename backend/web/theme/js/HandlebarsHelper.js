@@ -15,7 +15,24 @@ Handlebars.registerHelper("money", function (value, options) {
     // Returns the formatted number
     return (ds ? num.replace('.', ds) : num).replace(new RegExp(re, 'g'), '$&' + ts);
 });
-
+Handlebars.registerHelper("empty", function (val) {
+    if (typeof val === undefined || val === "" || val === null || !val) {
+        return null;
+    }
+    return val;
+});
 Handlebars.registerHelper("dateFormat", function (time) {
     return moment.unix(time).format('DD/MM/YYYY');
+});
+Handlebars.registerHelper("cashSource", function (val) {
+    const SOURCE_CASH = 'cash';
+    const SOURCE_COD = 'cod';
+    switch (val) {
+        case SOURCE_CASH:
+            return "Tiền mặt";
+        case SOURCE_COD:
+            return "Số dư COD";
+        default:
+            return "---";
+    }
 });

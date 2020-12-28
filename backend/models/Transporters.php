@@ -69,10 +69,19 @@ class Transporters extends \common\models\BaseModel
         return $this->hasOne(Transporters::className(), ['transporter_parent' => 'id']);
     }
 
-    public static function LISTS()
+    public function getChildren()
+    {
+        return $this->hasMany(Transporters::className(), ['transporter_parent' => 'id']);
+    }
+
+    public static function LISTS($all = true)
     {
         $query = Transporters::find();
-        $all = $query->asArray()->all();
-        return ArrayHelper::map($all, 'id', 'name');
+        if (!$all) {
+            $query->filterWhere(['=', 'transporter_parent', 0]);
+            $query->orFilterWhere(['IS', 'transporter_parent', new \yii\db\Expression('null')]);
+        }
+        $result = $query->asArray()->all();
+        return ArrayHelper::map($result, 'id', 'name');
     }
 }

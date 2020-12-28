@@ -24,6 +24,7 @@ class MediaObj extends \common\models\BaseModel
      * {@inheritdoc}
      */
     const OBJECT_PRODUCT = 'product;';
+    const OBJECT_TOPUP = 'topup;';
 
 
     public static function tableName()

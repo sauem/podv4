@@ -10,7 +10,8 @@ function orderSaleForm() {
     let orderItemsResult = $('#result-sku-list');
     let totalShip = $('#total-ship-text');
     let totalBill = $('#total-bill-text');
-    let totalBillInput = $('input[name="total_bill"]');
+    let totalBillHidden = $('input#cost_bill');
+    let totalPriceHidden = $('input#cost_product');
     let totalPriceInput = $('#total-price-input');
     let productPriceInput = $('input.input-product-price');
     let productQtyInput = $('input.input-product-qty');
@@ -90,8 +91,11 @@ function orderSaleForm() {
         total = ORDER_ITEMS.total.total_price + ORDER_ITEMS.total.total_ship;
         ORDER_ITEMS.total.total_bill = total;
 
+        //set view total price and value total price
         totalPriceInput.val(overwrite ? ORDER_ITEMS.total.total_price : price.format());
-
+        totalPriceHidden.val(overwrite ? ORDER_ITEMS.total.total_price : price);
+        //set view total bill and value total bill
+        totalBillHidden.val(total);
         totalBill.text(total.format());
     }
     this.setTotalPrice = function (value) {
@@ -109,10 +113,31 @@ function orderSaleForm() {
             this.removeItemTemp(element);
         }
     }
+    this.loadItemPrice = async function (qty, sku, element) {
+        try {
+            const res = await this.getPrice(qty, sku);
+            const {price} = res;
+            element.val(price.format());
+            this.setItemPrice(sku, price);
+        } catch (e) {
+            console.warn(JSON.parse(e.responseText).message);
+        }
+    }
+    this.valid = function (form) {
+        $(form).yiiActiveForm('validate');
+    }
+    this.getPrice = async function getPrice(qty, sku) {
+        return $.ajax({
+            url: AJAX_PATH.getPrice,
+            data: {qty, sku},
+            type: 'POST',
+            cache: false
+        })
+    }
 }
 
 async function changeStatus(model, status, element = null) {
-    let ids = $('.grid-view').yiiGridView("getSelectedRows");
+    let ids = $('#default-tab').yiiGridView("getSelectedRows");
     if (element) {
         ids = $(element).data('key');
     }
@@ -130,12 +155,13 @@ async function changeStatus(model, status, element = null) {
         if (res.value) {
             try {
                 const res = service(model, status, ids);
-                $.pjax.reload('div[id*="-box"]', {});
+                window.location.reload();
             } catch (e) {
                 toastr.warning(e.message);
             }
         }
     })
+
 
     async function service(model, status, ids) {
         return $.ajax({

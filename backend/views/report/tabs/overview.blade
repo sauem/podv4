@@ -1,0 +1,99 @@
+<div class="row">
+    <div class="col-12 mb-3 text-center">
+        <h4 class="text-danger">Bộ lọc</h4>
+    </div>
+    <div class="col-md-3">
+        <?= \kartik\daterange\DateRangePicker::widget([
+            'name' => 'filter[order_time]',
+            'presetDropdown' => true,
+            'hideInput' => true,
+            'options' => ['placeholder' => 'Chọn ngày tạo đơn...'],
+            'pluginOptions' => [
+                'locale' => [
+                    'format' => 'DD/MM/YYYY',
+                    'separator' => ' - '
+                ]
+            ]
+        ])?>
+    </div>
+    <div class="col-md-3">
+        <select title="Số điện thoại..."
+                data-actions-box="true"
+                data-live-search="true"
+                name="filter[phone][]" class="selectpicker"
+                multiple data-selected-text-format="count"
+                data-style="btn-light">
+
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select title="Contact code..."
+                data-actions-box="true"
+                data-live-search="true"
+                name="filter[code][]" class="selectpicker"
+                multiple data-selected-text-format="count"
+                data-style="btn-light">
+
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select title="Tình trạng thanh toán..."
+                data-actions-box="true"
+                data-live-search="true"
+                name="filter[payment_status][]" class="selectpicker"
+                multiple data-selected-text-format="count"
+                data-style="btn-light">
+
+        </select>
+    </div>
+    <div class="col-md-3 mt-2">
+        <select title="Tình trạng đối soát..."
+                data-actions-box="true"
+                data-live-search="true"
+                name="filter[cross_status][]" class="selectpicker"
+                multiple data-selected-text-format="count"
+                data-style="btn-light">
+
+        </select>
+    </div>
+    <div class="col-md-3 mt-2">
+        <button class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
+        <button data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-success"><i class="fe-trash"></i> Xoá
+        </button>
+    </div>
+</div>
+<hr>
+<div class="row align-items-center">
+    <div class="col-12 text-center">
+        <h4 class="text-danger">Chỉ số</h4>
+    </div>
+    <div class="col-1">
+        <p class="text-danger"><b>Chú thích</b></p>
+    </div>
+    <div class="col-2">
+        <p><b>C3: Tổng số đơn hàng</b></p>
+    </div>
+    <div class="col-2">
+        <p><b>C8: Tổng đơn hàng OK</b></p>
+    </div>
+    <div class="col">
+        <p><b>C11: Tổng đơn hàng chuyển thành công</b></p>
+    </div>
+    <div class="col">
+        <p><b>C13: Tổng đơn hàng đã chuyển tiền cho đối tác</b></p>
+    </div>
+</div>
+<div class="row" id="financial-result"></div>
+
+
+<div class="row">
+    <div class="col-12 text-center mt-4">
+        <h4 class="text-danger">BẢNG TỔNG HỢP C8-C11</h4>
+        <div id="chart-one" class="apex-charts"></div>
+
+    </div>
+    <div class="col-12 text-center mt-4">
+        <h4 class="text-danger">BẢNG TỔNG HỢP C11-C13</h4>
+        <div id="chart-two" class="apex-charts"></div>
+    </div>
+</div>

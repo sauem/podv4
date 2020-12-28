@@ -7,7 +7,9 @@ namespace backend\controllers;
 use backend\models\ContactsAssignment;
 use backend\models\Media;
 use backend\models\Products;
+use backend\models\ProductsPrice;
 use backend\models\ProductsSearch;
+use backend\models\Transporters;
 use backend\models\UploadForm;
 use common\helper\Helper;
 use Illuminate\Support\Arr;
@@ -88,7 +90,7 @@ class AjaxController extends BaseController
                 if (!$model) {
                     $model = new ContactsAssignment();
                 }
-                $model->load($value,'');
+                $model->load($value, '');
                 if (!$model->save()) {
                     throw new BadRequestHttpException(Helper::firstError($model));
                 }
@@ -157,5 +159,33 @@ class AjaxController extends BaseController
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
+    }
+
+    public function actionGetPrice()
+    {
+        $sku = \Yii::$app->request->post("sku");
+        $qty = \Yii::$app->request->post("qty");
+        $model = ProductsPrice::findOne(['sku' => $sku, 'qty' => $qty]);
+        if (!$model) {
+            throw new BadRequestHttpException("Không tìm thấy giá mặc định!");
+        }
+        return [
+            'price' => $model->price,
+            'qty' => $model->qty,
+            'sku' => $model->sku
+        ];
+    }
+
+    /**
+     * @return mixed|null
+     * @throws BadRequestHttpException
+     */
+    public function actionGetTransport()
+    {
+        $model = Transporters::findOne(\Yii::$app->request->post('transportID'));
+        if (!$model) {
+            throw new BadRequestHttpException("Không có đơn vị vận chuyển nào!");
+        }
+        return $model->children;
     }
 }

@@ -89,7 +89,7 @@ class BaseController extends Controller
         ];
     }
 
-    static function responseRemote($view, $params, $title = null, $footer = null, $size = 'normal')
+    static function responseRemote($view, $params = [], $title = null, $footer = null, $size = 'normal')
     {
         if (\Yii::$app->request->isAjax) {
             \Yii::$app->layout = 'blank.blade';

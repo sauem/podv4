@@ -281,9 +281,14 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
      */
     function successRemoteResponse(response) {
         // reload datatable if response contain forceReload field
+        if (response.message !== undefined && response.message) {
+            toastr.warning(response.message);
+        }
         if (response.forceReload !== undefined && response.forceReload) {
             //$.pjax.reload({container:containerId});
-            $.pjax.reload(containerId, pjaxOptions);
+            if(containerId){
+                $.pjax.reload(containerId, pjaxOptions);
+            }
         }
 
         // close modal if response contain forceClose field

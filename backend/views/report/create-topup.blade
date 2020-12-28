@@ -1,0 +1,70 @@
+<?php
+use backend\models\OrdersTopup;use backend\models\UserRole;use common\helper\Component;use kartik\form\ActiveForm;
+use kartik\daterange\DateRangePicker;
+use kartik\date\DatePicker;
+use kartik\select2\Select2;
+?>
+@section("content")
+    <?php $form = ActiveForm::begin();?>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'time')->widget(DatePicker::className(), [
+                'value' => date('d/m/Y', time()),
+                'removeButton' => false,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'dd/mm/yyyy'
+                ]
+            ])->label('Ngày')?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'partner_id')->widget(Select2::className(), [
+                'data' => UserRole::LISTS(UserRole::ROLE_PARTNER),
+                'options' => ['placeholder' => 'Chọn đối tác'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ]
+            ])->label('Ngày')?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'cash_source')->dropDownList(OrdersTopup::SOURCE, [
+                'id' => 'cash_source',
+                'placeholder' => 'Chọn nguồn tiền...'
+            ])?>
+        </div>
+        <div class="col-md-6">
+            <?= Component::inputMoney($model, $form, 'total')?>
+        </div>
+        <div class="col-12" style="display: none" id="thumb">
+            <?= $view->render('@backend/views/parts/FileUpload.blade', [
+                'form' => $form,
+                'model' => $model,
+                'label' => 'chứng từ',
+                'name' => 'thumb'
+            ])?>
+        </div>
+    </div>
+    <?php ActiveForm::end();?>
+@stop
+@section("pos_page")
+    <script>
+        const SOURCE_CASH = 'cash';
+        const SOURCE_COD = 'cod';
+
+        $(document).on("change", "#cash_source", function (evt) {
+            let val = $(this).val();
+            let thumb = $("#thumb");
+            switch (val) {
+                case SOURCE_CASH:
+                    thumb.show();
+                    break;
+                case SOURCE_COD:
+                    thumb.hide();
+                    break;
+                default:
+                    thumb.hide();
+                    break;
+            }
+        });
+    </script>
+@stop

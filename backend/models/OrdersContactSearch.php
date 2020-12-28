@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\helper\Helper;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\OrdersContact;
@@ -15,6 +16,7 @@ class OrdersContactSearch extends OrdersContact
      * {@inheritdoc}
      */
     public $items;
+
     public function rules()
     {
         return [
@@ -58,17 +60,9 @@ class OrdersContactSearch extends OrdersContact
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'shipping_cost' => $this->shipping_cost,
-            'payment_method' => $this->payment_method,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ]);
-
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere(['IN', 'id', $this->id])
             ->andFilterWhere(['like', 'code', $this->code])
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'zipcode', $this->zipcode])

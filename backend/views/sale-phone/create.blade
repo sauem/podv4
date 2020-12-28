@@ -1,5 +1,5 @@
 <?php
-use common\helper\Helper;
+use backend\models\ContactsSource;use common\helper\Helper;
 use kartik\select2\Select2;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
@@ -46,8 +46,8 @@ function (data, params) {
 JS;
 ?>
 @section('content')
-    @php($form = \kartik\form\ActiveForm::begin())
-    {!! $form->errorSummary($model) !!}
+    @php($form = \kartik\form\ActiveForm::begin(['id' => 'OrderContact']))
+    {!! $form->errorSummary($model,['class' => 'text-danger']) !!}
     <div class="row">
         <div class="col-md-5">
             <h4 class="card-title"><i class="fe-user-x"></i> Thông tin khách hàng</h4>
@@ -97,7 +97,7 @@ JS;
                 </div>
                 <div class="col-md-6">
                     <?= $form->field($model, 'order_source')->widget(Select2::className(), [
-                        'data' => Helper::countries(),
+                        'data' => ContactsSource::LISTS(),
                         'options' => ['placeholder' => 'Chọn nguồn liên hệ'],
                         'pluginOptions' => ['allowClear' => true]
                     ])?>
@@ -157,6 +157,7 @@ JS;
                             <th colspan="2">Tổng tiền:</th>
                             <th colspan="2">
                                 <div class="input-group">
+
                                     <input name="total_price" id="total-price-input"
                                            type="text"
                                            required
@@ -167,6 +168,9 @@ JS;
                                     <div class="input-group-append">
                                         <p class="currency-input input-group-text">Đ</p>
                                     </div>
+
+                                    <?= $form->field($model, 'total_price')
+                                        ->hiddenInput(['id' => 'cost_product'])->label(false)?>
                                 </div>
                             </th>
                         </tr>
@@ -178,7 +182,8 @@ JS;
                             <th colspan="2">Tổng đơn</th>
                             <th colspan="2">
                                 <span id="total-bill-text"></span>
-                                <input name="total_bill" type="hidden">
+                                <?= $form->field($model, 'total_bill')
+                                    ->hiddenInput(['id' => 'cost_bill'])->label(false)?>
                             </th>
                         </tr>
                         </tfoot>
@@ -195,8 +200,9 @@ JS;
         $(document).ready(function () {
 
             let order = new orderSaleForm();
-            $(document).on('click', '#btn-add-product', function () {
 
+
+            $(document).on('click', '#btn-add-product', function () {
                 let id = $('#product-sku').val();
                 order.addProductItem(id);
             });
@@ -214,7 +220,10 @@ JS;
             });
 
             $(document).on('change', '.input-product-qty', function () {
-
+                let qty = $(this).val();
+                let sku = $(this).data("sku");
+                let input = $("body").find(`#total-price-${sku}`);
+                order.loadItemPrice(qty, sku, input);
             });
             $(document).on('change', '#input-shipping-cost', function () {
                 order.setShippingCost($(this).val());
@@ -224,7 +233,5 @@ JS;
                 order.setTotalPrice($(this).val());
             });
         });
-
-
     </script>
 @stop

@@ -42,6 +42,19 @@ const initToggleTab = function () {
     });
 }
 
+function initDataTable(module) {
+    $(`#${module}-table`).DataTable({
+        language: {
+            paginate: {
+                previous: "<i class='mdi mdi-chevron-left'>",
+                next: "<i class='mdi mdi-chevron-right'>"
+            }
+        }, drawCallback: function () {
+            $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+        }
+    });
+}
+
 
 function initMaskMoney() {
     $(document).ready(function () {

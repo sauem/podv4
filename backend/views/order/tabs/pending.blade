@@ -43,14 +43,6 @@ use common\helper\Component;
         'perfectScrollbar' => true,
         'columns' => [
             [
-                'class' => CheckboxColumn::class,
-                'checkboxOptions' => function ($model) {
-                    $cog['data-code'] = $model->code;
-                    $cog['data-pjax'] = '0';
-                    return $cog;
-                }
-            ],
-            [
                 'attribute' => 'code',
                 'format' => 'html',
                 'value' => function ($model) {
@@ -58,6 +50,20 @@ use common\helper\Component;
                 }
             ],
             'checking_number',
+            [
+                'attribute' => 'warehouse_id',
+                'format' => 'html',
+                'value' => function ($model) {
+                    return Helper::isEmpty($model->warehouse) ? '---' : $model->warehouse->name;
+                }
+            ],
+            [
+                'attribute' => 'transport_id',
+                'format' => 'html',
+                'value' => function ($model) {
+                    return Helper::isEmpty($model->transporter) ? '---' : $model->transporter->name;
+                }
+            ],
             'name',
             'phone',
             [
@@ -71,21 +77,15 @@ use common\helper\Component;
                 'label' => 'sản phẩm',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return '--';
-                }
-            ],
-            [
-                'attribute' => 'warehouse_id',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::isEmpty($model->warehouse) ? '---' : $model->warehouse->name;
-                }
-            ],
-            [
-                'attribute' => 'transport_id',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::isEmpty($model->transporter) ? '---' : $model->transporter->name;
+                    $html = "";
+                    $products = !Helper::isEmpty($model->skuItems) ? $model->skuItems : [];
+                    if (empty($products)) {
+                        return '--';
+                    }
+                    foreach ($products as $product) {
+                        $html .= "$product->sku * $product->qty, ";
+                    }
+                    return Helper::string($html);
                 }
             ],
             [
@@ -112,14 +112,34 @@ use common\helper\Component;
             [
                 'class' => ActionColumn::class,
                 'template' => '{update}',
-                'width' => '5%',
+                'width' => '150px',
                 'buttons' => [
                     'update' => function ($url, $model) {
-                        return Component::btnUpdate($url);
+                        return Html::button("<i class='mdi mdi-square-edit-outline'></i> Cập nhật", [
+                            'data-pjax' => "0",
+                            'class' => 'btn btn-sm btn-warning',
+                            'role' => 'modal-remote',
+                            'data-url' => $url
+                        ]);
                     },
 
                 ]
             ]
         ]
     ]) ?>
+@stop
+@section("pos_page")
+    <script>
+        $(document).on("click", "#createOrderVendor", function() {
+            let ids = $('#w1').yiiGridView("getSelectedRows");
+
+            if(ids.length <= 0){
+                toastr.warning('Chọn 1 đơn hàng để thực hiện thao tác!');
+                return false;
+            }
+            let order = new HandleOrder();
+            order.create('#vendor-modal', '#default-box', this, {ids});
+        });
+
+    </script>
 @stop

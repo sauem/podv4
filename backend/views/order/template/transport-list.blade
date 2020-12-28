@@ -1,0 +1,13 @@
+<script id="transport-child" type="text/x-handlebars-template">
+    <label>Đơn vị vận chuyển cụ thể</label>
+    <select title="Marketer..."
+            data-live-search="true"
+            required
+            name="filter[marketer][]"
+            class="selectpicker"
+            data-style="btn-light">
+        @{{#each this }}
+        <option value="@{{ this.id }}">@{{this.name}}</option>
+        @{{/each }}
+    </select>
+</script>

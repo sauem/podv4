@@ -107,6 +107,8 @@ class OrderController extends BaseController
             return static::responseSuccess(0, 1);
         }
         if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
+            $model->total_bill = \Yii::$app->request->post("total_bill");
+            $model->total_price = Helper::toFloat(\Yii::$app->request->post("total_price"));
             try {
                 if (isset($model->ids) && !empty($model->ids)) {
                     $ids = explode(',', $model->ids);
@@ -133,7 +135,7 @@ class OrderController extends BaseController
         return static::responseRemote('create.blade', [
             'model' => $model,
             'ids' => implode(',', $ids),
-        ], 'Tạo đơn vận chuyển', $this->footer(),'md');
+        ], 'Tạo đơn vận chuyển', $this->footer());
     }
 
     /**
@@ -152,6 +154,11 @@ class OrderController extends BaseController
         ]);
     }
 
+    /**
+     * @param $code
+     * @return array|string
+     * @throws NotFoundHttpException
+     */
     public function actionUpdateTrackingId($code)
     {
         $model = OrdersContact::findOne(['code' => $code]);
@@ -160,6 +167,7 @@ class OrderController extends BaseController
             throw new NotFoundHttpException('Không tìm thấy mã đơn hàng!');
         }
         if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
+            $model->status = OrdersContact::STATUS_SHIPPING;
             if ($model->save()) {
                 return static::responseSuccess();
             }

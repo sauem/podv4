@@ -65,7 +65,15 @@ use yii\helpers\Html;
             'label' => 'sản phẩm',
             'format' => 'html',
             'value' => function ($model) {
-                return '--';
+                $html = "";
+                $products = !Helper::isEmpty($model->skuItems) ? $model->skuItems : [];
+                if (empty($products)) {
+                    return '--';
+                }
+                foreach ($products as $product) {
+                    $html .= "$product->sku * $product->qty, ";
+                }
+                return Helper::string($html);
             }
         ],
         [
@@ -79,14 +87,14 @@ use yii\helpers\Html;
             'label' => 'Phí vận chuyển',
             'format' => 'html',
             'value' => function ($model) {
-                return Helper::formatCUR($model->shipping_cost,'',0);
+                return Helper::formatCUR($model->shipping_cost, '', 0);
             }
         ],
         [
             'label' => 'Tổng đơn',
             'format' => 'html',
             'value' => function ($model) {
-                return Helper::formatCUR($model->total_bill,'',0);
+                return Helper::formatCUR($model->total_bill, '', 0);
             }
         ],
     ]

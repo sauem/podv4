@@ -51,7 +51,7 @@ class Component
             ],
             'pluginOptions' => [
                 'affixesStay' => false,
-                'prefix' => $prefix,
+                'prefix' => "~ ",
                 'allowNegative' => true,
                 'allowZero' => true,
                 'precision' => 0,

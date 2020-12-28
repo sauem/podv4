@@ -1,0 +1,75 @@
+<?php
+use yii\helpers\Url;
+?>
+@section("content")
+    <div class="card-box">
+        <h4 class="card-title"><i class="fe-bar-chart"></i> Báo cáo tài chính</h4>
+        <ul class="nav nav-tabs nav-bordered nav-justified">
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-1" data-toggle="tab"
+                   aria-expanded="true" class="nav-link active">
+                    Tổng quan
+                </a>
+            </li>
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-2"
+                   data-url="<?= Url::toRoute(['crossed'])?>"
+                   data-toggle="tab"
+                   aria-expanded="false"
+                   class="nav-link ">
+                    Đã đối soát
+                </a>
+            </li>
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-3"
+                   data-url="<?= Url::toRoute(['uncross'])?>"
+                   data-toggle="tab"
+                   aria-expanded="false"
+                   class="nav-link">
+                    Chưa đối soát
+                </a>
+            </li>
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-4"
+                   data-url="<?= Url::toRoute(['topup'])?>"
+                   data-toggle="tab"
+                   aria-expanded="false"
+                   class="nav-link">
+                    Topup
+                </a>
+            </li>
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-5" data-url="<?= Url::toRoute(['histories'])?>" data-toggle="tab"
+                   aria-expanded="false"
+                   class="nav-link">
+                    Nhật ký chung
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-1">
+                <?= $view->render("tabs/overview.blade")?>
+            </div>
+            <div class="tab-pane" id="tab-2">Đã đối soát</div>
+            <div class="tab-pane" id="tab-3">Chưa đối soát</div>
+            <div class="tab-pane" id="tab-4">Topup</div>
+            <div class="tab-pane" id="tab-5">Nhật ký chung</div>
+        </div>
+    </div>
+    <?= $view->render('@backend/views/parts/Modal.blade', ['id' => 'topup-modal'])?>
+@stop
+@section("pos_page")
+    <script>
+        // pjax tab content
+        initToggleTab();
+        //init overview chart
+        new initFinancialChart().render().overview();
+
+    </script>
+@stop
+
+<?php $view->registerJsFile('@web/theme/js/financial-report.js', ['depends' => \yii\web\JqueryAsset::className()]); ?>
+<?= $view->render('@backend/views/parts/dataTable.blade') ?>
+
+

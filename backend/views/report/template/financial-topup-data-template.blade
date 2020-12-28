@@ -1,0 +1,13 @@
+<script id="financial-topup-data-template" type="text/x-handlebars-template">
+    @{{#each this}}
+    <tr>
+        <td>@{{dateFormat time }}</td>
+        <td>@{{ partner.username }}</td>
+        <td>@{{cashSource cash_source }}</td>
+        <td>@{{money total }}</td>
+        <td>
+           ---
+        </td>
+    </tr>
+    @{{/each }}
+</script>

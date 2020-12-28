@@ -17,13 +17,12 @@ return [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@common/messages',
                 ],
+                'yii2mod.settings' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@yii2mod/settings/messages',
+                ],
             ],
         ],
-//        'formatter' => [
-//            'class' => 'yii\i18n\formatter',
-//            'thousandSeparator' => ',',
-//            'decimalSeparator' => '.',
-//        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

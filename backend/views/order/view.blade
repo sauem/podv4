@@ -7,13 +7,16 @@ use yii\helpers\Url;
     <?php \yii\widgets\Pjax::begin(); ?>
     <div id="order-detail-box" class="card">
         <div class="card-header">
-            <h4 class="card-title"><a href="{!! Url::toRoute(['index']) !!}"><i class="fe-arrow-left"></i> Danh sách đơn</a> | #{!! $model->code !!}</h4>
+            <h4 class="card-title"><a href="{!! Url::toRoute(['index']) !!}"><i class="fe-arrow-left"></i> Danh sách đơn</a>
+                | #{!! $model->code !!}</h4>
             <button class="btn btn-xs btn-info"><i class="fe-edit"></i> Sửa đơn</button>
-            <button class="btn btn-xs btn-warning"><i class="fe-repeat"></i> Hoàn đơn</button>
             <button class="btn btn-xs btn-danger"><i class="fe-x"></i> Hủy đơn</button>
-            <button role="modal-remote" data-url="{!! Url::toRoute(['update-tracking-id' ,'code' => $model->code]) !!}"
-                    class="btn btn-xs btn-success"><i class="fe-sliders"></i> Cập nhập tracking ID
-            </button>
+            <?php if($model->checking_number){
+            ?>
+            <button class="btn btn-xs btn-warning"><i class="fe-repeat"></i> Hoàn đơn</button>
+            <button class="btn btn-xs btn-success"><i class="fe-check"></i> Đã thanh toán</button>
+            <?php
+            } ?>
         </div>
         <div class="card-body">
             <div class="row">
@@ -31,7 +34,12 @@ use yii\helpers\Url;
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-4">
-                                        <h5 class="mt-0">Tracking ID: </h5>
+                                        <h5 class="mt-0">Tracking ID:
+                                            <button role="modal-remote"
+                                                    data-url="{!! Url::toRoute(['update-tracking-id' ,'code' => $model->code]) !!}"
+                                                    class="btn btn-xs btn-outline-success"><i class="fe-edit"></i>
+                                            </button>
+                                        </h5>
                                         <p>{!! $model->checking_number ? $model->checking_number :  '---' !!}</p>
                                     </div>
                                 </div>
@@ -40,12 +48,14 @@ use yii\helpers\Url;
                             <div class="track-order-list">
                                 <ul class="list-unstyled">
                                     <li class="completed">
-                                        <h5 class="mt-0 mb-1">Ngày chốt đơn</h5>
-                                        <p class="text-muted">{!! Helper::dateFormat($model->created_at, true) !!}</p>
+                                        <h5 class="mt-0 mb-1">Đã chốt đơn</h5>
+                                        <p class="text-muted">
+                                            {!! Helper::dateFormat($model->order_time  , true) !!}
+                                        </p>
                                     </li>
                                     <li class="completed">
                                         <h5 class="mt-0 mb-1">Đã chuyển hàng</h5>
-                                        <p class="text-muted">April 22 2019 <small class="text-muted">12:16 AM</small>
+                                        <p class="text-muted">{!! Helper::isEmpty($model->time_shipped_success) ? '--' : Helper::dateFormat($model->time_shipped_success, true) !!}</p>
                                         </p>
                                     </li>
                                     <li>
@@ -59,10 +69,6 @@ use yii\helpers\Url;
                                         <p class="text-muted">Estimated delivery within 3 days</p>
                                     </li>
                                 </ul>
-
-                                <div class="text-center mt-4">
-                                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
-                                </div>
                             </div>
 
                         </div>
@@ -97,8 +103,8 @@ use yii\helpers\Url;
                                                              alt="product-img" width="64">
                                                     </td>
                                                     <td>{!! $item->qty !!}</td>
-                                                    <td>{!! $item->price / $item->qty !!}</td>
-                                                    <td>{!! $item->price !!}</td>
+                                                    <td>{!! Helper::formatCUR($item->price / $item->qty, '', 0) !!}</td>
+                                                    <td>{!! Helper::formatCUR($item->price ,'', 0) !!}</td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -108,7 +114,7 @@ use yii\helpers\Url;
                                     <tr>
                                         <th scope="row" colspan="4" class="text-right">Tổng tiền :</th>
                                         <td>
-                                            <div class="font-weight-bold">{!! $model->total_price ? $model->total_price : '0'!!}</div>
+                                            <div class="font-weight-bold">{!! $model->total_price ? Helper::formatCUR($model->total_price, '',0) : '0'!!}</div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -118,7 +124,7 @@ use yii\helpers\Url;
                                     <tr>
                                         <th scope="row" colspan="4" class="text-right">Tổng hóa đơn :</th>
                                         <td>
-                                            <div class="font-weight-bold">{!! $model->total_bill ? $model->total_bill : '0' !!}</div>
+                                            <div class="font-weight-bold">{!! $model->total_bill ? Helper::formatCUR($model->total_bill, '',0) : '0' !!}</div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -162,13 +168,7 @@ use yii\helpers\Url;
                                     <p class="mb-2"><span class="font-weight-semibold mr-2">Payment Type:</span> Credit
                                         Card
                                     </p>
-                                    <p class="mb-2"><span class="font-weight-semibold mr-2">Provider:</span> Visa ending
-                                        in
-                                        2851
-                                    </p>
-                                    <p class="mb-2"><span class="font-weight-semibold mr-2">Valid Date:</span> 02/2020
-                                    </p>
-                                    <p class="mb-0"><span class="font-weight-semibold mr-2">CVV:</span> xxx</p>
+
                                 </li>
                             </ul>
 

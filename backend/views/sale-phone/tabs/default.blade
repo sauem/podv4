@@ -15,7 +15,6 @@ use yii\helpers\Url;
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'pjax' => true,
-    'persistResize' => true,
     'layout' => '{items}{pager}',
     'responsiveWrap' => false,
     'options' => ['id' => 'default-tab'],
@@ -60,7 +59,7 @@ use yii\helpers\Url;
         [
             'class' => ActionColumn::class,
             'template' => '{order}{actions}',
-            'width' => '5%',
+            'width' => '15%',
             'buttons' => [
                 'order' => function ($url, $model) {
                     return Html::button("<i class='fe-shopping-cart'></i> tạo đơn", [

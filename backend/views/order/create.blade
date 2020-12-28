@@ -7,28 +7,49 @@ use backend\models\Transporters;
     <?php $form = \kartik\form\ActiveForm::begin();?>
     <?= $form->errorSummary($model)?>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-12">
             <?= $form->field($model, 'warehouse_id')->widget(Select2::className(), [
                 'data' => Warehouse::LISTS(),
                 'options' => ['placeholder' => 'Chọn kho...'],
                 'pluginOptions' => ['allowClear' => true]
             ])->label('Kho hàng')?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-12">
             <?= $form->field($model, 'transport_id')->widget(Select2::className(), [
-                'data' => Transporters::LISTS(),
-                'options' => ['placeholder' => 'Chọn đối tác vận chuyển...'],
+                'data' => Transporters::LISTS(false),
+                'options' => ['id' => 'select-transport-partner', 'placeholder' => 'Chọn đối tác vận chuyển...'],
                 'pluginOptions' => ['allowClear' => true]
             ])->label('Đối tác vận chuyển')?>
             <?= $form->field($model, 'ids')->hiddenInput(['value' => $ids])->label(false)?>
         </div>
-        <div class="col-md-4">
-            <?= $form->field($model, 'sub_transport_id')->widget(Select2::className(), [
-                'data' => Transporters::LISTS(),
-                'options' => ['placeholder' => 'Chọn đơn vị vận chuyển...'],
-                'pluginOptions' => ['allowClear' => true]
-            ])->label('Đơn vị vận chuyển')?>
+        <div class="col-md-12">
+            <div id="result-transport-child"></div>
         </div>
     </div>
     <?php \kartik\form\ActiveForm::end()?>
+    <?= $view->render('template/transport-list.blade', ['model' => $model, 'form' => $form])?>
+@stop
+@section("pos_page")
+    <script>
+        let resultTransport = $("#result-transport-child");
+        let htmlTransport = $("#transport-child").html();
+        let tempTransport = Handlebars.compile(htmlTransport);
+        $(document).on("change", "#select-transport-partner", function () {
+            let transportID = $(this).val();
+            try {
+                $.ajax({
+                    url: AJAX_PATH.getTransport,
+                    data: {transportID},
+                    type: 'POST',
+                    cache: false,
+                    success: function (res) {
+                        resultTransport.html(tempTransport(res));
+                        initPicker();
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    </script>
 @stop

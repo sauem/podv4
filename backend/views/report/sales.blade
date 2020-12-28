@@ -1,0 +1,131 @@
+<?php
+
+/* @var $this yii\web\View */
+
+use dosamigos\chartjs\ChartJs;
+
+$this->title = 'My Yii Application';
+?>
+@section('content')
+    <div class="card-box">
+        <h4 class="card-title"><i class="fe-bar-chart"></i> Báo cáo bán hàng</h4>
+        <div class="row mb-3">
+            <div class="col-12 text-center">
+                <h4 class="text-danger mb-3">Bộ lọc</h4>
+            </div>
+            <div class="col-md-3 mt-1">
+                <select title="Sale..."
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[sale][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($marketers))
+                        @foreach($marketers as $id => $name)
+                            <option value="{{$id}}">{{$name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="col-md-3 mt-1">
+                <select title="Nguồn liên hệ"
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[contact_source][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($sources))
+                        @foreach($sources as $slug => $name)
+                            <option value="{{$slug}}">{{$name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="col-md-3 mt-1">
+                <select title="Sản phẩm"
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[product][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($products))
+                        @foreach($products as $sku => $name)
+                            <option value="{{$sku}}">{{$name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="col-md-3 mt-1">
+                <?= \kartik\daterange\DateRangePicker::widget([
+                    'name' => 'filter[register_time]',
+                    'presetDropdown' => true,
+                    'hideInput' => true,
+                    'pluginOptions' => [
+                        'locale' => [
+                            'format' => 'DD/MM/YYYY',
+                            'separator' => ' - '
+                        ]
+                    ]
+                ])?>
+            </div>
+            <div class="col-md-3 mt-1">
+                <select title="Marketer..."
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[marketer][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($marketers))
+                        @foreach($marketers as $id => $name)
+                            <option value="{{$id}}">{{$name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+
+            <div class="col-md-3 mt-1">
+                <button class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
+                <button data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-success"><i class="fe-trash"></i> Xoá
+                </button>
+            </div>
+        </div>
+
+        <hr>
+        <div class="row align-items-center">
+            <div class="col-12 text-center">
+                <h4 class="text-danger">Chỉ số</h4>
+            </div>
+            <div class="col-1">
+                <p class="text-danger"><b>Chú thích</b></p>
+            </div>
+            <div class="col-2">
+                <p><b>C3: Tổng số đơn hàng</b></p>
+            </div>
+            <div class="col-2">
+                <p><b>C8: Tổng đơn hàng OK</b></p>
+            </div>
+            <div class="col">
+                <p><b>C11: Tổng đơn hàng chuyển thành công</b></p>
+            </div>
+            <div class="col">
+                <p><b>C13: Tổng đơn hàng đã chuyển tiền cho đối tác</b></p>
+            </div>
+        </div>
+        <div id="sales-result" class="row align-items-center justify-content-around text-center">
+
+        </div>
+        <div class="sales-chart">
+            <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP C8 C11</h4>
+            <div id="chart-one" class="apex-charts"></div>
+
+            <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP CONTACT</h4>
+            <div id="chart-two" class="apex-charts" data-colors="#6658dd,#1abc9c,#f672a7"></div>
+        </div>
+    </div>
+@stop
+@section('pos_page')
+    <script>
+        new initSaleChart().renderView();
+    </script>
+@stop
+@php($view->registerJsFile('@web/theme/js/sales-report.js',['depends' =>  \yii\web\JqueryAsset::className()]))

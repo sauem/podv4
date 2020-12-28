@@ -28,7 +28,6 @@ class ProductController extends BaseController
     public function actionCreate()
     {
         $model = new Products();
-        //$priceModel = new ProductsPrice();
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
         try {
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
@@ -47,7 +46,6 @@ class ProductController extends BaseController
         }
         return static::responseRemote('create.blade', [
             'model' => $model,
-            //'priceModel' => $priceModel,
         ], 'Thêm sản phẩm', parent::footer());
     }
 
@@ -58,7 +56,6 @@ class ProductController extends BaseController
     public function actionUpdate($id)
     {
         $model = Products::findOne($id);
-        $priceModel = new ProductsPrice();
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
         try {
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
@@ -75,7 +72,6 @@ class ProductController extends BaseController
         }
         return static::responseRemote('create.blade', [
             'model' => $model,
-            'priceModel' => $priceModel,
         ], 'Cập nhật sản phẩm', parent::footer());
     }
 

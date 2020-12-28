@@ -189,3 +189,29 @@ td .text-td {
     }
   }
 }
+
+.pagination {
+
+
+  li {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+
+    a {
+      color: black;
+    }
+
+    &.active {
+      background: #CCC;
+
+      a {
+        font-weight: bold;
+      }
+    }
+  }
+}

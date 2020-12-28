@@ -136,5 +136,19 @@ td .text-td p {
 @media (max-width: 467px) {
   .modal-dialog.modal-xl, .modal-dialog.modal-md {
     max-width: 100%; } }
+.pagination li {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc; }
+  .pagination li a {
+    color: black; }
+  .pagination li.active {
+    background: #CCC; }
+    .pagination li.active a {
+      font-weight: bold; }
 
 /*# sourceMappingURL=site.css.map */

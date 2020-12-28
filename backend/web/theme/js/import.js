@@ -62,22 +62,30 @@ async function handleReadExcel(evt) {
 async function actionSave(module) {
     let url = AJAX_PATH[`${module}Import`];
     let data = window.DATA;
+    let errorsHtml = $("#errors-template").html();
+    let errTemp = Handlebars.compile(errorsHtml);
+    let errorsTable = $("#errors-table");
+
     let index = 0,
-        errorRows = 0,
-        errorMessages = [];
+        errorRows = 0;
     if (!data && data.length <= 0) {
         toastr.warning('Không tìm thấy dữ liệu!');
         return false;
     }
-    try {
-        while (typeof data[index] !== "undefined") {
+    while (typeof data[index] !== "undefined") {
+
+        try {
             const res = await doPushData(url, data[index]);
-            index++;
-            initProgressData(index, data.length, errorRows);
+        } catch (e) {
+            errorRows++;
+            if (!$("#tab-2").hasClass('active')) {
+                $("a[href='#tab-2']").trigger("click");
+            }
+            let errorItem = {row: (index + 1), message: JSON.parse(e.responseText).message};
+            $("#errors-result").prepend(errTemp(errorItem));
         }
-    } catch (e) {
-        errorRows++;
-        throw new Error(e.message);
+        index++;
+        initProgressData(index, data.length, errorRows);
     }
 }
 
@@ -163,7 +171,7 @@ function processRow(sheet) {
     let rows = [];
     switch (module) {
         case MODULE_CONTACT:
-            columnLength = 15;
+            columnLength = 17;
             break;
         case MODULE_TRACKING:
         case MODULE_REFUND:
@@ -207,13 +215,15 @@ const mappingModel = (module, row) => {
             item.zipcode = row[5] ? row[5].v : null;
             item.option = row[6] ? row[6].v : null;
             item.note = row[7] ? row[7].v : null;
-            item.partner = row[8] ? row[8].v : null;
-            item.utm_source = row[9] ? row[9].v : null;
-            item.utm_medium = row[10] ? row[10].v : null;
-            item.utm_campaign = row[11] ? row[11].v : null;
-            item.utm_term = row[12] ? row[12].v : null;
-            item.utm_content = row[13] ? row[13].v : null;
-            item.type = row[14] ? toUnicode(row[14].v).toLowerCase() : null;
+            item.country = row[8] ? row[9].v : null;
+            item.partner = row[9] ? row[9].v : null;
+            item.category = row[10] ? row[10].v : null;
+            item.type = row[11] ? toUnicode(row[11].v).toLowerCase : null;
+            item.utm_source = row[12] ? row[12].v : null;
+            item.utm_medium = row[13] ? row[13].v : null;
+            item.utm_campaign = row[14] ? row[14].v : null;
+            item.utm_term = row[15] ? row[15].v : null;
+            item.utm_content = row[16] ? row[16].v : null;
             break;
         case MODULE_REFUND:
             item = refundModel();
@@ -294,13 +304,15 @@ function contactModel() {
         zipcode: null,
         option: null,
         note: null,
+        country: null,
         partner: null,
+        category: null,
+        type: null,
         utm_source: null,
         utm_medium: null,
         utm_content: null,
         utm_term: null,
         utm_campaign: null,
-        type: null,
     }
 }
 

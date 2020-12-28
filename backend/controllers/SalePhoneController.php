@@ -10,6 +10,7 @@ use backend\models\ContactsLogStatus;
 use backend\models\ContactsSearch;
 use backend\models\OrdersContact;
 use backend\models\OrdersContactSku;
+use backend\models\OrderStatus;
 use backend\models\Products;
 use common\helper\Helper;
 use yii\db\Transaction;
@@ -130,9 +131,9 @@ class SalePhoneController extends BaseController
                     //save item order product
                     OrdersContactSku::saveItems($model->id, \Yii::$app->request->post('items'));
                     //check user has finish current phone
-                    ContactsAssignment::completeAssignment($model->phone);
+                    $newNumber = ContactsAssignment::completeAssignment($model->phone);
                     $transaction->commit();
-                    return static::responseSuccess();
+                    return static::responseSuccess(1, 1, $newNumber ? "Số mới được áp dụng!" : null);
                 }
             } catch (\Exception $exception) {
                 $transaction->rollBack();

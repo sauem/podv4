@@ -1,0 +1,149 @@
+<?php
+
+use kartik\grid\CheckboxColumn;
+use kartik\grid\GridView;
+use kartik\grid\ActionColumn;
+use backend\models\OrdersContact;
+use common\helper\Helper;
+use yii\helpers\Url;
+use yii\helpers\Html;
+use common\helper\Component;
+?>
+@section('content')
+    <div class="card-box">
+        <ul class="nav nav-tabs nav-bordered nav-justified">
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-1" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                    Chờ đối soát
+                </a>
+            </li>
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-2" data-url="<?= Url::toRoute(['crossed'])?>" data-toggle="tab"
+                   aria-expanded="false"
+                   class="nav-link ">
+                    Đã đối soát
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div class="btn-group mb-2">
+                    <button id="make-cross"
+                            data-url="{!! Url::toRoute(['make-cross']) !!}"
+                            class="btn btn-sm btn-success">
+                        <i class="fe-check-square"></i> Đối soát
+                    </button>
+                    <a href="{!! Url::toRoute(['/import','module' => 'crossed']) !!}" class="btn btn-sm btn-info"><i
+                                class="fe-check-square"></i> Nhập đơn đã đối soát
+                    </a>
+                </div>
+
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'pjax' => true,
+                    'persistResize' => true,
+                    'layout' => '{items}{pager}',
+                    'responsiveWrap' => false,
+                    'options' => ['id' => 'cross-order'],
+                    'tableOptions' => [
+                        'class' => 'table table-sm'
+                    ],
+                    'pjaxSettings' => [
+                        'neverTimeout' => true,
+                        'enablePushState' => false,
+                        'options' => [
+                            'id' => 'cross-box'
+                        ]
+                    ],
+                    'perfectScrollbar' => true,
+                    'columns' => [
+                        [
+                            'class' => CheckboxColumn::class,
+                            'checkboxOptions' => function ($model) {
+                                $cog['data-code'] = $model->code;
+                                $cog['data-pjax'] = '0';
+                                return $cog;
+                            }
+                        ],
+                        [
+                            'attribute' => 'code',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
+                            }
+                        ],
+                        'checking_number',
+                        'name',
+                        'phone',
+                        [
+                            'label' => 'Đối tác',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                return $model->contact->partner;
+                            }
+                        ],
+                        [
+                            'label' => 'sản phẩm',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                return '--';
+                            }
+                        ],
+                        [
+                            'attribute' => 'status',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                return OrdersContact::StatusLabel($model->status);
+                            }
+                        ],
+                        [
+                            'label' => 'Phí vận chuyển',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                return Helper::formatCUR($model->shipping_cost, '', 2);
+                            }
+                        ],
+                        [
+                            'label' => 'Tổng đơn',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                return Helper::formatCUR($model->total_bill, '', 2);
+                            }
+                        ],
+                        [
+                            'class' => ActionColumn::class,
+                            'template' => '{update}',
+                            'width' => '5%',
+                            'buttons' => [
+                                'update' => function ($url, $model) {
+                                    return Component::btnUpdate($url);
+                                },
+
+                            ]
+                        ]
+                    ]
+                ]) ?>
+            </div>
+            <div class="tab-pane" id="tab-2"></div>
+        </div>
+    </div>
+    <?= $view->render("@backend/views/parts/Modal.blade", ['id' => 'cross-modal'])?>
+@stop
+
+@section("pos_page")
+    <script>
+        initToggleTab();
+
+        $(document).on('click', '#make-cross', function (event) {
+            event.preventDefault();
+            let modal = new ModalRemote('#cross-modal', '#crossed-box');
+            let codes = $('#cross-order').yiiGridView("getSelectedRows");
+            if (codes.length <= 0) {
+                toastr.warning('Chọn 1 đơn hàng để thực hiện thao tác!');
+                return false;
+            }
+            modal.remote(this, {codes});
+        });
+
+    </script>
+@stop

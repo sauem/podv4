@@ -11,11 +11,12 @@ use backend\models\Contacts;
     'dataProvider' => $dataProvider,
     'pjax' => true,
     'persistResize' => true,
-    'layout' => '{items}{pager}',
+    'layout' => "{items}\n{summary}{pager}",
     'responsiveWrap' => false,
     'tableOptions' => [
         'class' => 'table table-sm'
     ],
+    'options' => ['id' => ''],
     'pjaxSettings' => [
         'neverTimeout' => true,
         'options' => [
@@ -36,7 +37,7 @@ use backend\models\Contacts;
             'attribute' => 'code',
             'format' => 'html',
             'value' => function ($model) {
-                return "<b class='text-info'>$model->code</b><br>".Helper::dateFormat($model->register_time);
+                return "<b class='text-info'>$model->code</b><br>" . Helper::dateFormat($model->register_time);
             }
         ],
         [

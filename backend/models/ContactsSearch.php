@@ -66,7 +66,7 @@ class ContactsSearch extends Contacts
 
         $query->andFilterWhere(['like', 'code', $this->name])
             ->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere(['=', 'phone', $this->phone])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'zipcode', $this->zipcode])

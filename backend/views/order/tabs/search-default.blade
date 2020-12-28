@@ -33,7 +33,10 @@ $form = ActiveForm::begin();
 
     </div>
     <div class="col">
-        <?=\yii\helpers\Html::submitButton('<i class="fe-search"></i> Tìm', ['class' => 'btn btn-primary']) ?>
+        <button class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
+        <button data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-success">
+            <i class="fe-trash"></i> Làm mới
+        </button>
     </div>
 </div>
 

@@ -1,0 +1,84 @@
+<?php
+use yii\helpers\Url;
+use kartik\grid\GridView;
+use common\helper\Helper;
+use common\helper\Component;
+use kartik\grid\ActionColumn;
+use backend\models\UserRole;
+?>
+@section("content")
+    <div class="row align-items-center my-2">
+        <div class="col-12 text-center">
+            <h4 class="text-danger">Chỉ số</h4>
+        </div>
+        <div class="col-12" id="result-topup"></div>
+    </div>
+    <div class="row my-2">
+        <div class="col-12 text-center">
+            <h4 class="text-danger">Bảng dữ liệu</h4>
+        </div>
+        <div class="col-md-3">
+            <select title="Đối tác..."
+                    data-actions-box="true"
+                    data-live-search="true"
+                    id="partner-select"
+                    name="partner_id" class="selectpicker"
+                    data-selected-text-format="count"
+                    data-style="btn-light">
+                <?php $partners = UserRole::LISTS(); ?>
+                <?php if (!Helper::isEmpty($partners)) {
+                    foreach ($partners as $k => $name) {
+                        echo "<option value='$k'>$name</option>";
+                    }
+                } ?>
+            </select>
+        </div>
+        <div class="col-md-9">
+            <button role="modal-remote"
+                    href="<?= Url::toRoute(['create-topup'])?>"
+                    class="btn float-right mb-3 btn-sm btn-info">
+                <i class="fe-check-square"></i> Thêm Topup
+            </button>
+        </div>
+        <div class="col-12">
+            <table class="table table-sm table-striped table-hover" id="topup-table">
+                <thead>
+                <tr>
+                    <th>Ngày</th>
+                    <th>Đối tác</th>
+                    <th>Nguồn tiền</th>
+                    <th>Số tiền</th>
+                    <th>Chứng từ</th>
+                </tr>
+                </thead>
+                <tbody id="result-data-topup"></tbody>
+            </table>
+        </div>
+    </div>
+    <?= $view->render("../template/financial-topup-template.blade");?>
+    <?= $view->render("../template/financial-topup-data-template.blade");?>
+@stop
+@section("pos_page")
+    <script>
+        let financial = new initFinancialChart();
+        let topupTempIndex = $("#financial-topup-template").html(),
+            topupTempData = $("#financial-topup-data-template").html(),
+            template = Handlebars.compile(topupTempIndex),
+            templateData = Handlebars.compile(topupTempData),
+            resultIndex = $("#result-topup"),
+            resultData = $("#result-data-topup");
+
+        financial.render().topup();
+
+        $(document).on('change', '#partner-select', function (event) {
+            let value = $(this).val();
+            financial.render().topup({partner_id: value});
+        });
+
+        $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#topup-modal', null);
+            event.preventDefault();
+            modal.remote(this, null);
+        });
+    </script>
+@stop

@@ -27,7 +27,6 @@ class AppAsset extends AssetBundle
         'libs/jquery-toast-plugin/jquery.toast.min.js',
         'libs/flatpickr/flatpickr.min.js',
         'libs/sweetalert2/sweetalert2.all.min.js',
-        'js/HandlebarsHelper.js',
         'libs/apexcharts/apexcharts.min.js',
         'libs/selectize/js/standalone/selectize.min.js',
         'libs/excel/xlsx/dist/xlsx.full.min.js',

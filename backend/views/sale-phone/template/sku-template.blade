@@ -15,13 +15,15 @@
         </td>
         <td>
             <input name="items[@{{ sku }}][qty]"
-                   type="text"
+                   type="number"
+                   min="1"
+                   max="10"
                    required
                    data-sku="@{{ sku }}"
                    class="form-control input-product-qty">
         </td>
         <td>
-            <input id="total-price"
+            <input id="total-price-@{{ sku }}"
                    name="items[@{{ sku }}][price]"
                    type="text"
                    required
