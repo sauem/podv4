@@ -74,7 +74,7 @@ class Contacts extends \common\models\BaseModel
         return [
             [['register_time', 'phone'], 'required'],
             [['register_time', 'created_at', 'updated_at'], 'integer'],
-            [['option', 'type','category'], 'string'],
+            [['option', 'type', 'category'], 'string'],
             [['code', 'name', 'email', 'address', 'zipcode', 'ip', 'note', 'partner', 'hash_key', 'country', 'utm_source', 'utm_medium', 'utm_content', 'utm_term', 'utm_campaign', 'link', 'short_link'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 25],
             [['status'], 'string', 'max' => 50],
@@ -160,21 +160,28 @@ class Contacts extends \common\models\BaseModel
      * @return string|string[]
      * @throws BadRequestHttpException
      */
-    public static function generateCode($partnerName)
+    public static function generateCode($partnerName = null, $country = null)
     {
+        $ccode = null;
         try {
             $maxId = Contacts::find()->max('id');
             if (!$maxId) {
                 $maxId = 0;
             }
-            $partner = UserModel::findOne(['username' => Helper::makeUpperString($partnerName)]);
-            if (!$partner) {
-                throw new BadRequestHttpException('Không tìm thấy đối tác!');
+            if ($partnerName) {
+                $partner = UserModel::findOne(['username' => Helper::makeUpperString($partnerName)]);
+                if (!$partner) {
+                    throw new BadRequestHttpException('Không tìm thấy đối tác!');
+                }
+                $ccode = $partner->country;
+            }
+            if ($country) {
+                $ccode = $country;
             }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
-        return Helper::makeCodeIncrement($maxId, $partner->country);
+        return Helper::makeCodeIncrement($maxId, $ccode);
 
     }
 

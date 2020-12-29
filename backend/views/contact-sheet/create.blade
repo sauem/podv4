@@ -1,0 +1,54 @@
+<?php
+
+use backend\models\ContactsSource;use backend\models\Products;use kartik\form\ActiveForm;
+use common\helper\Helper;
+use backend\models\UserRole;
+use kartik\select2\Select2;
+
+?>
+@section('content')
+    @php($form = ActiveForm::begin())
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'country')->widget(Select2::className(), [
+                'data' => Helper::countries(),
+                'options' => ['placeholder' => 'Chọn thị trường...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ]
+            ])->label("Thị trường")?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'partner_id')->widget(Select2::className(), [
+                'data' => UserRole::LISTS(),
+                'options' => ['placeholder' => 'Chọn đối tác...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ]
+            ])->label("Đối tác") ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'sku')->widget(Select2::className(), [
+                'data' => Products::LISTS(),
+                'options' => ['placeholder' => 'Sản phẩm...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ]
+            ])->label("Sản phẩm") ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'contact_source')->widget(Select2::className(), [
+                'data' => ContactsSource::LISTS(),
+                'options' => ['placeholder' => 'Nguồn liên hệ..'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ]
+            ])->label("Nguồn liên hệ") ?>
+        </div>
+        <div class="col-md-12">
+            <?= $form->field($model, 'sheet_id')->label('Sheet ID') ?>
+        </div>
+
+    </div>
+    @php(ActiveForm::end())
+@stop
