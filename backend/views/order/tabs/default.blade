@@ -58,7 +58,7 @@ use yii\helpers\Html;
             'label' => 'Đối tác',
             'format' => 'html',
             'value' => function ($model) {
-                return $model->contact->partner;
+                return Helper::isEmpty($model->contact) ? '---' : $model->contact->partner;
             }
         ],
         [
