@@ -44,7 +44,7 @@
                         'attribute' => 'partner_id',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return $model->partner->username;
+                            return Helper::isEmpty($model->partner) ? '---' : $model->partner->username;
                         }
                     ],
                     [
