@@ -85,7 +85,7 @@ return [
                     'sourcePath' => null,
                     'css' => [
                         '/theme/css/bootstrap.min.css',
-                        //'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css'
+                        'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css'
                     ],
                     'js' => [
                         '/theme/js/bootstrap.js'
