@@ -42,21 +42,21 @@ use yii\helpers\Url;
                         'attribute' => 'partner_id',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return $model->partner->username;
+                            return Helper::isEmpty($model->partner) ? '---' : $model->partner->username;
                         }
                     ],
                     [
                         'attribute' => 'sku',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return $model->product->sku;
+                            return Helper::isEmpty($model->product) ? '---' : $model->product->sku;
                         }
                     ],
                     [
                         'attribute' => 'contact_source',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return $model->source->name;
+                            return Helper::isEmpty($model->source) ? '---' : $model->source->name;
                         }
                     ],
 
