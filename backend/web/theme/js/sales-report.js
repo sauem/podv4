@@ -1,6 +1,9 @@
 function initSaleChart() {
-    this.numberCounterTemplate = $("#sales-template").html();
-    this.numberCounterResult = $("#sales-result");
+    let numberCounterTemplate = $("#sales-template").html(),
+        numberCounterResult = $("#sales-result"),
+        counterTemplate = Handlebars.compile(numberCounterTemplate),
+        buttonSearch = $("#searchData"),
+        formSearch = $("#sales-search");
 
     let optionsOne = {
         colors: ['#022ae2', '#1e9ff6', '#ff00b7'],
@@ -20,6 +23,7 @@ function initSaleChart() {
         chart: {
             height: 350,
             type: 'line',
+            stacked: false,
         },
         stroke: {
             width: [0, 0, 4]
@@ -30,9 +34,6 @@ function initSaleChart() {
             enabledOnSeries: [2]
         },
         labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
-        xaxis: {
-            type: 'datetime'
-        },
         legend: {
             position: 'top',
             fontSize: '15px',
@@ -41,6 +42,7 @@ function initSaleChart() {
         },
         yaxis: [
             {
+                seriesName: 'C3',
                 axisTicks: {
                     show: true,
                 },
@@ -58,12 +60,38 @@ function initSaleChart() {
                 }
             },
             {
+                seriesName: 'C3',
+                axisTicks: {show: false},
+                axisBorder: {show: false},
+                labels: {show: false}
+            },
+            {
+                seriesName: 'C8/C3',
                 opposite: true,
+                min: 0,
+                max: 150,
+                axisTicks: {
+                    show: true,
+                },
+                axisBorder: {
+                    show: true,
+                    color: '#FEB019'
+                },
+                labels: {
+                    style: {
+                        colors: '#FEB019',
+                    },
+                    formatter: function(val, index) {
+                        return val + '%';
+                    }
+                },
                 title: {
-                    text: 'C8/C13(%)'
+                    text: "C8/C3 (%)",
+                    style: {
+                        color: '#FEB019',
+                    }
                 }
             },
-
         ]
     };
     let optionsTwo = {
@@ -128,12 +156,7 @@ function initSaleChart() {
                 }
             },
         ],
-        xaxis: {
-            type: 'datetime',
-            categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT',
-                '01/05/2011 GMT', '01/06/2011 GMT'
-            ],
-        },
+        labels: [],
         legend: {
             position: 'right',
             offsetY: 40
@@ -142,11 +165,9 @@ function initSaleChart() {
             opacity: 1
         }
     };
-    let chartOne = new ApexCharts(document.querySelector("#chart-one"), optionsOne);
-    let chartTwo = new ApexCharts(document.querySelector("#chart-two"), optionsTwo);
 
 
-    this.getData = async function f() {
+    this.getData = async function () {
         return $.ajax({
             url: AJAX_PATH.salesReport,
             data: {},
@@ -155,8 +176,30 @@ function initSaleChart() {
     }
 
 
-    this.renderView = function () {
-        chartOne.render();
-        chartTwo.render();
+    this.renderView = async function () {
+        try {
+            let {labels, counter, data} = await this.getData();
+            optionsOne.labels = labels;
+            optionsOne.series[0].data = data.C8;
+            optionsOne.series[1].data = data.C3;
+            optionsOne.series[2].data = data.C8_C3;
+
+            let chartOne = new ApexCharts(document.querySelector("#chart-one"), optionsOne);
+            // chart 2
+            optionsTwo.labels = labels;
+            optionsTwo.series[0].data = data.C8;
+            optionsTwo.series[1].data = data.C6;
+            optionsTwo.series[2].data = data.C7;
+            optionsTwo.series[3].data = data.C4;
+            optionsTwo.series[4].data = data.C0;
+            let chartTwo = new ApexCharts(document.querySelector("#chart-two"), optionsTwo);
+
+            numberCounterResult.html(counterTemplate(counter));
+            chartOne.render();
+            chartTwo.render();
+        } catch
+            (e) {
+            console.log(e);
+        }
     }
 }

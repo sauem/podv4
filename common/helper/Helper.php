@@ -132,4 +132,12 @@ class Helper
         $bk = SettingModel::findOne(['section' => "Common", "key" => $name]);
         return ArrayHelper::getValue($bk, 'value');
     }
+
+    static function calculate($number1, $number2, $float = 2)
+    {
+        if (!$number1 || $number1 <= 0) {
+            return 0;
+        }
+        return round($number1 / $number2 * 100, $float);
+    }
 }

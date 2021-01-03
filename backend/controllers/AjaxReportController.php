@@ -10,6 +10,7 @@ use backend\models\OrdersContactSearch;
 use backend\models\OrdersTopup;
 use backend\models\OrdersTopupSearch;
 use common\helper\Helper;
+use Illuminate\Support\Arr;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
 
@@ -44,7 +45,9 @@ class AjaxReportController extends BaseController
     public function actionSales()
     {
 
+
         $query = Contacts::find()
+            ->leftJoin('orders_contact', 'orders_contact.code = contacts.code')
             ->addSelect([
                 'SUM(IF( contacts.status != "duplicate", 1, 0)) as C3',
                 'SUM(IF( contacts.status = "ok", 1, 0 )) as C8',
@@ -52,8 +55,11 @@ class AjaxReportController extends BaseController
                 'SUM(IF( contacts.status = "callback" OR contacts.status = "pending", 1, 0 )) as C7',
                 'SUM(IF( contacts.status = "number_fail", 1, 0 )) as C4',
                 'SUM(IF( contacts.status = "new", 1, 0 )) as C0',
+                'SUM(orders_contact.total_bill) as revenueC8',
+                'SUM(IF(orders_contact.payment_status = "paid",1,0)) as C11',
                 'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
             ])->groupBy('day');
+
 
         if (\Yii::$app->request->isPost) {
             $filter = \Yii::$app->request->post();
@@ -72,12 +78,58 @@ class AjaxReportController extends BaseController
             if ($source) {
                 $query->filterWhere(['IN', 'type', $source]);
             }
-            if ($product) {
+            if ($product && !empty($product)) {
                 $query->innerJoin('products', 'products.partner_name = contacts.partner');
                 $query->filterWhere(['IN', 'sku', $product]);
             }
         }
-        return $query->asArray()->all();
+
+        $result = $query->asArray()->all();
+        $result = array_map(function ($item) {
+            return array_merge($item, [
+                'C8_C3' => $item['C8'] > 0 ? (string)round($item['C8'] / $item['C3'] * 100) : "0"
+            ]);
+        }, $result);
+        $labels = ArrayHelper::getColumn($result, 'day');
+        $C8 = ArrayHelper::getColumn($result, 'C8');
+        $C3 = ArrayHelper::getColumn($result, 'C3');
+        $C4 = ArrayHelper::getColumn($result, 'C4');
+        $C6 = ArrayHelper::getColumn($result, 'C6');
+        $C7 = ArrayHelper::getColumn($result, 'C7');
+        $C0 = ArrayHelper::getColumn($result, 'C0');
+        $C11 = ArrayHelper::getColumn($result, 'C11');
+        $C8_C3 = ArrayHelper::getColumn($result, 'C8_C3');
+        $revenue_C8 = ArrayHelper::getColumn($result, 'revenueC8');
+        $revenue_C8 = array_sum($revenue_C8);
+        $totalC3 = array_sum($C3);
+        $totalC8 = array_sum($C8);
+        $totalC8_C3 = Helper::calculate($totalC8, $totalC3);
+        $totalC11 = array_sum($C11);
+        $totalC11_C3 = Helper::calculate($totalC11, $totalC3);
+        $totalC11_C8 = Helper::calculate($totalC11, $totalC8);
+
+
+        return [
+            'labels' => $labels,
+            'data' => [
+                'C8' => $C8,
+                'C3' => $C3,
+                'C8_C3' => $C8_C3,
+                'C4' => $C4,
+                'C6' => $C6,
+                'C7' => $C7,
+                'C0' => $C0
+            ],
+            'counter' => [
+                'revenue_C8' => $revenue_C8,
+                'totalC8' => $totalC8,
+                'totalC3' => $totalC3,
+                'totalC8_C3' => $totalC8_C3,
+                'totalC11' => $totalC11,
+                'totalC11_C8' => $totalC11_C8,
+                'totalC11_C3' => $totalC11_C3
+            ]
+        ];
     }
 
 }
