@@ -18,13 +18,14 @@ class ContactController extends BaseController
     {
         $model = new Contacts();
         $searchModel = new ContactsSearch();
-        $allContact = $searchModel->search(\Yii::$app->request->post());
 
         $waitingContact = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
             'ContactsSearch' => [
-                'contacts.status' => [Contacts::STATUS_NEW]
-            ]
+                'contacts.status' => [Contacts::STATUS_NEW],
+            ],
         ]));
+        $allContact = $searchModel->search(\Yii::$app->request->queryParams);
+        $waitingContact->query->join('INNER JOIN', 'contacts_assignment', 'contacts_assignment.phone != contacts.phone');
         $waitingContact->query->groupBy('contacts.phone');
         return $this->render('index.blade', [
             'model' => $model,

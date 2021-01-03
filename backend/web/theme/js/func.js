@@ -90,7 +90,7 @@ function initMoney(number, options) {
 }
 
 function approvePhone() {
-    this.phones = $('#w1.grid-view').find('input[type="checkbox"]:checked');
+    this.phones = $('#phone-box').find('input[type="checkbox"]:checked');
     this.modal = $('#approve-modal');
     this.form = $(this.modal).find('form#approveForm');
     this.phoneResult = $(this.modal).find('#phones-result');

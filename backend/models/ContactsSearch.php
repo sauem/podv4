@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\helper\Helper;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\Contacts;
@@ -41,13 +42,11 @@ class ContactsSearch extends Contacts
     public function search($params)
     {
         $query = Contacts::find();
-
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
         $this->load($params);
 
         if (!$this->validate()) {
@@ -84,7 +83,6 @@ class ContactsSearch extends Contacts
             ->andFilterWhere(['like', 'utm_campaign', $this->utm_campaign])
             ->andFilterWhere(['like', 'link', $this->link])
             ->andFilterWhere(['like', 'short_link', $this->short_link]);
-
         return $dataProvider;
     }
 }

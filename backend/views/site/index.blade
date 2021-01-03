@@ -7,7 +7,14 @@ use dosamigos\chartjs\ChartJs;
 $this->title = 'My Yii Application';
 ?>
 @section('content')
-    <h1>HELLLO</h1>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="widget-rounded-circle card-box">
+                <a href="<?= \yii\helpers\Url::toRoute(['report/sales'])?>" class="text-muted mb-1 text-truncate">BÁO CÁO BÁN
+                    HÀNG</a>
+            </div>
+        </div>
+    </div>
 @stop
 @section('pos_page')
     <script src="/theme/js/sales-report.js?v={!! time() !!}"></script>
