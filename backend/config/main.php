@@ -104,9 +104,9 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'rbac/*',
-            'api/*',
-            '/site/login',
-            '/ajax-report/*'
+            '/api/*',
+            'site/login',
+            'site/logout',
         ]
     ],
     'params' => $params,

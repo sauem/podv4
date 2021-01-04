@@ -49,6 +49,7 @@ class AjaxImportController extends BaseController
         }
         if ($model->load($data, '')) {
             $model->status = OrdersContact::STATUS_SHIPPING;
+            $model->shipping_status = OrdersContact::STATUS_SHIPPING;
             if (!$model->save()) {
                 throw new BadRequestHttpException(Helper::firstError($model));
             }
@@ -74,7 +75,9 @@ class AjaxImportController extends BaseController
         }
         try {
             if ($refund->load($data, '') && $refund->save()) {
-                OrdersContact::updateAll(['status' => OrdersContact::STATUS_REFUND], ['code' => $refund->code]);
+                OrdersContact::updateAll([
+                    'status' => OrdersContact::STATUS_REFUND,
+                ], ['code' => $refund->code]);
             }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
@@ -98,6 +101,7 @@ class AjaxImportController extends BaseController
         $model->collection_fee = $data['collection_fee'];
         $model->transport_fee = $data['transport_fee'];
         $model->payment_status = OrdersContact::STATUS_PAYED;
+        $model->status = OrdersContact::STATUS_PAYED;
 
         if (!$model->save()) {
             throw new BadRequestHttpException(Helper::firstError($model));
@@ -122,6 +126,7 @@ class AjaxImportController extends BaseController
         $model->remittance_date = $data['remittance_date'];
         $model->cross_check_code = $data['cross_check_code'];
         $model->cross_status = OrdersContact::STATUS_CROSSED;
+        $model->status = OrdersContact::STATUS_CROSSED;
 
         if (!$model->save()) {
             throw new BadRequestHttpException(Helper::firstError($model));

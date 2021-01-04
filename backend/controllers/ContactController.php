@@ -25,8 +25,8 @@ class ContactController extends BaseController
             ],
         ]));
         $allContact = $searchModel->search(\Yii::$app->request->queryParams);
-        $waitingContact->query->join('INNER JOIN', 'contacts_assignment', 'contacts_assignment.phone != contacts.phone');
-        $waitingContact->query->groupBy('contacts.phone');
+
+
         return $this->render('index.blade', [
             'model' => $model,
             'searchModel' => $searchModel,
