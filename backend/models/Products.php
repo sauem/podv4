@@ -71,6 +71,10 @@ class Products extends \common\models\BaseModel
     {
         return $this->hasOne(UserModel::className(), ['id' => 'partner_id']);
     }
+    public function getMarketer()
+    {
+        return $this->hasOne(UserModel::className(), ['id' => 'marketer_id']);
+    }
 
     public function attributeLabels()
     {

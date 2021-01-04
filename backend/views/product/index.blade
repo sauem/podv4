@@ -56,42 +56,17 @@ use yii\helpers\Url;
                         }
                     ],
                     [
-                        'label' => 'Tồn kho',
+                        'label' => 'Đối tác',
                         'format' => 'html',
-                        'headerOptions' => [
-                            'class' => 'text-center'
-                        ],
-                        'contentOptions' => [
-                            'class' => 'text-middle text-18'
-                        ],
                         'value' => function ($model) {
-                            return 0;
+                            return $model->partner->username;
                         }
                     ],
                     [
-                        'label' => 'Đã đặt',
+                        'label' => 'Marketer',
                         'format' => 'html',
-                        'headerOptions' => [
-                            'class' => 'text-center'
-                        ],
-                        'contentOptions' => [
-                            'class' => 'text-middle text-18'
-                        ],
                         'value' => function ($model) {
-                            return 0;
-                        }
-                    ],
-                    [
-                        'label' => 'Khả dụng',
-                        'format' => 'html',
-                        'headerOptions' => [
-                            'class' => 'text-center'
-                        ],
-                        'contentOptions' => [
-                            'class' => 'text-middle text-18'
-                        ],
-                        'value' => function ($model) {
-                            return 2000;
+                            return $model->marketer->username;
                         }
                     ],
                     [
