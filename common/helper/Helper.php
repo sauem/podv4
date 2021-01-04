@@ -133,10 +133,14 @@ class Helper
         return ArrayHelper::getValue($bk, 'value');
     }
 
-    static function calculate($number1, $number2, $float = 2)
+    static function calculate($number1, $number2, $reverse = false, $float = 2)
     {
-        if (!$number1 || $number1 <= 0) {
+        if (!$number2 || $number2 <= 0) {
             return 0;
+        }
+        if ($reverse) {
+            return round($number1 * $number2 / 100, $float);
+
         }
         return round($number1 / $number2 * 100, $float);
     }

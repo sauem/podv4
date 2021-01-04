@@ -1,3 +1,16 @@
+const nFormatter = function (num) {
+    if (num >= 1000000000) {
+        return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+    }
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    }
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    }
+    return num;
+}
+
 function initFinancialChart() {
 
     let optionsOne = {
@@ -7,7 +20,7 @@ function initFinancialChart() {
             type: 'column',
             data: [202, 505, 414, 160, 227, 302, 201, 352, 752, 320, 257, 160]
         }, {
-            name: 'C3',
+            name: 'C11',
             type: 'column',
             data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160]
         }],
@@ -26,13 +39,17 @@ function initFinancialChart() {
             width: [0, 0]
         },
         dataLabels: {
+            background: false,
+            style: {
+                fontSize: '10px',
+            },
             enabled: true,
-            enabledOnSeries: [0, 1]
+            enabledOnSeries: [0, 1],
+            formatter: function (val, {seriesIndex, dataPointIndex, w}) {
+                return "฿ " + nFormatter(val);
+            }
         },
         labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
-        xaxis: {
-            type: 'datetime'
-        },
         legend: {
             position: 'top',
             fontSize: '15px',
@@ -41,6 +58,7 @@ function initFinancialChart() {
         },
         yaxis: [
             {
+                opposite: true,
                 axisTicks: {
                     show: true,
                 },
@@ -51,25 +69,20 @@ function initFinancialChart() {
                 labels: {
                     style: {
                         colors: '#008FFB',
+                    },
+                    formatter: function (value, index) {
+                        return '฿' + nFormatter(value);
                     }
                 },
                 tooltip: {
                     enabled: true
                 }
             },
-            {
-                opposite: true,
-                title: {
-                    text: 'C8/C13(%)'
-                }
-            },
-
         ]
     };
-
-    const chartOne = new ApexCharts(document.querySelector("#chart-one"), optionsOne);
-    const chartTwo = new ApexCharts(document.querySelector("#chart-two"), optionsOne);
-
+    let htmlOverview = $('#financial-overview-template').html(),
+        resultOverView = $('#financial-overview-result'),
+        templateOverView = Handlebars.compile(htmlOverview);
     this.getData = async function (task = "overview") {
         return $.ajax({
             url: AJAX_PATH.financialReport,
@@ -78,15 +91,39 @@ function initFinancialChart() {
         });
     }
     this.render = function () {
-
+        const instance = this;
         return {
-            overview: function () {
-                chartOne.render();
-                chartTwo.render();
+            overview: async function () {
+                try {
+                    let {labels, data, counter} = await instance.getData();
+
+                    optionsOne.labels = labels;
+                    optionsOne.series[0].data = data.C8;
+                    optionsOne.series[1].data = data.C11;
+
+                    const chartOne = new ApexCharts(document.querySelector("#chart-one"), optionsOne);
+                    chartOne.render();
+
+                    // Chart 2
+                    optionsOne.labels = labels;
+                    optionsOne.series[0].data = data.C11;
+                    optionsOne.series[0].name = 'C11';
+                    optionsOne.series[1].data = data.C13;
+                    optionsOne.series[1].name = 'C13';
+
+                    const chartTwo = new ApexCharts(document.querySelector("#chart-two"), optionsOne);
+                    chartTwo.render();
+
+                    // init result
+
+                    resultOverView.html(templateOverView(counter));
+                } catch (e) {
+
+                }
+
             },
             topup: async function (search = {}) {
                 initPicker();
-
 
                 const topupReq = async function (search = {}) {
                     return $.ajax({

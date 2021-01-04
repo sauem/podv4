@@ -4,14 +4,21 @@
 namespace backend\controllers;
 
 
+use backend\models\Contacts;
+use backend\models\ContactsSearch;
 use backend\models\ContactsSource;
 use backend\models\MediaObj;
+use backend\models\OrdersContact;
 use backend\models\OrdersTopup;
 use backend\models\OrdersTopupSearch;
 use backend\models\Products;
 use backend\models\UserRole;
 use common\helper\Helper;
+use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\db\Transaction;
+use yii\debug\models\timeline\DataProvider;
+use yii\helpers\ArrayHelper;
 
 class ReportController extends BaseController
 {
@@ -38,14 +45,106 @@ class ReportController extends BaseController
 
     function actionCrossed()
     {
-        return static::responseRemote("tabs/crossed.blade");
+        $query = OrdersContact::find()
+            ->with(['contact', 'skuItems'])
+            ->from('orders_contact as O')
+            ->where(['O.cross_status' => OrdersContact::STATUS_CROSSED])
+            ->andWhere(['=', 'O.payment_status', OrdersContact::STATUS_PAYED])
+            ->andWhere(['=', 'O.status', OrdersContact::STATUS_CROSSED])
+            ->addSelect([
+                'id',
+                'name',
+                'code',
+                'phone',
+                'transport_fee',
+                'collection_fee',
+                'total_bill',
+                'payment_status',
+                'status',
+                'SUM(IF(O.payment_status = "paid" , total_bill, 0)) as C11',
+            ])->asArray()->all();
 
+
+        $data = static::getData($query);
+
+        $C11 = array_sum(ArrayHelper::getColumn($data, 'C11'));
+        $transport_fee = array_sum(ArrayHelper::getColumn($data, 'transport_fee'));
+        $collection_fee = array_sum(ArrayHelper::getColumn($data, 'collection_fee'));
+        $C13 = array_sum(ArrayHelper::getColumn($data, 'C13'));
+        $service_fee = array_sum(ArrayHelper::getColumn($data, 'service_fee'));
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $data
+        ]);
+
+        return static::responseRemote("tabs/crossed.blade", [
+            'dataProvider' => $dataProvider,
+            'C11' => $C11,
+            'transport_fee' => $transport_fee,
+            'collection_fee' => $collection_fee,
+            'C13' => $C13,
+            'service_fee' => $service_fee
+        ]);
+    }
+
+    static function getData($query)
+    {
+        return array_map(function ($item) {
+            $C11 = ArrayHelper::getValue($item, 'C11', 0);
+            $total_bill = ArrayHelper::getValue($item, 'total_bill', 0);
+            $collection_fee = ArrayHelper::getValue($item, 'collection_fee', 0);
+            $transport_fee = ArrayHelper::getValue($item, 'transport_fee', 0);
+            $service_fee = ArrayHelper::getValue($item, 'contact.partner.service_fee', 18);
+            $service_fee = Helper::calculate($service_fee, $C11, true);
+
+            return array_merge($item, [
+                'service_fee' => $service_fee,
+                'C13' => $total_bill - $collection_fee - $transport_fee - $service_fee,
+            ]);
+        }, $query);
     }
 
     function actionUncross()
     {
-        return static::responseRemote("tabs/uncross.blade");
+        $query = OrdersContact::find()
+            ->with(['contact', 'skuItems'])
+            ->from('orders_contact as O')
+            ->addSelect([
+                'id',
+                'name',
+                'code',
+                'phone',
+                'transport_fee',
+                'collection_fee',
+                'total_bill',
+                'payment_status',
+                'SUM(IF(O.payment_status = "paid" , total_bill, false)) as C11',
+            ])
+            ->andWhere(['<>', 'O.status', OrdersContact::STATUS_CROSSED])
+            ->andWhere(['<>', 'O.payment_status', OrdersContact::STATUS_PAYED])
+            ->asArray()->all();
 
+        $data = static::getData($query);
+
+        $C11 = array_sum(ArrayHelper::getColumn($data, 'C11'));
+        $transport_fee = array_sum(ArrayHelper::getColumn($data, 'transport_fee'));
+        $collection_fee = array_sum(ArrayHelper::getColumn($data, 'collection_fee'));
+        $C13 = array_sum(ArrayHelper::getColumn($data, 'C13'));
+        $service_fee = array_sum(ArrayHelper::getColumn($data, 'service_fee'));
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $data
+        ]);
+
+
+        return static::responseRemote("tabs/uncross.blade", [
+            'dataProvider' => $dataProvider,
+            'C11' => $C11,
+            'transport_fee' => $transport_fee,
+            'collection_fee' => $collection_fee,
+            'C13' => $C13,
+            'service_fee' => $service_fee
+        ]);
     }
 
     function actionTopup()
@@ -69,7 +168,7 @@ class ReportController extends BaseController
                         MediaObj::saveObject($model->thumb, $model->id, MediaObj::OBJECT_TOPUP);
                     }
                     $transaction->commit();
-                    return static::responseSuccess(0, 1,'Thêm topup thành công!');
+                    return static::responseSuccess(0, 1, 'Thêm topup thành công!');
                 }
             }
         } catch (\Exception $exception) {

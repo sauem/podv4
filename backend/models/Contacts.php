@@ -243,4 +243,14 @@ class Contacts extends \common\models\BaseModel
             'class' => "badge badge-pill m-auto badge-$color"
         ]);
     }
+
+    public function getOrder()
+    {
+        return $this->hasOne(OrdersContact::className(), ['code' => 'code'])->with('skuItems');
+    }
+
+    public function getPartner()
+    {
+        return $this->hasOne(UserModel::className(), ['username' => 'partner']);
+    }
 }

@@ -1,27 +1,33 @@
+<?php
+use backend\models\OrdersContact;
+use kartik\grid\GridView;
+use common\helper\Helper;
+use yii\helpers\ArrayHelper;
+?>
 @section("content")
     <div class="row mb-3 text-center">
         <div class="col-12">
             <h4 class="text-danger my-4">Chỉ số</h4>
         </div>
         <div class="col">
-            <p><</p>
-            <h4>0</h4>
+            <p>Doanh thu C11</p>
+            <h4><?= Helper::isEmpty($C11) ? 0 : Helper::formatCUR($C11, '', 0)?></h4>
         </div>
         <div class="col">
             <p>Phí vận chuyển</p>
-            <h4>0</h4>
+            <h4><?= Helper::isEmpty($transport_fee) ? 0 : Helper::formatCUR($transport_fee, '', 0)?></h4>
         </div>
         <div class="col">
             <p>Phí thu hộ</p>
-            <h4>0</h4>
+            <h4><?= Helper::isEmpty($collection_fee) ? 0 : Helper::formatCUR($collection_fee, '', 0)?></h4>
         </div>
         <div class="col">
             <p>Phí dịch vụ</p>
-            <h4>0</h4>
+            <h4><?= Helper::isEmpty($service_fee) ? 0 : Helper::formatCUR($service_fee, '', 0)?></h4>
         </div>
         <div class="col">
             <p>Doanh thu sau phí (C13)</p>
-            <h4>0</h4>
+            <h4><?= Helper::isEmpty($C13) ? 0 : Helper::formatCUR($C13, '', 0)?></h4>
         </div>
     </div>
     <div class="row">
@@ -29,27 +35,100 @@
             <h4 class="text-danger text-center mb-4">Bảng số liệu</h4>
         </div>
         <div class="col-12">
-            <div class="table-responsive">
-                <table class="table table-sm table-striped table-hover" id="crossed-table">
-                    <thead>
-                    <tr>
-                        <th>Contact code</th>
-                        <th>Ngày ra contact</th>
-                        <th>Tên khách hàng</th>
-                        <th>Số điện thoại</th>
-                        <th>Doanh thu</th>
-                        <th>Phí thu hộ</th>
-                        <th>Phí vận chuyển</th>
-                        <th>Phí dịch vụ (18%)</th>
-                        <th>Doanh thu sau phí (C13)</th>
-                        <th>Tình trạng thanh toán C11</th>
-                        <th>Sản phẩm</th>
-                        <th>Số lượng</th>
-                    </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'columns' => [
+                    'code',
+                    [
+                        'label' => 'Ngày ra contact',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            $time = ArrayHelper::getValue($model, 'contact.register_time', 0);
+                            return Helper::dateFormat($time, true);
+                        }
+                    ],
+                    'name',
+                    'phone',
+                    [
+                        'label' => 'Doanh thu',
+                        'attribute' => 'total_bill',
+                        'value' => function ($model) {
+                            return Helper::formatCUR(ArrayHelper::getValue($model, 'total_bill', 0), '', 0);
+                        }
+                    ],
+                    [
+                        'label' => 'Phí thu hộ',
+                        'attribute' => 'collection_fee',
+                        'value' => function ($model) {
+                            return Helper::formatCUR(ArrayHelper::getValue($model, 'collection_fee', 0), '', 0);
+                        }
+                    ],
+                    [
+                        'label' => 'Phí vận chuyển',
+                        'attribute' => 'transport_fee',
+                        'value' => function ($model) {
+                            return Helper::formatCUR(ArrayHelper::getValue($model, 'transport_fee', 0), '', 0);
+                        }
+                    ],
+                    [
+                        'label' => 'Phí dịch vụ (18%)',
+                        'value' => function ($model) {
+                            $service_fee = ArrayHelper::getValue($model, 'contact.partner.service_fee', 18);
+                            $C11 = ArrayHelper::getValue($model, 'C11', 0);
+                            $service_fee = Helper::calculate($service_fee, $C11, true);
+                            return Helper::formatCUR($service_fee, '', 0);
+                        }
+                    ],
+                    [
+                        'label' => 'Doanh thu sau phí (C13)',
+                        'value' => function ($model) {
+                            $C11 = ArrayHelper::getValue($model, 'C11', 0);
+                            $total_bill = ArrayHelper::getValue($model, 'total_bill', 0);
+                            $collection_fee = ArrayHelper::getValue($model, 'collection_fee', 0);
+                            $transport_fee = ArrayHelper::getValue($model, 'transport_fee', 0);
+                            $service_fee = ArrayHelper::getValue($model, 'contact.partner.service_fee', 18);
+                            $service_fee = Helper::calculate($service_fee, $C11, true);
+                            $C13 = $total_bill - $collection_fee - $transport_fee - $service_fee;
+                            return Helper::formatCUR($C13, '', 0);
+                        }
+                    ],
+                    [
+                        'label' => 'Tình trạng thanh toán C11',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return OrdersContact::StatusLabel(ArrayHelper::getValue($model, 'payment_status'));
+                        }
+                    ],
+                    [
+                        'label' => 'Sản phẩm',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            $skuItems = ArrayHelper::getValue($model, 'skuItems', []);
+                            $htm = '';
+                            if (!empty($skuItems)) {
+                                foreach ($skuItems as $item) {
+                                    $htm .= ArrayHelper::getValue($item, 'sku') . ',';
+                                }
+                            }
+                            return substr($htm, 0, -1);
+                        }
+                    ],
+                    [
+                        'label' => 'Số lượng',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            $skuItems = ArrayHelper::getValue($model, 'skuItems', []);
+                            $htm = '';
+                            if (!empty($skuItems)) {
+                                foreach ($skuItems as $item) {
+                                    $htm .= ArrayHelper::getValue($item, 'qty') . ',';
+                                }
+                            }
+                            return substr($htm, 0, -1);
+                        }
+                    ],
+                ]
+            ])?>
         </div>
     </div>
 @stop

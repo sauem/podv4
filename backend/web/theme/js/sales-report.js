@@ -31,7 +31,10 @@ function initSaleChart() {
 
         dataLabels: {
             enabled: true,
-            enabledOnSeries: [2]
+            enabledOnSeries: [2],
+            formatter: function (value, {seriesIndex, dataPointIndex, w}) {
+                return value + '%';
+            }
         },
         labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
         legend: {
@@ -60,7 +63,7 @@ function initSaleChart() {
                 }
             },
             {
-                seriesName: 'C3',
+                seriesName: 'C8',
                 axisTicks: {show: false},
                 axisBorder: {show: false},
                 labels: {show: false}
@@ -81,7 +84,7 @@ function initSaleChart() {
                     style: {
                         colors: '#FEB019',
                     },
-                    formatter: function(val, index) {
+                    formatter: function (val, index) {
                         return val + '%';
                     }
                 },

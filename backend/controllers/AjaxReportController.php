@@ -42,6 +42,66 @@ class AjaxReportController extends BaseController
         ];
     }
 
+    static function Crossed()
+    {
+        return [
+
+        ];
+    }
+
+    static function Overview()
+    {
+        $query = Contacts::find()
+            ->leftJoin('orders_contact', 'orders_contact.code = contacts.code')
+            ->addSelect([
+                'SUM(orders_contact.total_bill) as revenue_C8',
+                'SUM(IF(orders_contact.payment_status = "paid", orders_contact.total_bill ,0)) as revenue_C11',
+                'SUM(IF(orders_contact.payment_status = "crossed", orders_contact.total_bill ,0)) as revenue_C13',
+                'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
+            ])->groupBy('day');
+
+        $result = $query->asArray()->all();
+        $result = array_map(function ($item) {
+            return array_merge($item, [
+                'C11_C8' => Helper::calculate($item['revenue_C11'], $item['revenue_C8']),
+                'C13_C11' => Helper::calculate($item['revenue_C13'], $item['revenue_C11']),
+            ]);
+        }, $result);
+        $labels = ArrayHelper::getColumn($result, 'day');
+        $revenue_C8 = ArrayHelper::getColumn($result, 'revenue_C8');
+        $revenue_C11 = ArrayHelper::getColumn($result, 'revenue_C11');
+        $revenue_C13 = ArrayHelper::getColumn($result, 'revenue_C13');
+        $C11_C8 = array_sum(ArrayHelper::getColumn($result, 'C11_C8'));
+        $C13_C11 = array_sum(ArrayHelper::getColumn($result, 'C13_C11'));
+        $total_revenue = array_sum(ArrayHelper::getColumn($result, 'revenue_C8'));
+
+        return [
+            'labels' => $labels,
+            'data' => [
+                'C8' => $revenue_C8,
+                'C11' => $revenue_C11,
+                'C13' => $revenue_C13
+            ],
+            'counter' => [
+                'C11_C8' => $C11_C8,
+                'C13_C11' => $C13_C11,
+                'total_revenue' => $total_revenue
+            ]
+        ];
+    }
+
+    public function actionFinancial()
+    {
+        $task = \Yii::$app->request->post('task');
+        switch ($task) {
+            case 'crossed':
+                return static::Crossed();
+            default:
+                return static::Overview();
+        }
+
+    }
+
     public function actionSales()
     {
 
@@ -87,7 +147,7 @@ class AjaxReportController extends BaseController
         $result = $query->asArray()->all();
         $result = array_map(function ($item) {
             return array_merge($item, [
-                'C8_C3' => $item['C8'] > 0 ? (string)round($item['C8'] / $item['C3'] * 100) : "0"
+                'C8_C3' => Helper::calculate($item['C8'], $item['C3'])
             ]);
         }, $result);
         $labels = ArrayHelper::getColumn($result, 'day');
