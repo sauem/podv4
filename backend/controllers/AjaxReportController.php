@@ -155,7 +155,7 @@ class AjaxReportController extends BaseController
             }
             if (!Helper::isEmpty($product)) {
 
-                $query->leftJoin('products as P', 'p.partner_name = contacts.partner');
+                $query->leftJoin('products as P', 'P.partner_name = contacts.partner');
                 $query->leftJoin('orders_contact_sku as I', 'P.sku = I.sku');
                 $query->andWhere(['IN', 'I.sku', $product]);
             }
