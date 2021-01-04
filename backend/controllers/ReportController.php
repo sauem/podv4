@@ -74,7 +74,7 @@ class ReportController extends BaseController
         $service_fee = array_sum(ArrayHelper::getColumn($data, 'service_fee'));
 
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $data
+            'allModels' => Helper::isEmpty($data[0]['code']) ? [] : $data
         ]);
 
         return static::responseRemote("tabs/crossed.blade", [
@@ -133,7 +133,7 @@ class ReportController extends BaseController
         $service_fee = array_sum(ArrayHelper::getColumn($data, 'service_fee'));
 
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $data
+            'allModels' => Helper::isEmpty($data[0]['code']) ? [] : $data
         ]);
 
 

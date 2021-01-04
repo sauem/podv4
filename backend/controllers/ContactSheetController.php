@@ -45,7 +45,7 @@ class ContactSheetController extends BaseController
             }
             \Yii::$app->session->setFlash("danger", Helper::firstError($model));
         }
-        self::responseRemote("create.blade", [
+        return self::responseRemote("create.blade", [
             'model' => $model,
         ], "Cập nhật sheet dữ liệu đối tác", $this->footer());
     }
