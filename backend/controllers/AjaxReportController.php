@@ -188,6 +188,7 @@ class AjaxReportController extends BaseController
             ->leftJoin('orders_contact', 'orders_contact.code = contacts.code')
             ->addSelect([
                 'contacts.*',
+                'orders_contact.*',
                 'SUM(IF( contacts.status != "duplicate", 1, 0)) as C3',
                 'SUM(IF( contacts.status = "ok", 1, 0 )) as C8',
                 'SUM(IF( contacts.status = "cancel", 1, 0 )) as C6',
