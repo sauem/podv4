@@ -85,7 +85,8 @@ $this->title = 'My Yii Application';
                 </div>
 
                 <div class="col-md-3 mt-1">
-                    <button type="button" id="searchData" class="btn btn-success"><i class="fe-search"></i> Lọc
+                    <button type="button" onclick="searchForm()" id="searchData" class="btn btn-success"><i
+                                class="fe-search"></i> Lọc
                     </button>
                     <button type="reset" data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-success"><i
                                 class="fe-trash"></i> Xoá
@@ -122,14 +123,21 @@ $this->title = 'My Yii Application';
             <div id="chart-one" class="apex-charts"></div>
 
             <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP CONTACT</h4>
-            <div id="chart-two" class="apex-charts" data-colors="#6658dd,#1abc9c,#f672a7"></div>
+            <div id="chart-two" class="apex-charts"></div>
         </div>
     </div>
     <?= $view->render("template/sales-template.blade")?>
 @stop
 @section('pos_page')
     <script>
-        new initSaleChart().renderView();
+
+        let chart = new initSaleChart();
+        chart.renderView();
+
+        function searchForm() {
+            let data = $("#sales-search").serializeArray();
+            chart.search(data);
+        }
     </script>
 @stop
 @php($view->registerJsFile('@web/theme/js/sales-report.js',['depends' =>  \yii\web\JqueryAsset::className()]))

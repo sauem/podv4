@@ -83,16 +83,19 @@ function initFinancialChart() {
     let htmlOverview = $('#financial-overview-template').html(),
         resultOverView = $('#financial-overview-result'),
         templateOverView = Handlebars.compile(htmlOverview);
-    this.getData = async function (task = "overview") {
+    this.getData = async function (task = "overview", params = {}) {
         return $.ajax({
             url: AJAX_PATH.financialReport,
-            data: {task: task},
+            data: {task, params},
             cache: false,
         });
     }
     this.render = function () {
         const instance = this;
         return {
+            search: function (params) {
+
+            },
             overview: async function () {
                 try {
                     let {labels, data, counter} = await instance.getData();

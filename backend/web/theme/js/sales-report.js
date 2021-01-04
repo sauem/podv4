@@ -10,15 +10,15 @@ function initSaleChart() {
         series: [{
             name: 'C8',
             type: 'column',
-            data: [202, 505, 414, 160, 227, 302, 201, 352, 752, 320, 257, 160]
+            data: []
         }, {
             name: 'C3',
             type: 'column',
-            data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160]
+            data: []
         }, {
             name: 'C8/C3',
             type: 'line',
-            data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16]
+            data: []
         }],
         chart: {
             height: 350,
@@ -28,7 +28,6 @@ function initSaleChart() {
         stroke: {
             width: [0, 0, 4]
         },
-
         dataLabels: {
             enabled: true,
             enabledOnSeries: [2],
@@ -36,7 +35,10 @@ function initSaleChart() {
                 return value + '%';
             }
         },
-        labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
+        labels: [],
+        noData: {
+            text: 'Loading...'
+        },
         legend: {
             position: 'top',
             fontSize: '15px',
@@ -56,6 +58,9 @@ function initSaleChart() {
                 labels: {
                     style: {
                         colors: '#008FFB',
+                    },
+                    formatter: function (val) {
+                        return val.toFixed(0);
                     }
                 },
                 tooltip: {
@@ -100,20 +105,23 @@ function initSaleChart() {
     let optionsTwo = {
         series: [{
             name: 'C8 (OK)',
-            data: [44, 55, 41, 67, 22, 43]
+            data: [],
         }, {
             name: 'C6 (Cancel)',
-            data: [13, 23, 20, 8, 13, 27]
+            data: [],
         }, {
             name: 'C7 (Callback)',
-            data: [11, 17, 15, 15, 21, 14]
+            data: [],
         }, {
             name: 'C4 (Number fail)',
-            data: [21, 7, 25, 13, 22, 8]
+            data: [],
         }, {
             name: 'C0 (New)',
-            data: [21, 7, 25, 13, 22, 8]
+            data: [],
         }],
+        noData: {
+            text: 'Loading...'
+        },
         chart: {
             type: 'bar',
             height: 350,
@@ -169,37 +177,50 @@ function initSaleChart() {
         }
     };
 
+    let chartOne = new ApexCharts(document.querySelector("#chart-one"), optionsOne);
+    let chartTwo = new ApexCharts(document.querySelector("#chart-two"), optionsTwo);
+    chartOne.render();
+    chartTwo.render();
 
-    this.getData = async function () {
+    this.getData = async function (params = {}, type = 'GET') {
         return $.ajax({
             url: AJAX_PATH.salesReport,
-            data: {},
+            data: params,
+            type: type,
             cache: false,
         });
     }
+    this.compile = function (labels, data) {
 
-
-    this.renderView = async function () {
+        let options = {
+            optionsOne: {
+                labels: labels,
+                series: [{data: data.C8}, {data: data.C3}, {data: data.C8_C3}]
+            },
+            optionsTwo: {
+                labels: labels,
+                series: [{data: data.C8}, {data: data.C6}, {data: data.C7}, {data: data.C4}, {data: data.C0}]
+            },
+        }
+        chartOne.updateOptions(options.optionsOne);
+        chartTwo.updateOptions(options.optionsTwo);
+    }
+    this.search = async function (params) {
         try {
-            let {labels, counter, data} = await this.getData();
-            optionsOne.labels = labels;
-            optionsOne.series[0].data = data.C8;
-            optionsOne.series[1].data = data.C3;
-            optionsOne.series[2].data = data.C8_C3;
-
-            let chartOne = new ApexCharts(document.querySelector("#chart-one"), optionsOne);
-            // chart 2
-            optionsTwo.labels = labels;
-            optionsTwo.series[0].data = data.C8;
-            optionsTwo.series[1].data = data.C6;
-            optionsTwo.series[2].data = data.C7;
-            optionsTwo.series[3].data = data.C4;
-            optionsTwo.series[4].data = data.C0;
-            let chartTwo = new ApexCharts(document.querySelector("#chart-two"), optionsTwo);
+            let {labels, counter, data} = await this.getData(params, 'POST');
 
             numberCounterResult.html(counterTemplate(counter));
-            chartOne.render();
-            chartTwo.render();
+            this.compile(labels, data);
+        } catch (e) {
+
+        }
+    }
+    this.renderView = async function (params = {}) {
+        try {
+            let {labels, counter, data} = await this.getData(params);
+            numberCounterResult.html(counterTemplate(counter));
+            this.compile(labels, data);
+
         } catch
             (e) {
             console.log(e);

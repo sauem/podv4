@@ -105,9 +105,8 @@ return [
         'allowActions' => [
             'rbac/*',
             'api/*',
-            'site/logout',
-            'site/login',
-            'site/web-settings'
+            '/site/login',
+            '/ajax-report/*'
         ]
     ],
     'params' => $params,
