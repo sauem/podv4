@@ -15,6 +15,20 @@ $this->title = 'My Yii Application';
                     <h4 class="text-danger mb-3">Bộ lọc</h4>
                 </div>
                 <div class="col-md-3 mt-1">
+                    <?= \kartik\daterange\DateRangePicker::widget([
+                        'name' => 'filter[register_time]',
+                        'presetDropdown' => true,
+                        'hideInput' => true,
+                        'options' => ['placeholder' => 'Ngày ra đơn...'],
+                        'pluginOptions' => [
+                            'locale' => [
+                                'format' => 'DD/MM/YYYY',
+                                'separator' => ' - '
+                            ]
+                        ]
+                    ])?>
+                </div>
+                <div class="col-md-3 mt-1">
                     <select title="Sale..."
                             data-actions-box="true"
                             data-live-search="true"
@@ -55,19 +69,6 @@ $this->title = 'My Yii Application';
                             @endforeach
                         @endif
                     </select>
-                </div>
-                <div class="col-md-3 mt-1">
-                    <?= \kartik\daterange\DateRangePicker::widget([
-                        'name' => 'filter[register_time]',
-                        'presetDropdown' => true,
-                        'hideInput' => true,
-                        'pluginOptions' => [
-                            'locale' => [
-                                'format' => 'DD/MM/YYYY',
-                                'separator' => ' - '
-                            ]
-                        ]
-                    ])?>
                 </div>
                 <div class="col-md-3 mt-1">
                     <select title="Marketer..."

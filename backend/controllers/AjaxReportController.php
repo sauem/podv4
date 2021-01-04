@@ -50,6 +50,33 @@ class AjaxReportController extends BaseController
         ];
     }
 
+    /**
+     * @param $query
+     * @param $filter
+     * @return mixed
+     * @throws BadRequestHttpException
+     */
+
+    static function financialSearch($query, $filter)
+    {
+        try {
+            $phone = ArrayHelper::getValue($filter, 'filter.phone', []);
+            $code = ArrayHelper::getValue($filter, 'filter.code', []);
+            $payment_status = ArrayHelper::getValue($filter, 'filter.payment_status', []);
+            $cross_status = ArrayHelper::getValue($filter, 'filter.cross_status', []);
+            $time_register = ArrayHelper::getValue($filter, 'filter.register_time', '');
+
+
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+        return $query;
+    }
+
+    /**
+     * @return array
+     * @throws BadRequestHttpException
+     */
     public function actionFinancial()
     {
         $query = Contacts::find()
@@ -61,6 +88,13 @@ class AjaxReportController extends BaseController
                 'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
             ])->groupBy('day');
 
+        if (\Yii::$app->request->isPost) {
+            try {
+                $query = static::financialSearch($query, \Yii::$app->request->post());
+            } catch (\Exception $exception) {
+                throw new BadRequestHttpException($exception->getMessage());
+            }
+        }
         $result = $query->asArray()->all();
         $result = array_map(function ($item) {
             return array_merge($item, [
@@ -142,6 +176,7 @@ class AjaxReportController extends BaseController
         }
         return $query;
     }
+
 
     /**
      * @return array
