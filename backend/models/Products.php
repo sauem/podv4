@@ -96,7 +96,7 @@ class Products extends \common\models\BaseModel
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->sku = strtoupper(Helper::toLower($this->sku));
+            $this->sku = $this->generateName();
         }
         $this->partner_id = $this->category->partner_id;
         $pn = UserModel::findOne($this->partner_id);
