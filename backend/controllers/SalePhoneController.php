@@ -40,6 +40,10 @@ class SalePhoneController extends BaseController
                 'phone' => $this->assignPhone
             ]
         ]));
+
+        ContactsAssignment::completeAssignment($this->assignPhone);
+        ContactsAssignment::nextAssignment();
+
         return $this->render('index.blade', [
             'dataProvider' => $dataProvider,
             'assignPhone' => $this->assignPhone,

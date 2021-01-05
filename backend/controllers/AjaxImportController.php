@@ -77,6 +77,7 @@ class AjaxImportController extends BaseController
             if ($refund->load($data, '') && $refund->save()) {
                 OrdersContact::updateAll([
                     'status' => OrdersContact::STATUS_REFUND,
+                    'shipping_status' => OrdersContact::STATUS_REFUND,
                 ], ['code' => $refund->code]);
             }
         } catch (\Exception $exception) {

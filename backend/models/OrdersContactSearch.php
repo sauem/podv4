@@ -73,6 +73,7 @@ class OrdersContactSearch extends OrdersContact
             ->andFilterWhere(['like', 'note', $this->note])
             ->andFilterWhere(['like', 'vendor_note', $this->vendor_note])
             ->andFilterWhere(['IN', 'status', $this->status])
+            ->andFilterWhere(['IN', 'payment_status', $this->payment_status])
             ->andFilterWhere(['like', 'country', $this->country]);
 
         return $dataProvider;

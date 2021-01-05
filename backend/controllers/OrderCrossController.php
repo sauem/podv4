@@ -48,20 +48,17 @@ class OrderCrossController extends BaseController
     public function actionMakeCross()
     {
         $model = new OrderCrossStatus();
-        $codes = \Yii::$app->request->get('codes');
-        if (empty($codes)) {
+        $ids = \Yii::$app->request->get('codes');
+        if (empty($ids)) {
             return static::responseSuccess(0, 1);
         }
-        if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
-            if (!$model->save()) {
-                return static::responseSuccess(0, 0, Helper::firstError($model));
-            }
-        }
+
         $searchModel = new OrdersContactSearch();
         $dataProvider = $searchModel->search([
             'OrdersContactSearch' => [
-                'code' => $codes,
-                'status' => [OrdersContact::STATUS_PAYED, OrdersContact::STATUS_REFUND]
+                'id' => $ids,
+//                'payment_status' => [OrdersContact::STATUS_PAYED, OrdersContact::STATUS_REFUND],
+//                'status' => OrdersContact::STATUS_PAYED
             ]
         ]);
         return static::responseRemote("make-cross.blade", [

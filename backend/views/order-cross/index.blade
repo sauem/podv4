@@ -61,6 +61,7 @@ use common\helper\Component;
                             'class' => CheckboxColumn::class,
                             'checkboxOptions' => function ($model) {
                                 $cog['data-code'] = $model->code;
+                                $cog['value'] = $model->code;
                                 $cog['data-pjax'] = '0';
                                 return $cog;
                             }

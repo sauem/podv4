@@ -24,9 +24,9 @@ class ContactController extends BaseController
                 'contacts.status' => [Contacts::STATUS_NEW],
             ],
         ]));
+        $waitingContact->query->leftJoin('contacts_assignment', 'contacts_assignment.phone = contacts.phone')
+            ->where('contacts_assignment.phone IS NULL');
         $allContact = $searchModel->search(\Yii::$app->request->queryParams);
-
-
         return $this->render('index.blade', [
             'model' => $model,
             'searchModel' => $searchModel,

@@ -63,10 +63,6 @@ class ContactsSearch extends Contacts
             'updated_at' => $this->updated_at,
         ]);
 
-        if (UserRole::ROLE_ADMIN) {
-            $query->innerJoin('contacts_assignment', 'contacts_assignment.phone != contacts.phone');
-            $query->groupBy('contacts.phone');
-        }
 
         $query->andFilterWhere(['like', 'code', $this->name])
             ->andFilterWhere(['like', 'name', $this->name])

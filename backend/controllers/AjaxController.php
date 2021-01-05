@@ -156,6 +156,7 @@ class AjaxController extends BaseController
             $model = new \ReflectionClass("backend\models\\$model");
             $model = $model->newInstanceWithoutConstructor();
             $model::updateAll(['status' => $status], ['id' => $key]);
+
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }

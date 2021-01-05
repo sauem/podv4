@@ -6,9 +6,9 @@ use kartik\date\DatePicker;
 use kartik\grid\GridView;use kartik\select2\Select2;use yii\helpers\Html;use yii\helpers\Url;
 ?>
 @section("content")
-    <?php $form = ActiveForm::begin();?>
     <div class="row">
         <div class="col-md-4">
+            <?php $form = ActiveForm::begin(['id' => 'cross-form']);?>
             <div class="row">
                 <div class="col-md-6">
                     <?= $form->field($model, 'remittance_date')
@@ -43,6 +43,7 @@ use kartik\grid\GridView;use kartik\select2\Select2;use yii\helpers\Html;use yii
                         ->label('Số lần đối soát')?>
                 </div>
             </div>
+            <?php ActiveForm::end();?>
         </div>
         <div class="col-md-8">
             <?= GridView::widget([
@@ -104,5 +105,14 @@ use kartik\grid\GridView;use kartik\select2\Select2;use yii\helpers\Html;use yii
             ]) ?>
         </div>
     </div>
-    <?php ActiveForm::end();?>
+
+@stop
+@section("pos_page")
+    <script>
+        $(document).on('beforeSubmit', '#cross-form', function (e) {
+            e.preventDefault();
+            alert('asdasuvadsa');
+            return false;
+        });
+    </script>
 @stop
