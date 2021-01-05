@@ -158,8 +158,7 @@ class AjaxController extends BaseController
             $model::updateAll(['status' => $status], ['id' => $key]);
             if (!Helper::isEmpty($model->phone)) {
                 ContactsAssignment::completeAssignment($model->phone);
-                $next = ContactsAssignment::nextAssignment();
-                return $next;
+                ContactsAssignment::nextAssignment();
             }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
