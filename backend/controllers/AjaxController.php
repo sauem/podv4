@@ -156,9 +156,10 @@ class AjaxController extends BaseController
             $model = new \ReflectionClass("backend\models\\$model");
             $model = $model->newInstanceWithoutConstructor();
             $model::updateAll(['status' => $status], ['id' => $key]);
-            if (!Helper::isEmpty($model->phone)) {
-                ContactsAssignment::completeAssignment($model->phone);
-                ContactsAssignment::nextAssignment();
+            ContactsAssignment::completeAssignment(ContactsAssignment::getPhoneAssign());
+            $new = ContactsAssignment::nextAssignment();
+            if ($new) {
+                \Yii::$app->session->setFlash("success", "Số mới được áp dụng!");
             }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());

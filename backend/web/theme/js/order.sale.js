@@ -155,11 +155,11 @@ async function changeStatus(model, status, element = null) {
         if (res.value) {
             try {
                 const res = service(model, status, ids);
-                console.log(res);
                 $.pjax('#sale-box', {});
             } catch (e) {
                 toastr.warning(e.message);
             }
+            window.location.reload();
         }
     })
 
