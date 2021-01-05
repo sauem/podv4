@@ -5,6 +5,7 @@ const MODULE_TRACKING = 'tracking';
 const MODULE_REFUND = 'refund';
 const MODULE_PAID = 'paid';
 const MODULE_CROSSED = 'crossed';
+const MODULE_COUNTRY = 'country';
 
 async function handleReadExcel(evt) {
     this.file = $(evt)[0].files[0];
@@ -175,6 +176,7 @@ function processRow(sheet) {
             break;
         case MODULE_TRACKING:
         case MODULE_REFUND:
+        case MODULE_COUNTRY:
             columnLength = 5;
             break;
         case MODULE_CROSSED:
@@ -204,6 +206,14 @@ const mappingModel = (module, row) => {
             item.sub_transport = row[2] ? row[2].v : null;
             item.checking_number = row[3] ? row[3].v : null;
             item.sub_transport_tracking = row[4] ? row[4].v : null;
+            break;
+        case MODULE_COUNTRY:
+            item = countryModel();
+            item.name = row[0] ? row[0].v : null;
+            item.code = row[1] ? row[1].v : null;
+            item.zipcode = row[2] ? row[2].v : null;
+            item.city = row[3] ? row[3].v : null;
+            item.district = row[4] ? row[4].v : null;
             break;
         case MODULE_CONTACT:
             item = contactModel();
@@ -291,6 +301,16 @@ function trackingModel() {
         checking_number: null,
         sub_transport: null,
         sub_transport_tracking: null
+    }
+}
+
+function countryModel() {
+    return {
+        name: null,
+        zipcode: null,
+        code: null,
+        city: null,
+        district: null
     }
 }
 

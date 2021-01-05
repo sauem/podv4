@@ -8,6 +8,7 @@ use backend\models\Contacts;
 use backend\models\OrdersContact;
 use backend\models\OrdersRefund;
 use backend\models\Products;
+use backend\models\ZipcodeCountry;
 use common\helper\Helper;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
@@ -108,6 +109,33 @@ class AjaxImportController extends BaseController
             throw new BadRequestHttpException(Helper::firstError($model));
         }
         return true;
+    }
+
+    /**
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public function actionCountry()
+    {
+        $data = \Yii::$app->request->post('row');
+        $model = ZipcodeCountry::findOne([
+            'zipcode' => $data['zipcode'],
+            'city' => $data['city'],
+            'code' => $data['code']]);
+        if (!$model) {
+            $model = new ZipcodeCountry();
+        }
+        try {
+            if ($model->load($data, "")) {
+                if (!$model->save()) {
+                    throw new BadRequestHttpException(Helper::firstError($model));
+                }
+            }
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+        return true;
+
     }
 
     /**

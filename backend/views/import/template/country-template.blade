@@ -1,0 +1,28 @@
+<script id="country-template" type="text/x-handlebars-template">
+    <button onclick="actionSave('{{$module}}')" class="btn btn-sm float-right btn-success"><i class="fe-save"></i> Lưu
+        dữ liệu
+    </button>
+    <table id="contact-table" class="table table-sm table-hover">
+        <thead>
+        <tr>
+
+            <th>Quốc gia</th>
+            <th>Mã quốc gia</th>
+            <th>Zipcode</th>
+            <th>Tỉnh/Thành phố</th>
+            <th>Quận/Huyện</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{{#each this}}
+        <tr data-key="@{{ @index }}">
+            <td>@{{name}}</td>
+            <td>@{{ code }}</td>
+            <td>@{{ zipcode }}</td>
+            <td>@{{ city }}</td>
+            <td>@{{ district }}</td>
+        </tr>
+        @{{/each}}
+        </tbody>
+    </table>
+</script>
