@@ -71,6 +71,7 @@ class Products extends \common\models\BaseModel
     {
         return $this->hasOne(UserModel::className(), ['id' => 'partner_id']);
     }
+
     public function getMarketer()
     {
         return $this->hasOne(UserModel::className(), ['id' => 'marketer_id']);
@@ -96,8 +97,8 @@ class Products extends \common\models\BaseModel
     {
         if ($insert) {
             $this->sku = strtoupper(Helper::toLower($this->sku));
-            $this->partner_id = $this->category->partner_id;
         }
+        $this->partner_id = $this->category->partner_id;
         $pn = UserModel::findOne($this->partner_id);
         $this->partner_name = $pn ? $pn->username : null;
         if ($this->marketer_time && !empty($this->marketer_time)) {

@@ -90,7 +90,7 @@ JS;
                 <div class="col-md-6">
                     <?= $form->field($model, 'shipping_cost')->textInput([
                         'data-toggle' => 'input-mask',
-                        'data-mask-format' => '#,##0.00',
+                        'data-mask-format' => '#,##0',
                         'data-reverse' => 'true',
                         'id' => 'input-shipping-cost'
                     ])?>
@@ -163,7 +163,7 @@ JS;
                                            required
                                            class="form-control"
                                            data-toggle="input-mask"
-                                           data-mask-format="#,##0.00"
+                                           data-mask-format="#,##0"
                                            data-reverse="true">
                                     <div class="input-group-append">
                                         <p class="currency-input input-group-text">Đ</p>
