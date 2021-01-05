@@ -176,13 +176,13 @@ function processRow(sheet) {
             break;
         case MODULE_TRACKING:
         case MODULE_REFUND:
-        case MODULE_COUNTRY:
             columnLength = 5;
             break;
         case MODULE_CROSSED:
             columnLength = 4;
             break;
         case MODULE_PAID:
+        case MODULE_COUNTRY:
             columnLength = 6;
             break;
     }
@@ -214,6 +214,7 @@ const mappingModel = (module, row) => {
             item.zipcode = row[2] ? row[2].v : null;
             item.city = row[3] ? row[3].v : null;
             item.district = row[4] ? row[4].v : null;
+            item.symbol = row[5] ? row[5].v : null;
             break;
         case MODULE_CONTACT:
             item = contactModel();
@@ -310,7 +311,8 @@ function countryModel() {
         zipcode: null,
         code: null,
         city: null,
-        district: null
+        district: null,
+        symbol: null
     }
 }
 

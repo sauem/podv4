@@ -16,6 +16,7 @@ use Yii;
  * @property string|null $address
  * @property int $created_at
  * @property int $updated_at
+ * @property string|null $symbol
  */
 class ZipcodeCountry extends \common\models\BaseModel
 {
@@ -36,6 +37,7 @@ class ZipcodeCountry extends \common\models\BaseModel
             [['zipcode', 'code'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
             [['name', 'code', 'zipcode', 'city', 'district', 'address'], 'string', 'max' => 255],
+            [['symbol'], 'string', 'max' => 50],
         ];
     }
 
@@ -46,14 +48,15 @@ class ZipcodeCountry extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'code' => 'Code',
-            'zipcode' => 'Zipcode',
-            'city' => 'City',
-            'district' => 'District',
-            'address' => 'Address',
+            'name' => 'Tên quốc gia',
+            'code' => 'Mã vùng',
+            'zipcode' => 'Mã bưu điện',
+            'city' => 'Tỉnh/Thành phố',
+            'district' => 'Quận/Huyện',
+            'address' => 'Địa chỉ',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'symbol' => 'Đơn vị tiền tệ',
         ];
     }
 }
