@@ -97,7 +97,7 @@ use yii\helpers\Url;
                                                     @endphp
                                             @foreach($model->skuItems as $item)
                                                 <tr>
-                                                    <th scope="row">{!! $item->product->name !!}</th>
+                                                    <th scope="row">{!! $item->product->sku !!}</th>
                                                     <td>
                                                         <img src="{!! !Helper::isEmpty($item->product->media) ? $item->product->media->media->url : Helper::defaultImage() !!}"
                                                              alt="product-img" width="64">
