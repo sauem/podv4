@@ -25,9 +25,9 @@ class SheetApi
         $this->client->refreshToken(GOOGLE_DRIVE_REFRESH_TOKEN);
         $this->client->setScopes(\Google_Service_Sheets::SPREADSHEETS);
         $this->client->setAccessType('offline');
-        $this->client->setHttpClient(new Client([
-            'verify' => "D:\cacert.pem"
-        ]));
+//        $this->client->setHttpClient(new Client([
+//            'verify' => "D:\cacert.pem"
+//        ]));
 
     }
 
