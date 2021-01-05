@@ -8,7 +8,7 @@ use yii\helpers\Url;
     <div id="order-detail-box" class="card">
         <div class="card-header">
             <h4 class="card-title"><a href="{!! Url::toRoute(['index']) !!}"><i class="fe-arrow-left"></i> Danh sách đơn</a>
-                | #{!! $model->code !!}</h4>
+                | {!! $model->code !!}</h4>
             <button class="btn btn-xs btn-info"><i class="fe-edit"></i> Sửa đơn</button>
             <button class="btn btn-xs btn-danger"><i class="fe-x"></i> Hủy đơn</button>
             <?php if($model->checking_number){
