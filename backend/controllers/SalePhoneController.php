@@ -81,8 +81,8 @@ class SalePhoneController extends BaseController
             'ContactsSearch' => [
                 'status' => [
                     Contacts::STATUS_CANCEL,
-                    //Contacts::STATUS_DUPLICATE,
-                    //Contacts::STATUS_NUMBER_FAIL
+                    Contacts::STATUS_DUPLICATE,
+                    Contacts::STATUS_NUMBER_FAIL
                 ],
                 'phone' => $this->assignPhone
             ]

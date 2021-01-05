@@ -159,7 +159,7 @@ class AjaxController extends BaseController
             ContactsAssignment::completeAssignment(ContactsAssignment::getPhoneAssign());
             $new = ContactsAssignment::nextAssignment();
             if ($new) {
-                \Yii::$app->session->setFlash("success", "Số mới được áp dụng!");
+                return ['assigned' => 1];
             }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());

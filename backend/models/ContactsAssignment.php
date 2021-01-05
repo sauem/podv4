@@ -92,7 +92,9 @@ class ContactsAssignment extends BaseModel
             return false;
         }
         $model->status = ContactsAssignment::STATUS_PROCESSING;
-        $model->save();
+        if (!$model->save()) {
+            return false;
+        }
         return $model;
     }
 
