@@ -42,7 +42,7 @@ function orderSaleForm() {
     }
     this.setOrderItems = function (item) {
         const {sku, id} = item;
-        if (ORDER_ITEMS.items.some(value => value.sku !== sku)) {
+        if (ORDER_ITEMS.items.some(value => value.sku === sku)) {
             toastr.warning('Sản phẩm đã tồn tại');
             return false;
         }
