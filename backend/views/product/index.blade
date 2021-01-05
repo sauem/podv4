@@ -59,14 +59,16 @@ use yii\helpers\Url;
                         'label' => 'Đối tác',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return $model->partner->username;
+                            $partner = Helper::isEmpty($model->partner) ? '---' : $model->partner->username;
+                            return $partner;
                         }
                     ],
                     [
                         'label' => 'Marketer',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return $model->marketer->username;
+                            $marketer = Helper::isEmpty($model->marketer) ? '---' : $model->marketer->username;
+                            return $marketer;
                         }
                     ],
                     [
