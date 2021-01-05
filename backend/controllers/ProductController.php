@@ -61,6 +61,7 @@ class ProductController extends BaseController
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
                 if ($model->save()) {
                     MediaObj::saveObject($model->thumb, $model->id, MediaObj::OBJECT_PRODUCT);
+                    ProductsPrice::removePrice($model->sku);
                     ProductsPrice::savePrice($model->sku, \Yii::$app->request->post('prices'));
                     $transaction->commit();
                     return static::responseSuccess();

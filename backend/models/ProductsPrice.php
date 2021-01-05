@@ -75,4 +75,17 @@ class ProductsPrice extends \common\models\BaseModel
             return true;
         }
     }
+
+    /**
+     * @param $sku
+     * @throws BadRequestHttpException
+     */
+    public static function removePrice($sku)
+    {
+        try {
+            ProductsPrice::deleteAll(['sku' => $sku]);
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+    }
 }
