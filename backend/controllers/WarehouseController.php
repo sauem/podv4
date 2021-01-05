@@ -24,6 +24,10 @@ class WarehouseController extends BaseController
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
 
         $warehouse_query = Products::find()
+            ->innerJoin('categories C', 'C.id = products.category_id')
+            ->leftJoin('warehouse_transaction WT', 'WT.product_sku = products.sku')
+            ->leftJoin('orders_contact_sku as OCS', 'products.sku = OCS.sku')
+            ->innerJoin('orders_contact as OC', 'OCS.order_id = OC.id')
             ->addSelect([
                 'C.name',
                 'products.sku as sku',
@@ -34,8 +38,6 @@ class WarehouseController extends BaseController
                 'SUM(CASE WHEN WT.transaction_type = "refund" THEN WT.qty END) as refund',
                 'SUM(CASE WHEN WT.transaction_type = "broken" THEN WT.qty END) as broken'
             ])
-            ->innerJoin('categories C', 'C.id = products.category_id')
-            ->leftJoin('warehouse_transaction WT', 'WT.product_sku = products.sku')
             ->groupBy('products.category_id')
             ->asArray()->all();
 

@@ -156,7 +156,11 @@ class AjaxController extends BaseController
             $model = new \ReflectionClass("backend\models\\$model");
             $model = $model->newInstanceWithoutConstructor();
             $model::updateAll(['status' => $status], ['id' => $key]);
-
+            if (!Helper::isEmpty($model->phone)) {
+                ContactsAssignment::completeAssignment($model->phone);
+                $next = ContactsAssignment::nextAssignment();
+                return  $next;
+            }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }

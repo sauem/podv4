@@ -71,8 +71,8 @@ use yii\helpers\Url;
                 },
                 'actions' => function ($url, $model) {
                     return Component::dropDown([
-                        '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`cancel`)" class="dropdown-item"><i class="fe-phone-missed"></i> Hủy đặt</a>',
-                        '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`duplicate`)" class="dropdown-item"><i class="fe-phone-missed"></i> Trùng số</a>',
+                        '<a data-phone="' . $model->phone . '" data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`cancel`,this)" class="dropdown-item"><i class="fe-phone-missed"></i> Hủy đặt</a>',
+                        '<a data-phone="' . $model->phone . '" data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`duplicate`,this)" class="dropdown-item"><i class="fe-phone-missed"></i> Trùng số</a>',
 
                     ]);
                 },

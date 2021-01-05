@@ -26,13 +26,18 @@ class SalePhoneController extends BaseController
         parent::__construct($id, $module, $config);
         $assignPhone = ContactsAssignment::getPhoneAssign();
         if (!$assignPhone) {
-            \Yii::$app->session->setFlash('warning', 'Hiện tại bạn chưa có số điện thoại nào!');
+            $assignPhone = ContactsAssignment::getNewPhone();
+            if (!$assignPhone) {
+                \Yii::$app->session->setFlash('warning', 'Hiện tại bạn chưa có số điện thoại nào!');
+            }
         }
         $this->assignPhone = $assignPhone;
     }
 
     public function actionIndex()
     {
+
+
         $searchModel = new ContactsSearch();
         $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
             'ContactsSearch' => [
@@ -41,8 +46,6 @@ class SalePhoneController extends BaseController
             ]
         ]));
 
-        ContactsAssignment::completeAssignment($this->assignPhone);
-        ContactsAssignment::nextAssignment();
 
         return $this->render('index.blade', [
             'dataProvider' => $dataProvider,
