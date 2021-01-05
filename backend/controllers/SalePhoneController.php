@@ -37,6 +37,8 @@ class SalePhoneController extends BaseController
     public function actionIndex()
     {
 
+        ContactsAssignment::completeAssignment($this->assignPhone);
+        ContactsAssignment::nextAssignment();
 
         $searchModel = new ContactsSearch();
         $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
@@ -79,8 +81,8 @@ class SalePhoneController extends BaseController
             'ContactsSearch' => [
                 'status' => [
                     Contacts::STATUS_CANCEL,
-                    Contacts::STATUS_DUPLICATE,
-                    Contacts::STATUS_NUMBER_FAIL
+                    //Contacts::STATUS_DUPLICATE,
+                    //Contacts::STATUS_NUMBER_FAIL
                 ],
                 'phone' => $this->assignPhone
             ]
