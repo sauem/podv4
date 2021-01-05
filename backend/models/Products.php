@@ -139,6 +139,7 @@ class Products extends \common\models\BaseModel
             return false;
         }
         $this->name = $category->name . '-' . $this->sku;
+        return $this->name;
     }
 
     public static function LISTS()
