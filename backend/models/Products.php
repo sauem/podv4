@@ -96,6 +96,7 @@ class Products extends \common\models\BaseModel
     public function beforeSave($insert)
     {
         if ($insert) {
+            #$this->sku = Helper::makeUpperString($this->sku);
             $this->sku = $this->generateName();
         }
         $this->partner_id = $this->category->partner_id;
@@ -138,7 +139,6 @@ class Products extends \common\models\BaseModel
             return false;
         }
         $this->name = $category->name . '-' . $this->sku;
-        return $this->name;
     }
 
     public static function LISTS()
