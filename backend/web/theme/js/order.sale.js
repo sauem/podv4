@@ -15,6 +15,9 @@ function orderSaleForm() {
     let totalPriceInput = $('#total-price-input');
     let productPriceInput = $('input.input-product-price');
     let productQtyInput = $('input.input-product-qty');
+    let cityInput = $('input.city');
+    let districtInput = $('input.district');
+    let countrySelect = $('select.country-select');
 
     let ORDER_ITEMS = {
         total: {
@@ -33,6 +36,7 @@ function orderSaleForm() {
             type: 'POST'
         })
     }
+
     this.appendTemplateItem = function (item) {
         orderItemsResult.append(template(item));
         initMaskMoney();
@@ -51,7 +55,6 @@ function orderSaleForm() {
             price: 0,
             qty: 0
         });
-        console.log('SET ITEM:', ORDER_ITEMS);
         return true;
     }
     this.removeOrderItems = function (key) {
@@ -125,6 +128,23 @@ function orderSaleForm() {
     }
     this.valid = function (form) {
         $(form).yiiActiveForm('validate');
+    }
+    this.changeZipcode = async function (zipcode) {
+        try {
+            let res = await $.ajax({
+                url: AJAX_PATH.getZipcode,
+                data: {zipcode},
+                type: 'POST'
+            });
+            if (res) {
+                const {name, city, zipcode, district, code} = res;
+                cityInput.val(city);
+                districtInput.valueOf(district);
+                countrySelect.val(code);
+            }
+        } catch (e) {
+            console.log(e);
+        }
     }
     this.getPrice = async function getPrice(qty, sku) {
         return $.ajax({

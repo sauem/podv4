@@ -62,16 +62,16 @@ JS;
                     <?= $form->field($model, 'email')?>
                 </div>
                 <div class="col-md-6">
-                    <?= $form->field($model, 'zipcode')?>
+                    <?= $form->field($model, 'zipcode')->textInput(['class' => 'zipcode'])?>
                 </div>
                 <div class="col-md-6">
                     <?= $form->field($model, 'address')?>
                 </div>
                 <div class="col-md-6">
-                    <?= $form->field($model, 'district')?>
+                    <?= $form->field($model, 'district')->textInput(['class' => 'district'])?>
                 </div>
                 <div class="col-md-6">
-                    <?= $form->field($model, 'city')?>
+                    <?= $form->field($model, 'city')->textInput(['class' => 'city'])?>
                 </div>
                 <div class="col-md-6">
                     <?= $form->field($model, 'country')->widget(Select2::className(), [
@@ -211,14 +211,19 @@ JS;
                 let sku = $(this).data('sku');
                 order.removeProductItem(sku, this);
             });
-
+            $(document).on('change', '.zipcode', function () {
+                let zipcode = $(this).val();
+                order.changeZipcode(zipcode);
+            });
             $(document).on('change', '.input-product-price', function () {
                 let val = $(this).val();
                 val = val.replaceAll(',', '');
                 let sku = $(this).data('sku');
                 order.setItemPrice(sku, val);
             });
+            $(document).on('change', '.country-select', function () {
 
+            });
             $(document).on('change', '.input-product-qty', function () {
                 let qty = $(this).val();
                 let sku = $(this).data("sku");

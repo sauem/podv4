@@ -12,6 +12,7 @@ use backend\models\OrdersContact;
 use backend\models\OrdersContactSku;
 use backend\models\OrderStatus;
 use backend\models\Products;
+use backend\models\ZipcodeCountry;
 use common\helper\Helper;
 use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
@@ -120,11 +121,15 @@ class SalePhoneController extends BaseController
         $contact = Contacts::findOne(['code' => $code]);
         $model = new OrdersContact();
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
-
+        $country = ZipcodeCountry::findOne(['zipcode' => $contact->zipcode]);
         $data = ArrayHelper::toArray($contact);
         unset($data['id']);
-
         $model->load($data, '');
+        if ($country) {
+            $model->city = $country->city;
+            $model->district = $country->district;
+            $model->country = $country->code;
+        }
         $products = Products::find()->asArray()->all();
         if (!$contact) {
             throw new BadRequestHttpException('Contact not founded!');

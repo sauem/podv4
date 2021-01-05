@@ -11,6 +11,7 @@ use backend\models\ProductsPrice;
 use backend\models\ProductsSearch;
 use backend\models\Transporters;
 use backend\models\UploadForm;
+use backend\models\ZipcodeCountry;
 use common\helper\Helper;
 use Illuminate\Support\Arr;
 use yii\base\Exception;
@@ -193,5 +194,18 @@ class AjaxController extends BaseController
             throw new BadRequestHttpException("Không có đơn vị vận chuyển nào!");
         }
         return $model->children;
+    }
+
+    /**
+     * @throws BadRequestHttpException
+     */
+    public function actionGetZipcode()
+    {
+        $zipcode = \Yii::$app->request->post('zipcode');
+        $model = ZipcodeCountry::findOne(['zipcode' => $zipcode]);
+        if (!$model) {
+            throw new BadRequestHttpException(Helper::firstError($model));
+        }
+        return ArrayHelper::toArray($model);
     }
 }
