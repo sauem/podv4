@@ -159,11 +159,12 @@ class AjaxController extends BaseController
             if (!Helper::isEmpty($model->phone)) {
                 ContactsAssignment::completeAssignment($model->phone);
                 $next = ContactsAssignment::nextAssignment();
-                return  $next;
+                return $next;
             }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
+        return true;
     }
 
     public function actionGetPrice()
