@@ -36,7 +36,7 @@ class ContactsLogStatus extends \common\models\BaseModel
     {
         return [
             [['user_id', 'created_at', 'updated_at'], 'integer'],
-            [['created_at', 'updated_at'], 'required'],
+            [['code', 'phone'], 'required'],
             [['code', 'sale_note', 'customer_note'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 25],
             [['status'], 'string', 'max' => 50],
@@ -72,10 +72,7 @@ class ContactsLogStatus extends \common\models\BaseModel
     public static function saveRecord($code, $phone, $status, $sale_note = '', $customer_note = '')
     {
         try {
-            $contact = Contacts::findOne(['code' => $code]);
-            if (!$contact) {
-                throw new BadRequestHttpException(Helper::firstError('không tìm thấy liên hệ!'));
-            }
+
             $model = new ContactsLogStatus();
             $model->code = $code;
             $model->user_id = Yii::$app->user->getId();

@@ -10,15 +10,15 @@ function initSaleChart() {
         series: [{
             name: 'C8',
             type: 'column',
-            data: []
+            data: null
         }, {
             name: 'C3',
             type: 'column',
-            data: []
+            data: null
         }, {
             name: 'C8/C3',
             type: 'line',
-            data: []
+            data: null
         }],
         chart: {
             height: 350,

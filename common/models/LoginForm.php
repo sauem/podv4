@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use backend\models\UserModel;
 use Yii;
 use yii\base\Model;
 
@@ -30,6 +31,7 @@ class LoginForm extends Model
             ['country', 'string'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+            ['country', 'validateCountry'],
         ];
     }
 
@@ -46,6 +48,16 @@ class LoginForm extends Model
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
+            }
+        }
+    }
+
+    public function validateCountry($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
+            if (!$user || !$user->validateCountry($this->country)) {
+                $this->addError($attribute, "Quốc gia không thuộc quyền quản lý!");
             }
         }
     }
@@ -68,12 +80,13 @@ class LoginForm extends Model
     /**
      * Finds user by [[username]]
      *
-     * @return User|null
+     * @return UserModel
      */
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = UserModel::findByUsername($this->username);
+            $this->_user->role = $this->_user->position->item_name;
         }
 
         return $this->_user;

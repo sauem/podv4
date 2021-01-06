@@ -149,6 +149,14 @@ class UserModel extends BaseModel implements IdentityInterface
         return $this->getAuthKey() === $authKey;
     }
 
+    public function validateCountry($country)
+    {
+        if ($this->position->item_name === UserRole::ROLE_SALE) {
+            return $country === $this->country;
+        }
+        return true;
+    }
+
     /**
      * Validates password
      *

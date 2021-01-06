@@ -1,3 +1,4 @@
+
 const toastr = {
     warning: (text = "content", heading = "Cảnh báo!") => {
         $.toast({

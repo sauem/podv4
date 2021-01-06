@@ -4,7 +4,9 @@
 namespace backend\controllers;
 
 
+use backend\models\Contacts;
 use backend\models\ContactsAssignment;
+use backend\models\ContactsLogStatus;
 use backend\models\Media;
 use backend\models\Products;
 use backend\models\ProductsPrice;
@@ -157,6 +159,9 @@ class AjaxController extends BaseController
             $model = new \ReflectionClass("backend\models\\$model");
             $model = $model->newInstanceWithoutConstructor();
             $model::updateAll(['status' => $status], ['id' => $key]);
+            if(get_class($model) === "backend\models\Contacts"){
+                ContactsLogStatus::saveRecord($model->code, $model->phone, Contacts::STATUS_OK);
+            }
             ContactsAssignment::completeAssignment(ContactsAssignment::getPhoneAssign());
             $new = ContactsAssignment::nextAssignment();
             if ($new) {

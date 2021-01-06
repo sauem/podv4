@@ -68,7 +68,6 @@ class SiteController extends BaseController
         $sources = ContactsSource::LISTS();
         $products = Products::LISTS();
         $marketers = UserRole::LISTS(UserRole::ROLE_MARKETER);
-
         return $this->render('index.blade', [
             'sources' => $sources,
             'products' => $products,
@@ -85,7 +84,6 @@ class SiteController extends BaseController
         $this->layout = 'auth.blade';
 
         $model = new LoginForm();
-
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {

@@ -2,7 +2,9 @@
 
 namespace backend\models;
 
+use common\helper\Helper;
 use Yii;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "warehouse_histories".
@@ -61,5 +63,22 @@ class WarehouseHistories extends \common\models\BaseModel
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * @param $orderCode
+     * @param $items
+     * @throws BadRequestHttpException
+     */
+    public static function saveHistories($orderCode, $items)
+    {
+        try {
+            if (Helper::isEmpty($items)) {
+                throw new BadRequestHttpException("Không có sản phẩm được chọn!");
+            }
+
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
     }
 }

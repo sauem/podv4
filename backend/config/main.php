@@ -47,7 +47,7 @@ return [
             'cookieValidationKey' => 'QqhWhK8-MJKqCGbUInK5J2UjWMgFIvWB',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'backend\models\UserModel',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],

@@ -12,7 +12,9 @@ $(document).on('hide.bs.modal', '.modal', function () {
     window.ORDER_ITEMS = [];
 })
 
-
+const toNumber = function (value) {
+    return value.replaceAll(SYMBOL_MARKET.trim(), '');
+}
 const initToggleTab = function () {
     let toggleTab = $('a[data-toggle="tab"]');
     toggleTab.off('shown.bs.tab');

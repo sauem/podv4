@@ -94,6 +94,7 @@ JS;
                 <div class="col-md-6">
                     <?= $form->field($model, 'shipping_cost')->textInput([
                         'data-toggle' => 'input-mask',
+                        'class' => "form-control",
                         'data-mask-format' => '#,##0',
                         'data-reverse' => 'true',
                         'id' => 'input-shipping-cost'
@@ -173,7 +174,7 @@ JS;
                                            data-mask-format="#,##0"
                                            data-reverse="true">
                                     <div class="input-group-append">
-                                        <p class="currency-input input-group-text">Đ</p>
+                                        <p class="currency-input input-group-text"><?= Helper::symbol()?></p>
                                     </div>
 
                                     <?= $form->field($model, 'total_price')
@@ -224,11 +225,9 @@ JS;
                 let val = $(this).val();
                 val = val.replaceAll(',', '');
                 let sku = $(this).data('sku');
-                order.setItemPrice(sku, val);
+                order.setItemPrice(sku, toNumber(val));
             });
-            $(document).on('change', '.country-select', function () {
 
-            });
             $(document).on('change', '.input-product-qty', function () {
                 let qty = $(this).val();
                 let sku = $(this).data("sku");
@@ -236,11 +235,13 @@ JS;
                 order.loadItemPrice(qty, sku, input);
             });
             $(document).on('change', '#input-shipping-cost', function () {
-                order.setShippingCost($(this).val());
+                let value = $(this).val();
+                order.setShippingCost(toNumber(value));
             });
 
             $(document).on('change', '#total-price-input', function () {
-                order.setTotalPrice($(this).val());
+                let value = $(this).val();
+                order.setTotalPrice(toNumber(value));
             });
         });
     </script>

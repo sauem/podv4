@@ -37,13 +37,18 @@ class UserRole extends UserModel
         return ArrayHelper::map($roles, 'name', 'name');
     }
 
-    public static function LISTS($role = UserRole::ROLE_PARTNER)
+    public static function LISTS($role = UserRole::ROLE_PARTNER, $byCountry = false)
     {
-        $users = UserModel::find()->joinWith([
+        $query = UserModel::find()->joinWith([
             'position' => function ($query) use ($role) {
                 $query->andWhere(['{{auth_assignment}}.item_name' => $role]);
             }
-        ], false)->all();
-        return ArrayHelper::map($users, 'id', 'username');
+        ], false);
+        if ($byCountry) {
+            $country = \Yii::$app->cache->get('country');
+            $query->andWhere(['{{user}}.country' => $country]);
+        }
+        $query = $query->all();
+        return ArrayHelper::map($query, 'id', 'username');
     }
 }

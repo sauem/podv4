@@ -142,9 +142,4 @@ class WarehouseTransaction extends \common\models\BaseModel
 
         }
     }
-
-    public static function updateWarehouse()
-    {
-
-    }
 }

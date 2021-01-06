@@ -36,7 +36,7 @@ class OrdersContactSku extends \common\models\BaseModel
     {
         return [
             [['order_id', 'qty', 'created_at', 'updated_at'], 'integer'],
-            [['sku', 'order_id', 'qty', 'price'], 'required'],
+            [['sku', 'qty', 'price'], 'required'],
             [['price'], 'number'],
             [['sku'], 'string', 'max' => 255],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrdersContact::className(), 'targetAttribute' => ['order_id' => 'id']],
@@ -50,10 +50,10 @@ class OrdersContactSku extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'order_id' => 'Order ID',
-            'sku' => 'Sku',
-            'qty' => 'Qty',
-            'price' => 'Price',
+            'order_id' => 'Mã đơn hàng',
+            'sku' => 'Sản phẩm',
+            'qty' => 'Số lượng',
+            'price' => 'Giá',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -68,9 +68,12 @@ class OrdersContactSku extends \common\models\BaseModel
     {
         return $this->hasOne(OrdersContact::className(), ['id' => 'order_id']);
     }
-    public function getProduct(){
-        return $this->hasOne(Products::className(),['sku' => 'sku']);
+
+    public function getProduct()
+    {
+        return $this->hasOne(Products::className(), ['sku' => 'sku']);
     }
+
     /**
      * @param $orderId
      * @param array $items

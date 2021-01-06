@@ -25,7 +25,8 @@ class Helper
 
     static function toFloat($number)
     {
-        return str_replace(',', '', $number);
+        $number = str_replace(',', '', $number);
+        return str_replace(trim(Helper::symbol()), '', trim($number));
     }
 
     static function formatCUR($num, $symbol = null, $decimal = 2)

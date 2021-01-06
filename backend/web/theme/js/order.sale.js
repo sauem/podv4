@@ -18,7 +18,7 @@ function orderSaleForm() {
     let cityInput = $('input.city');
     let districtInput = $('input.district');
     let countrySelect = $('select.country-select');
-
+    initMaskMoney();
     let ORDER_ITEMS = {
         total: {
             total_bill: 0,
@@ -77,9 +77,8 @@ function orderSaleForm() {
         }
     }
     this.setShippingCost = function (number) {
-        totalShip.text(number);
+        totalShip.text(number + SYMBOL_MARKET);
         ORDER_ITEMS.total.total_ship = parseFloat(number.replaceAll(',', ''));
-
         this.sumTotal();
     }
     this.sumTotal = function (overwrite = false) {
@@ -99,7 +98,7 @@ function orderSaleForm() {
         totalPriceHidden.val(overwrite ? ORDER_ITEMS.total.total_price : price);
         //set view total bill and value total bill
         totalBillHidden.val(total);
-        totalBill.text(total.format());
+        totalBill.text(total.format() + SYMBOL_MARKET);
     }
     this.setTotalPrice = function (value) {
         value = parseFloat(value.replaceAll(',', ''));

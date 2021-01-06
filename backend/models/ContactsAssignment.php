@@ -115,7 +115,7 @@ class ContactsAssignment extends BaseModel
         $contact = Contacts::find()
             ->leftJoin('contacts_assignment', 'contacts_assignment.phone = contacts.phone')
             ->where('contacts_assignment.phone IS NULL')
-            ->andWhere(['contacts.status' => Contacts::STATUS_NEW])->groupBy('phone')->one();
+            ->andWhere(['contacts.country' => Yii::$app->cache->get('country'), 'contacts.status' => Contacts::STATUS_NEW])->groupBy('phone')->one();
 
         if ($contact) {
             $model = new ContactsAssignment();

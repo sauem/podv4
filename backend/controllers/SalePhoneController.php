@@ -12,6 +12,8 @@ use backend\models\OrdersContact;
 use backend\models\OrdersContactSku;
 use backend\models\OrderStatus;
 use backend\models\Products;
+use backend\models\WarehouseHistories;
+use backend\models\WarehouseTransaction;
 use backend\models\ZipcodeCountry;
 use common\helper\Helper;
 use yii\db\Transaction;
@@ -141,9 +143,11 @@ class SalePhoneController extends BaseController
                     //Update new info contact
                     Contacts::updateStatus($code, $model);
                     // Save contact call log
-                    ContactsLogStatus::saveRecord($code, $model->phone, $model->status);
-                    //save item order product
                     OrdersContactSku::saveItems($model->id, \Yii::$app->request->post('items'));
+                    //save item order product
+                    ContactsLogStatus::saveRecord($code, $model->phone, Contacts::STATUS_OK);
+                    //Update warehouse
+                    WarehouseHistories::saveHistories($code, \Yii::$app->request->post('items'));
                     //check user has finish current phone
                     $newNumber = ContactsAssignment::completeAssignment($model->phone);
                     $transaction->commit();
