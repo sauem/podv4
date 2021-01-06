@@ -65,15 +65,7 @@ use yii\helpers\Html;
             'label' => 'sản phẩm',
             'format' => 'html',
             'value' => function ($model) {
-                $html = "";
-                $products = !Helper::isEmpty($model->skuItems) ? $model->skuItems : [];
-                if (empty($products)) {
-                    return '--';
-                }
-                foreach ($products as $product) {
-                    $html .= "$product->sku * $product->qty, ";
-                }
-                return Helper::string($html);
+                return Helper::printString($model);
             }
         ],
         [

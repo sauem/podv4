@@ -4,9 +4,11 @@
 namespace backend\controllers;
 
 
+use backend\models\ZipcodeCountry;
 use common\helper\Helper;
 use cyneek\yii2\blade\BladeBehavior;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -14,8 +16,14 @@ class BaseController extends Controller
 {
     public function init()
     {
+        $countries = ZipcodeCountry::find()->addSelect(['name', 'code','symbol'])->groupBy('code')->all();
+        $countriesParams = ArrayHelper::map($countries, 'code', function ($item) {
+            return $item->code . '-' . $item->name;
+        });
+        $symbols = ArrayHelper::map($countries, 'code', 'symbol');
+        \Yii::$app->params['countries'] = $countriesParams;
+        \Yii::$app->params['symbols'] = $symbols;
         parent::init();
-
     }
 
     /**

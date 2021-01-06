@@ -79,6 +79,9 @@ class OrdersContact extends \common\models\BaseModel
         self::STATUS_CANCEL => 'Huỷ đơn',
 
     ];
+    /**
+     * @var mixed|null
+     */
 
 
     /**
@@ -107,6 +110,11 @@ class OrdersContact extends \common\models\BaseModel
             [['shipping_cost'], 'safe'],
             [['payment_status', 'cross_status', 'shipping_status'], 'string', 'max' => 50],
         ];
+    }
+
+    public static function find()
+    {
+        return parent::find()->where(['orders_contact.country' => Yii::$app->cache->get('country')]);
     }
 
     public function fields()

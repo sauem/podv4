@@ -1,5 +1,7 @@
 <script>
     const USER_LOGIN_ID = '{!! \Yii::$app->user->getId() !!}';
+    const SYMBOL_MARKET = '{!! \common\helper\Helper::symbol() !!} ';
+    const USER_MARKET = '{!! \Yii::$app->cache->get('country') !!}';
     let AJAX_PATH = {
         uploadURL: '/ajax/upload-file',
         getPrice: '/ajax/get-price',

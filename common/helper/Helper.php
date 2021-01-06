@@ -2,6 +2,8 @@
 
 namespace common\helper;
 
+use backend\models\OrdersContact;
+use Illuminate\Support\Arr;
 use yii\helpers\ArrayHelper;
 use yii2mod\settings\models\SettingModel;
 use function GuzzleHttp\Psr7\str;
@@ -26,9 +28,12 @@ class Helper
         return str_replace(',', '', $number);
     }
 
-    static function formatCUR($num, $symbol = '', $decimal = 2)
+    static function formatCUR($num, $symbol = null, $decimal = 2)
     {
-        return number_format($num, $decimal, '.', ',') . $symbol;
+        if (!$symbol) {
+            $symbol = Helper::symbol();
+        }
+        return $symbol . number_format($num, $decimal, '.', ',');
     }
 
     static function makeUpperString($str)
@@ -63,9 +68,10 @@ class Helper
 
     static function countries()
     {
-        return ArrayHelper::map(\Yii::$app->params['countries'], 'code', function ($item) {
-            return $item['code'] . ' - ' . $item['name'];
-        });
+//        return ArrayHelper::map(\Yii::$app->params['countries'], 'code', function ($item) {
+//            return $item['code'] . ' - ' . $item['name'];
+//        });
+        return \Yii::$app->params['countries'];
     }
 
     static function countryName($code)
@@ -143,5 +149,27 @@ class Helper
 
         }
         return round($number1 / $number2 * 100, $float);
+    }
+
+    static function symbol($country = null)
+    {
+        $symbols = \Yii::$app->params['symbols'];
+        if (!$country) {
+            $country = \Yii::$app->cache->get('country');
+        }
+        return ArrayHelper::getValue($symbols, $country, '');
+    }
+
+    static function printString(OrdersContact $model)
+    {
+        $items = Helper::isEmpty($model->skuItems) ? null : $model->skuItems;
+        if (!$items || empty($items)) {
+            return '---';
+        }
+        $str = "";
+        foreach ($items as $item) {
+            $str .= $item->sku . "*" . $item->qty;
+        }
+        return "<small>$str</small>";
     }
 }

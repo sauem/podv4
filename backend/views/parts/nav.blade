@@ -29,7 +29,8 @@
                    href="#" role="button" aria-haspopup="false" aria-expanded="false">
                     <img src="/theme/images/users/user-1.jpg" alt="user-image" class="rounded-circle">
                     <span class="pro-user-name ml-1">
-                                 {{Yii::$app->user->identity->username}}    <i class="mdi mdi-chevron-down"></i>
+                                 {{Yii::$app->user->identity->username}} - {{Yii::$app->cache->get('country')}}    <i
+                                class="mdi mdi-chevron-down"></i>
                                 </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">

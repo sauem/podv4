@@ -104,6 +104,7 @@ class AjaxImportController extends BaseController
         $model->transport_fee = $data['transport_fee'];
         $model->payment_status = OrdersContact::STATUS_PAYED;
         $model->status = OrdersContact::STATUS_PAYED;
+        $model->time_paid_success = time();
 
         if (!$model->save()) {
             throw new BadRequestHttpException(Helper::firstError($model));

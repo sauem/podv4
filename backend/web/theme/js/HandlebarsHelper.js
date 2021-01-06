@@ -13,7 +13,7 @@ Handlebars.registerHelper("money", function (value, options) {
     let num = value.toFixed(Math.max(0, ~~dl));
 
     // Returns the formatted number
-    return (ds ? num.replace('.', ds) : num).replace(new RegExp(re, 'g'), '$&' + ts);
+    return SYMBOL_MARKET + (ds ? num.replace('.', ds) : num).replace(new RegExp(re, 'g'), '$&' + ts);
 });
 Handlebars.registerHelper("empty", function (val) {
     if (typeof val === undefined || val === "" || val === null || !val) {

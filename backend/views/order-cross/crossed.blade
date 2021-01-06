@@ -49,6 +49,9 @@ use yii\helpers\Url;
                 'label' => 'Đối tác',
                 'format' => 'html',
                 'value' => function ($model) {
+                    if (Helper::isEmpty($model->contact)) {
+                        return "---";
+                    }
                     return $model->contact->partner;
                 }
             ],
@@ -56,7 +59,7 @@ use yii\helpers\Url;
                 'label' => 'sản phẩm',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return '--';
+                    return Helper::printString($model);
                 }
             ],
             [

@@ -8,6 +8,10 @@ use yii\web\View;
 use common\helper\Component;
 use backend\models\Payments;
 $formatJs = <<<'JS'
+let order = new orderSaleForm();
+let selectSku = function (e) {
+    order.addProductItem(e.target.value);
+ }
 let formatRepo = function (repo) {
     if (repo.loading) {
         return repo.sku;
@@ -115,7 +119,7 @@ JS;
                 <div class="col-md-7">
                     <?= Select2::widget([
                         'name' => 'sku',
-                        'options' => ['id' => 'product-sku', 'placeholder' => 'Chọn sản phẩm...'],
+                        'options' => ['placeholder' => 'Chọn sản phẩm...'],
                         'theme' => Select2::THEME_MATERIAL,
                         'pluginOptions' => [
                             'allowClear' => true,
@@ -131,11 +135,14 @@ JS;
                             'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
                             'templateResult' => new JsExpression('formatRepo'),
                             'templateSelection' => new JsExpression('formatRepoSelection'),
+                        ],
+                        'pluginEvents' => [
+                            "select2:select" => new JsExpression('selectSku'),
                         ]
                     ])?>
                 </div>
                 <div class="col-md-5">
-                    <?=  Html::button('Thêm sản phẩm', ['id' => 'btn-add-product', 'class' => 'btn btn-flat btn-success'])?>
+                    <?= "";// Html::button('Thêm sản phẩm', ['id' => 'btn-add-product', 'class' => 'btn btn-flat btn-success'])?>
                 </div>
             </div>
             <div class="row">
@@ -198,8 +205,6 @@ JS;
 @section('pos_page')
     <script>
         $(document).ready(function () {
-
-            let order = new orderSaleForm();
 
 
             $(document).on('click', '#btn-add-product', function () {

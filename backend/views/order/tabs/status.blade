@@ -54,15 +54,14 @@ use common\helper\Component;
                 'label' => 'Đối tác',
                 'format' => 'html',
                 'value' => function ($model) {
-                    $partner = Helper::isEmpty($model->contact) ? '---' : $model->contact->partner;
-                    return $partner;
+                    return Helper::isEmpty($model->contact) ? '---' : $model->contact->partner;
                 }
             ],
             [
                 'label' => 'sản phẩm',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return '--';
+                    return Helper::printString($model);
                 }
             ],
             [

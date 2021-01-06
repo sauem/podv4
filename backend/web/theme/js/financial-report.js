@@ -46,7 +46,7 @@ function initFinancialChart() {
             enabled: true,
             enabledOnSeries: [0, 1],
             formatter: function (val, {seriesIndex, dataPointIndex, w}) {
-                return "฿ " + nFormatter(val);
+                return SYMBOL_MARKET + nFormatter(val);
             }
         },
         labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
@@ -71,7 +71,7 @@ function initFinancialChart() {
                         colors: '#008FFB',
                     },
                     formatter: function (value, index) {
-                        return '฿' + nFormatter(value);
+                        return SYMBOL_MARKET + nFormatter(value);
                     }
                 },
                 tooltip: {

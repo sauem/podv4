@@ -85,14 +85,19 @@ use common\helper\Component;use yii\helpers\Html;
                                class="form-control">
                     </td>
                     <td>
-                        <input name="prices[{{ $k }}][price]"
-                               type="text"
-                               value="{{$price->price}}"
-                               required
-                               class="form-control"
-                               data-toggle="input-mask"
-                               data-mask-format="#,##0"
-                               data-reverse="true">
+                        <div class="input-group">
+                            <input name="prices[{{ $k }}][price]"
+                                   type="text"
+                                   value="{{$price->price}}"
+                                   required
+                                   class="form-control"
+                                   data-toggle="input-mask"
+                                   data-mask-format="#,##0"
+                                   data-reverse="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><?= Helper::symbol()?></span>
+                            </div>
+                        </div>
                     </td>
                     <td class="align-middle">
                         <button type="button" class="btn btn-xs btn-outline-warning" id="removePrice"><i
@@ -122,13 +127,18 @@ use common\helper\Component;use yii\helpers\Html;
                        class="form-control">
             </td>
             <td>
-                <input name="prices[@{{ index }}][price]"
-                       type="text"
-                       required
-                       class="form-control"
-                       data-toggle="input-mask"
-                       data-mask-format="#,##0"
-                       data-reverse="true">
+                <div class="input-group">
+                    <input name="prices[@{{ index }}][price]"
+                           type="text"
+                           required
+                           class="form-control"
+                           data-toggle="input-mask"
+                           data-mask-format="#,##0"
+                           data-reverse="true">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><?= Helper::symbol()?></span>
+                    </div>
+                </div>
             </td>
             <td class="align-middle">
                 <button type="button" class="btn btn-xs btn-outline-warning" id="removePrice"><i class="fe-trash"></i>
