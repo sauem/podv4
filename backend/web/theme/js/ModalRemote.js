@@ -182,7 +182,11 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
         else if (size !== 'normal')
             console.warn("Not define size" + size);
     }
-
+    this.view = function (content) {
+        this.show();
+        this.setContent(content);
+        this.setFooter();
+    }
 
     /**
      * Auto load content from a tag

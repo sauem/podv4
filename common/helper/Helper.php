@@ -174,11 +174,11 @@ class Helper
         }
         $str = "";
         foreach ($items as $item) {
-            $str .= $item->sku . "*" . $item->qty;
+            $str .= $item->sku . "*" . $item->qty . " + ";
         }
         if ($string) {
             return $str;
         }
-        return "<small>$str</small>";
+        return "<small>" . substr($str, 0, -2) . "</small>";
     }
 }

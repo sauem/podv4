@@ -6,12 +6,21 @@ use kartik\grid\ActionColumn;
 use backend\models\OrdersContact;
 use common\helper\Helper;
 use yii\helpers\Url;
-use yii\helpers\Html;
+use yii\helpers\Html;use yii\web\JsExpression;use yii\web\View;
 ?>
 
-{!! $view->render('search-default.blade',[
+<div class="row">
+    <div class="col-md-8">
+        {!! $view->render('search-default.blade',[
            'searchModel' => $searchModel
        ]) !!}
+    </div>
+    <div class="col-md-4">
+        <div style="height: 80px;" data-simplebar>
+            <div id="result-warehouse-view"></div>
+        </div>
+    </div>
+</div>
 
 <div class="my-2">
     <button data-url="{!! Url::toRoute(['create']) !!}" id="createOrderVendor" class="btn btn-sm btn-success"><i
@@ -91,9 +100,43 @@ use yii\helpers\Html;
         ],
     ]
 ]) ?>
-
+<?= $view->render('../template/warehouse-view.blade')?>
+<?= $view->render('@backend/views/parts/Modal.blade', ['id' => 'viewExpand-modal'])?>
 <?php
+
+
 $js = <<<JS
+
+    let resultView = $("#result-warehouse-view"),
+        templateView = $("#warehouse-view-template").html(),
+        template = Handlebars.compile(templateView);
+    let reloadWarehouseView = async function(){
+        let codes = [];
+         $("#w1 input[type='checkbox']").each(function() {
+            if($(this).data('code') !== undefined){
+            codes.push($(this).data('code'));
+            }
+        });
+        try {
+            resultView.html('<div class="text-center"><div class="spinner-border text-secondary m-2" role="status"></div></div>');
+            const data = await $.ajax({
+                url : AJAX_PATH.getWarehouseAvailable,
+                type : 'POST',
+                data : {codes},
+                cache : false
+            });
+            resultView.html(template(data));
+        }catch (e) {
+            console.log(e);
+        }
+    }
+    $(document).on("change","#w1 input[type='checkbox']", function(e) {
+      reloadWarehouseView();
+    });
+    $(document).on('click','.viewExpand',function(){
+        let modal = new ModalRemote('#viewExpand-modal', null);
+        modal.view(resultView.html());
+    });
     $(document).on("click", "#createOrderVendor", function() {
         let ids = $('#w1').yiiGridView("getSelectedRows");
 

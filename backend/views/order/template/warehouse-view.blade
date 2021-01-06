@@ -1,0 +1,25 @@
+<script type="text/x-handlebars-template" id="warehouse-view-template">
+    <button class="viewExpand btn btn-xs btn-info"><i class="fe-eye"></i></button>
+    <table class="table table-sm table-responsive table-bordered">
+        <thead>
+        <tr>
+            <th>Kho</th>
+            <th>Sản phẩm</th>
+            <th>Khả dụng</th>
+            <th>Cần xuất</th>
+            <th>Còn lại</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{{#each this}}
+        <tr>
+            <td><small>@{{name}}</small></td>
+            <td><small>@{{sku}}</small></td>
+            <td>@{{inventory}}</td>
+            <td>@{{needed}}</td>
+            <td>@{{invalid}}</td>
+        </tr>
+        @{{/each}}
+        </tbody>
+    </table>
+</script>

@@ -42,6 +42,11 @@ class WarehouseStorage extends \common\models\BaseModel
         ];
     }
 
+    public function getWarehouse()
+    {
+        return $this->hasOne(Warehouse::className(), ['id' => 'warehouse_id']);
+    }
+
     /**
      * {@inheritdoc}
      */

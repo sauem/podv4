@@ -8,14 +8,16 @@ use backend\models\Contacts;
 use backend\models\ContactsAssignment;
 use backend\models\ContactsLogStatus;
 use backend\models\Media;
+use backend\models\OrdersContactSku;
 use backend\models\Products;
 use backend\models\ProductsPrice;
 use backend\models\ProductsSearch;
 use backend\models\Transporters;
 use backend\models\UploadForm;
+use backend\models\WarehouseHistories;
+use backend\models\WarehouseStorage;
 use backend\models\ZipcodeCountry;
 use common\helper\Helper;
-use Illuminate\Support\Arr;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
@@ -159,7 +161,7 @@ class AjaxController extends BaseController
             $model = new \ReflectionClass("backend\models\\$model");
             $model = $model->newInstanceWithoutConstructor();
             $model::updateAll(['status' => $status], ['id' => $key]);
-            if(get_class($model) === "backend\models\Contacts"){
+            if (get_class($model) === "backend\models\Contacts") {
                 ContactsLogStatus::saveRecord($model->code, $model->phone, Contacts::STATUS_OK);
             }
             ContactsAssignment::completeAssignment(ContactsAssignment::getPhoneAssign());
@@ -212,5 +214,66 @@ class AjaxController extends BaseController
             throw new BadRequestHttpException(Helper::firstError($model));
         }
         return ArrayHelper::toArray($model);
+    }
+
+    /**
+     * @throws BadRequestHttpException
+     */
+
+    public function actionWarehouseAvailable()
+    {
+        try {
+            $codes = \Yii::$app->request->post('codes');
+            $codes = ['#CCVN0002317'];
+            $skuItems = OrdersContactSku::find()->
+            innerJoin('orders_contact', 'orders_contact.id = orders_contact_sku.order_id')
+                ->addSelect([
+                    'orders_contact_sku.sku',
+                    'SUM(qty) as needed'
+                ])->where(['orders_contact.code' => $codes])
+                ->groupBy(['orders_contact_sku.sku'])
+                ->asArray()->all();
+
+            $storage = WarehouseStorage::find()
+                ->innerJoin('warehouse', 'storage.warehouse_id = warehouse.id')
+                ->from('warehouse_storage as storage')
+                ->addSelect([
+                    'warehouse.name',
+                    'storage.sku',
+                    'SUM(storage.qty) as inventory'
+                ])->groupBy(['storage.sku'])
+                ->asArray()->all();
+            $histories = WarehouseHistories::find()
+                ->from('warehouse_histories as histories')
+                ->addSelect([
+                    'histories.product_sku as sku',
+                    'SUM(IF(histories.transaction_type = "output" , histories.qty , 0)) as minus'
+                ])
+                ->groupBy(['histories.product_sku'])
+                ->asArray()->all();
+            $storage = array_map(function ($item) use ($histories) {
+                $invalid = array_map(function ($hist) use ($item) {
+                    if ($item['sku'] == $hist['sku']) {
+                        return [
+                            'invalid' => $item['inventory'] - $hist['minus'],
+                        ];
+                    }
+                }, $histories);
+                return array_merge($item, array_values(array_filter($invalid))[0]);
+            }, $storage);
+
+            $storage = array_map(function ($item) use ($skuItems) {
+                $inventory = array_map(function ($sku) use ($item) {
+                    if ($sku['sku'] == $item['sku']) {
+                        return array_merge($sku, $item);
+                    }
+                }, $skuItems);
+                return array_merge($item, array_values(array_filter($inventory))[0]);
+            }, $storage);
+            //Helper::printf($storage);
+            return $storage;
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
     }
 }

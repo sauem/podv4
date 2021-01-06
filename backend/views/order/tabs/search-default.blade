@@ -10,14 +10,14 @@ use common\helper\Helper;
 $form = ActiveForm::begin();
 ?>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
         <?= $form->field($searchModel, 'items')->widget(Select2::className(), [
             'data' => Products::LISTS(),
             'options' => ['placeholder' => 'Sản phẩm...'],
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <?= $form->field($searchModel, 'payment_method')->widget(Select2::className(), [
             'data' => Payments::LISTS(),
             'options' => ['placeholder' => 'Hình thức thanh toán...'],
