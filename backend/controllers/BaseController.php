@@ -87,14 +87,14 @@ class BaseController extends Controller
 
     }
 
-    static function responseSuccess($forceReload = 1, $forceClose = 1, $message = '')
+    static function responseSuccess($forceReload = 1, $forceClose = 1, $message = '', $type = 'success')
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         return [
             'forceReload' => $forceReload,
             'forceClose' => $forceClose,
             'message' => $message,
-            'type' => 'success'
+            'type' => $type
         ];
     }
 

@@ -7,11 +7,13 @@ namespace backend\controllers;
 use backend\models\Products;
 use backend\models\Warehouse;
 use backend\models\WarehouseSearch;
+use backend\models\WarehouseStorage;
 use backend\models\WarehouseTransaction;
 use common\helper\Helper;
 use PHPUnit\TextUI\Help;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
@@ -68,6 +70,11 @@ class WarehouseController extends BaseController
         ], 'Tạo kho', $this->footer());
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws BadRequestHttpException
+     */
     public function actionView($id)
     {
         $warehouse = Warehouse::findOne($id);
@@ -125,20 +132,32 @@ class WarehouseController extends BaseController
 
     public function actionImportProduct($warehouse_id, $type)
     {
-        $warehouse = Warehouse::findOne($warehouse_id);
-        if (!$warehouse) {
-            return static::responseSuccess(Helper::firstError($warehouse));
-        }
 
         $model = new WarehouseTransaction();
-
+        $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
+        $warehouse = Warehouse::findOne($warehouse_id);
+        if (!$warehouse) {
+            return static::responseSuccess(0, 0, 'Kho không tồn tại!', 'danger');
+        }
         if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
-
-            $model->transaction_type = strtolower($type);
-            if (!$model->save()) {
-                return static::responseSuccess(Helper::firstError($model));
+            try {
+                $model->transaction_type = strtolower($type);
+                if (!$model->save()) {
+                    throw new BadRequestHttpException(Helper::firstError($model));
+                }
+                WarehouseStorage::updateStorage(
+                    $warehouse_id,
+                    $model->product_sku,
+                    $model->qty,
+                    $model->po_code,
+                    WarehouseStorage::TYPE_PLUS
+                );
+                $transaction->commit();
+                return static::responseSuccess(1, 1, 'Thao tác thành công!');
+            } catch (\Exception $exception) {
+                $transaction->rollBack();
+                \Yii::$app->session->setFlash('danger', $exception->getMessage());
             }
-            return static::responseSuccess();
         }
 
         return static::responseRemote('transaction.blade', [
@@ -155,21 +174,32 @@ class WarehouseController extends BaseController
      */
     public function actionExportProduct($warehouse_id, $type)
     {
+        $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
         $warehouse = Warehouse::findOne($warehouse_id);
-        if (!$warehouse) {
-            return static::responseSuccess(Helper::firstError($warehouse));
-        }
-
         $model = new WarehouseTransaction();
-        if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
-
-            $model->transaction_type = strtolower($type);
-            if (!$model->save()) {
-                return static::responseSuccess(Helper::firstError($model));
-            }
-            return static::responseSuccess();
+        if (!$warehouse) {
+            return static::responseSuccess(0, 0, 'Kho không tồn tại!', 'danger');
         }
-
+        if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
+            try {
+                $model->transaction_type = strtolower($type);
+                if (!$model->save()) {
+                    throw new BadRequestHttpException(Helper::firstError($model));
+                }
+                WarehouseStorage::updateStorage(
+                    $warehouse_id,
+                    $model->product_sku,
+                    $model->qty,
+                    $model->po_code,
+                    WarehouseStorage::TYPE_MINUS
+                );
+                $transaction->commit();
+                return static::responseSuccess(1, 1, 'Thao tác thành công!');
+            } catch (\Exception $exception) {
+                $transaction->rollBack();
+                \Yii::$app->session->setFlash('danger', $exception->getMessage());
+            }
+        }
         return static::responseRemote('transaction.blade', [
             'model' => $model,
             'warehouse' => $warehouse,

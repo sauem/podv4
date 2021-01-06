@@ -103,44 +103,44 @@ use common\helper\Helper;
                     [
                         'label' => 'Nhập',
                         'value' => function ($model) {
-                            return $model['import'] ? Helper::formatCUR($model['import'], null, 0) : '--';
+                            return $model['import'] ? Helper::decimal($model['import'], 0) : '--';
                         }
                     ],
                     [
                         'label' => 'Xuất bán',
                         'value' => function ($model) {
-                            return $model['export'] ? Helper::formatCUR($model['export'], null, 0) : '--';
+                            return $model['export'] ? Helper::decimal($model['export'], 0) : '--';
                         }
                     ],
                     [
                         'label' => 'Hoàn',
                         'value' => function ($model) {
-                            return $model['refund'] ? Helper::formatCUR($model['refund'], null, 0) : '--';
+                            return $model['refund'] ? Helper::decimal($model['refund'], 0) : '--';
                         }
                     ],
                     [
                         'label' => 'Hỏng',
                         'value' => function ($model) {
-                            return $model['broken'] ? Helper::formatCUR($model['broken'], null, 0) : '--';
+                            return $model['broken'] ? Helper::decimal($model['broken'], 0) : '--';
                         }
                     ],
                     [
                         'label' => 'Xuất kho khác',
                         'value' => function ($model) {
-                            return isset($model['export_diff']) ? Helper::formatCUR($model['export_diff'], null, 0) : '--';
+                            return isset($model['export_diff']) ? Helper::decimal($model['export_diff'], 0) : '--';
                         }
                     ],
                     [
                         'label' => 'Tồn',
                         'value' => function ($model) {
                             $inventory = $model['import'] + $model['refund'] - $model['export'] + $model['broken'];
-                            return Helper::formatCUR($inventory, null, 0);
+                            return Helper::decimal($inventory, 0);
                         }
                     ],
                     [
                         'label' => 'Chưa xuất hàng',
                         'value' => function ($model) {
-                            return isset($model['orderItems']) ? Helper::formatCUR($model['orderItems']['pending'], null, 0) : '--';
+                            return isset($model['orderItems']) ? Helper::decimal($model['orderItems']['pending'], 0) : '--';
                         }
                     ],
                     [

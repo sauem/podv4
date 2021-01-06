@@ -37,6 +37,11 @@ class Helper
         return $symbol . number_format($num, $decimal, '.', ',');
     }
 
+    static function decimal($num, $decimal = 2)
+    {
+        return number_format($num, $decimal, '.', ',');
+    }
+
     static function makeUpperString($str)
     {
         return strtoupper(static::toLower($str));
@@ -171,7 +176,7 @@ class Helper
         foreach ($items as $item) {
             $str .= $item->sku . "*" . $item->qty;
         }
-        if($string){
+        if ($string) {
             return $str;
         }
         return "<small>$str</small>";

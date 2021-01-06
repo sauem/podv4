@@ -27,6 +27,7 @@ class WarehouseHistories extends \common\models\BaseModel
 {
     const TYPE_OUTPUT = 'output';
     const TYPE_REFUND = 'refund';
+    const TYPE_INPUT = 'input';
 
     /**
      * {@inheritdoc}
@@ -42,9 +43,9 @@ class WarehouseHistories extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['warehouse_id', 'order_code', 'qty', 'created_at', 'updated_at'], 'integer'],
+            [['warehouse_id', 'qty', 'created_at', 'order_code', 'updated_at'], 'integer'],
             [['total_average'], 'number'],
-            [['created_at', 'updated_at'], 'required'],
+            [['product_sku', 'qty'], 'required'],
             [['product_sku', 'po_code', 'note', 'code'], 'string', 'max' => 255],
             [['transaction_type'], 'string', 'max' => 50],
         ];
@@ -72,6 +73,36 @@ class WarehouseHistories extends \common\models\BaseModel
     }
 
     /**
+     * @param $warehouse_id
+     * @param $sku
+     * @param $qty
+     * @param $po_code
+     * @param $type
+     * @throws BadRequestHttpException
+     */
+    public static function createRow($warehouse_id, $sku, $qty, $po_code, $type)
+    {
+        try {
+            $transaction = WarehouseTransaction::findOne(['warehouse_id' => $warehouse_id, 'product_sku' => $sku, 'po_code' => $po_code]);
+            if (!$transaction) {
+                throw new BadRequestHttpException("Không tồn tại mã nhập hàng này!");
+            }
+            $model = new WarehouseHistories();
+            $model->warehouse_id = $warehouse_id;
+            $model->product_sku = $sku;
+            $model->qty = $qty;
+            $model->transaction_type = $type;
+            $model->total_average = $transaction->total_average / $transaction->qty * $qty;
+            if (!$model->save()) {
+                throw new BadRequestHttpException(Helper::firstError($model));
+            }
+
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+    }
+
+    /**
      * @param $orderCode
      * @param $items
      * @param string $type
@@ -88,10 +119,10 @@ class WarehouseHistories extends \common\models\BaseModel
                 $sku = ArrayHelper::getValue($item, 'sku', null);
                 $qty = ArrayHelper::getValue($item, 'qty', null);
                 $price = ArrayHelper::getValue($item, 'price', null);
+
                 $model = new WarehouseHistories();
                 $model->code = $orderCode;
                 $model->transaction_type = $type;
-                $model->order_code = $orderCode;
                 $model->product_sku = $sku;
                 $model->qty = $qty;
                 $model->total_average = Helper::toFloat($price);

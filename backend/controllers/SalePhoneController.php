@@ -149,7 +149,7 @@ class SalePhoneController extends BaseController
                 //save item order product
                 ContactsLogStatus::saveRecord($code, $model->phone, Contacts::STATUS_OK);
                 //Update warehouse
-                // WarehouseHistories::saveHistories($code, \Yii::$app->request->post('items'));
+                 WarehouseHistories::saveHistories($code, \Yii::$app->request->post('items'));
                 //check user has finish current phone
                 $newNumber = ContactsAssignment::completeAssignment($model->phone);
                 $transaction->commit();

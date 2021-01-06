@@ -65,13 +65,13 @@ use backend\models\WarehouseTransaction;
                         'label' => 'Giá vốn',
                         'attribute' => 'total_average',
                         'value' => function ($model) {
-                            return Helper::formatCUR($model->total_average, 'đ');
+                            return Helper::formatCUR($model->total_average, null, 0);
                         }
                     ],
                     [
                         'label' => 'Vốn/đơn vị',
                         'value' => function ($model) {
-                            return Helper::formatCUR($model->total_average / $model->qty, 'đ');
+                            return Helper::formatCUR($model->total_average / $model->qty, null, 0);
                         }
                     ],
                     [
