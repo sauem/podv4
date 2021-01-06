@@ -16,7 +16,7 @@ class BaseController extends Controller
 {
     public function init()
     {
-        $countries = ZipcodeCountry::find()->addSelect(['name', 'code','symbol'])->groupBy('code')->all();
+        $countries = ZipcodeCountry::find()->addSelect(['name', 'code', 'symbol'])->groupBy('code')->all();
         $countriesParams = ArrayHelper::map($countries, 'code', function ($item) {
             return $item->code . '-' . $item->name;
         });
@@ -93,7 +93,8 @@ class BaseController extends Controller
         return [
             'forceReload' => $forceReload,
             'forceClose' => $forceClose,
-            'message' => $message
+            'message' => $message,
+            'type' => 'success'
         ];
     }
 

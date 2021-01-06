@@ -117,9 +117,9 @@ class AjaxController extends BaseController
     function actionInfoProduct()
     {
         $sku = Products::find()->where([
-            'sku' => \Yii::$app->request->post('sku')])
-            ->orWhere(['id' => \Yii::$app->request->post('sku')])
-            ->with('category')
+            'products.sku' => \Yii::$app->request->post('sku')])
+            ->orWhere(['products.id' => \Yii::$app->request->post('sku')])
+            //->with('category')
             ->with('partner')
             ->with('media')
             ->asArray()->one();

@@ -282,11 +282,11 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
     function successRemoteResponse(response) {
         // reload datatable if response contain forceReload field
         if (response.message !== undefined && response.message) {
-            toastr.warning(response.message);
+            toastr[response.type](response.message);
         }
         if (response.forceReload !== undefined && response.forceReload) {
             //$.pjax.reload({container:containerId});
-            if(containerId){
+            if (containerId) {
                 $.pjax.reload(containerId, pjaxOptions);
             }
         }
@@ -328,6 +328,7 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
 
                 // Submit form when user click submit button
                 $(modalFormSubmitBtn).click(function (e) {
+
                     let url = $(modalForm).attr('action');
                     let method = $(modalForm).hasAttr('method') ? $(modalForm).attr('method') : 'GET';
                     let data = new FormData(modalForm);

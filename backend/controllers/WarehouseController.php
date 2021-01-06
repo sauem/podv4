@@ -24,12 +24,11 @@ class WarehouseController extends BaseController
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
 
         $warehouse_query = Products::find()
-            ->innerJoin('categories C', 'C.id = products.category_id')
             ->leftJoin('warehouse_transaction WT', 'WT.product_sku = products.sku')
             ->leftJoin('orders_contact_sku as OCS', 'products.sku = OCS.sku')
             ->innerJoin('orders_contact as OC', 'OCS.order_id = OC.id')
             ->addSelect([
-                'C.name',
+                'categories.name',
                 'products.sku as sku',
                 'products.category_id',
                 'WT.transaction_type as type',

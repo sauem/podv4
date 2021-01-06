@@ -29,7 +29,7 @@ class CategoryController extends BaseController
     public function actionCreate()
     {
         $model = new Categories();
-
+        $model->country = \Yii::$app->cache->get('country');
         try {
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
                 if ($model->save()) {
@@ -43,6 +43,7 @@ class CategoryController extends BaseController
             'model' => $model
         ], 'Thêm loại sản phẩm', parent::footer());
     }
+
     public function actionUpdate($id)
     {
         $model = Categories::findOne($id);

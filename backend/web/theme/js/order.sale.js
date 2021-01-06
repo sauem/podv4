@@ -125,9 +125,7 @@ function orderSaleForm() {
             console.warn(JSON.parse(e.responseText).message);
         }
     }
-    this.valid = function (form) {
-        $(form).yiiActiveForm('validate');
-    }
+
     this.changeZipcode = async function (zipcode) {
         try {
             let res = await $.ajax({
@@ -152,6 +150,12 @@ function orderSaleForm() {
             type: 'POST',
             cache: false
         })
+    }
+    this.valid = function () {
+        if (ORDER_ITEMS.items.length <= 0) {
+            toastr.error("Chưa có sản phẩm nào trong đơn hàng!");
+            return false;
+        }
     }
 }
 

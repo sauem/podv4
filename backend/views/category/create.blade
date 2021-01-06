@@ -16,6 +16,7 @@ use kartik\select2\Select2;
             {!! $form->field($model,'country')->widget(Select2::className(),[
                 'data' =>Helper::countries(),
                 'options' => ['placeholder' => 'Chọn thị trường...'],
+                'disabled'=> true,
                 'pluginOptions' => [
                     'allowClear' => true
                     ]

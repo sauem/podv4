@@ -80,16 +80,21 @@ JS;
                 <div class="col-md-6">
                     <?= $form->field($model, 'country')->widget(Select2::className(), [
                         'data' => Helper::countries(),
+                        'disabled' => true,
                         'options' => ['placeholder' => 'Chọn quốc gia', 'class' => 'country-select'],
                         'pluginOptions' => ['allowClear' => true]
                     ])?>
                 </div>
+
                 <div class="col-md-6">
                     <?= $form->field($model, 'payment_method')->widget(Select2::className(), [
                         'data' => Payments::LISTS(),
-                        'options' => ['placeholder' => 'Chọn phương thức thanh toán'],
+                        'options' => ['placeholder' => 'Chọn phương thức thanh toán', 'id' => 'payment_method'],
                         'pluginOptions' => ['allowClear' => true]
                     ])?>
+                </div>
+                <div class="col-md-12" id="bill_link" style="display: none">
+                    <?= $form->field($model, 'bill_link')?>
                 </div>
                 <div class="col-md-6">
                     <?= $form->field($model, 'shipping_cost')->textInput([
@@ -206,8 +211,13 @@ JS;
 @section('pos_page')
     <script>
         $(document).ready(function () {
-
-
+            $(document).on('change', '#payment_method', function () {
+                if ($(this).val() == 3) {
+                    $("#bill_link").show();
+                } else {
+                    $("#bill_link").hide();
+                }
+            });
             $(document).on('click', '#btn-add-product', function () {
                 let id = $('#product-sku').val();
                 order.addProductItem(id);

@@ -130,7 +130,7 @@ class SalePhoneController extends BaseController
         if ($country) {
             $model->city = $country->city;
             $model->district = $country->district;
-            $model->country = $country->code;
+            $model->country = $contact->country;
         }
         $products = Products::find()->asArray()->all();
         if (!$contact) {
@@ -139,20 +139,22 @@ class SalePhoneController extends BaseController
 
         if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
             try {
-                if ($model->save()) {
-                    //Update new info contact
-                    Contacts::updateStatus($code, $model);
-                    // Save contact call log
-                    OrdersContactSku::saveItems($model->id, \Yii::$app->request->post('items'));
-                    //save item order product
-                    ContactsLogStatus::saveRecord($code, $model->phone, Contacts::STATUS_OK);
-                    //Update warehouse
-                    WarehouseHistories::saveHistories($code, \Yii::$app->request->post('items'));
-                    //check user has finish current phone
-                    $newNumber = ContactsAssignment::completeAssignment($model->phone);
-                    $transaction->commit();
-                    return static::responseSuccess(1, 1, $newNumber ? "Số mới được áp dụng!" : null);
+                if (!$model->save()) {
+                    throw new BadRequestHttpException(Helper::firstError($model));
                 }
+                //Update new info contact
+                Contacts::updateStatus($code, $model);
+                // Save contact call log
+                OrdersContactSku::saveItems($model->id, \Yii::$app->request->post('items'));
+                //save item order product
+                ContactsLogStatus::saveRecord($code, $model->phone, Contacts::STATUS_OK);
+                //Update warehouse
+                // WarehouseHistories::saveHistories($code, \Yii::$app->request->post('items'));
+                //check user has finish current phone
+                $newNumber = ContactsAssignment::completeAssignment($model->phone);
+                $transaction->commit();
+
+                return static::responseSuccess(1, 1, $newNumber ? "Số mới được áp dụng!" : null);
             } catch (\Exception $exception) {
                 $transaction->rollBack();
                 \Yii::$app->session->setFlash('warning', $exception->getMessage());

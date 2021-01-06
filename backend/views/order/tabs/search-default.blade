@@ -24,14 +24,7 @@ $form = ActiveForm::begin();
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
     </div>
-    <div class="col-md-3">
-        <?= $form->field($searchModel, 'country')->widget(Select2::className(), [
-            'data' => Helper::countries(),
-            'options' => ['placeholder' => 'Quốc gia...'],
-            'pluginOptions' => ['allowClear' => true, 'multiple' => true]
-        ])->label(false);?>
 
-    </div>
     <div class="col">
         <button class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
         <button data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-success">

@@ -37,14 +37,7 @@ class AjaxExportController extends BaseController
                 [
                     'attribute' => 'code',
                     'value' => function ($model) {
-                        $text = '';
-                        $items = Helper::isEmpty($model->skuItems) ? [] : $model->skuItems;
-                        if (!empty($items)) {
-                            foreach ($items as $item) {
-                                $text .= $item->product->category->name . '-' . $item->sku . ',';
-                            }
-                        }
-                        return $text;
+                        return $model->code;
                     }
                 ],
                 [
@@ -75,15 +68,9 @@ class AjaxExportController extends BaseController
                 ],
                 [
                     'label' => 'Total Product',
+                    'format' => 'html',
                     'value' => function ($model) {
-                        $text = '';
-                        $items = Helper::isEmpty($model->skuItems) ? [] : $model->skuItems;
-                        if (!empty($items)) {
-                            foreach ($items as $item) {
-                                $text .= $item->product->category->name . '-' . $item->sku . ',';
-                            }
-                        }
-                        return $text;
+                        return Helper::printString($model, true);
                     }
                 ],
                 [
@@ -128,7 +115,7 @@ class AjaxExportController extends BaseController
                                 $qty .= $item->qty . ',';
                             }
                         }
-                        return $qty;
+                        return substr($qty, 0, -1);
                     }
                 ],
 
@@ -142,7 +129,7 @@ class AjaxExportController extends BaseController
                                 $qty .= $item->qty . ',';
                             }
                         }
-                        return $qty;
+                        return substr($qty, 0, -1);
                     }
                 ],
                 [
@@ -155,7 +142,7 @@ class AjaxExportController extends BaseController
                                 $qty .= $item->qty . ',';
                             }
                         }
-                        return $qty;
+                        return substr($qty, 0, -1);
                     }
                 ],
                 [

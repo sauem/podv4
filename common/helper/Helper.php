@@ -161,7 +161,7 @@ class Helper
         return ArrayHelper::getValue($symbols, $country, '');
     }
 
-    static function printString(OrdersContact $model)
+    static function printString(OrdersContact $model, $string = false)
     {
         $items = Helper::isEmpty($model->skuItems) ? null : $model->skuItems;
         if (!$items || empty($items)) {
@@ -170,6 +170,9 @@ class Helper
         $str = "";
         foreach ($items as $item) {
             $str .= $item->sku . "*" . $item->qty;
+        }
+        if($string){
+            return $str;
         }
         return "<small>$str</small>";
     }

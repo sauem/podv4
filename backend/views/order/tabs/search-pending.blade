@@ -24,14 +24,7 @@ $form = ActiveForm::begin();
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
     </div>
-    <div class="col-md-3">
-        <?= $form->field($searchModel, 'country')->widget(Select2::className(), [
-            'data' => Helper::countries(),
-            'options' => ['placeholder' => 'Quốc gia...', 'id' => 'country-pending'],
-            'pluginOptions' => ['allowClear' => true, 'multiple' => true]
-        ])->label(false);?>
 
-    </div>
     <div class="col-md-3">
         <?= $form->field($searchModel, 'country')->widget(DateRangePicker::className(), [
             'name' => 'order_time',
