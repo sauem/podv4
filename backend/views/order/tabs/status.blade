@@ -85,17 +85,17 @@ use common\helper\Component;
                     return Helper::formatCUR($model->total_bill, '', 2);
                 }
             ],
-            [
-                'class' => ActionColumn::class,
-                'template' => '{update}',
-                'width' => '5%',
-                'buttons' => [
-                    'update' => function ($url, $model) {
-                        return Component::btnUpdate($url);
-                    },
-
-                ]
-            ]
+//            [
+//                'class' => ActionColumn::class,
+//                'template' => '{update}',
+//                'width' => '5%',
+//                'buttons' => [
+//                    'update' => function ($url, $model) {
+//                        return Component::btnUpdate($url);
+//                    },
+//
+//                ]
+//            ]
         ]
     ]) ?>
 @stop

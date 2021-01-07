@@ -46,10 +46,10 @@ use yii\helpers\Url;
                         }
                     ],
                     [
-                        'attribute' => 'sku',
+                        'attribute' => 'category_id',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return Helper::isEmpty($model->product) ? '---' : $model->product->sku;
+                            return Helper::isEmpty($model->category) ? '---' : $model->category->name;
                         }
                     ],
                     [

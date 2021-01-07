@@ -108,7 +108,7 @@ class ReportController extends BaseController
     {
         $query = OrdersContact::find()
             ->with(['contact', 'skuItems'])
-            ->from('orders_contact as O')
+            ->from('orders_contact')
             ->addSelect([
                 'id',
                 'name',
@@ -118,10 +118,10 @@ class ReportController extends BaseController
                 'collection_fee',
                 'total_bill',
                 'payment_status',
-                'SUM(IF(O.payment_status = "paid" , total_bill, false)) as C11',
+                'SUM(IF(orders_contact.payment_status = "paid" , total_bill, false)) as C11',
             ])
-            ->andWhere(['<>', 'O.status', OrdersContact::STATUS_CROSSED])
-            ->andWhere(['<>', 'O.payment_status', OrdersContact::STATUS_PAYED])
+            ->andWhere(['<>', 'orders_contact.status', OrdersContact::STATUS_CROSSED])
+            ->andWhere(['<>', 'orders_contact.payment_status', OrdersContact::STATUS_PAYED])
             ->asArray()->all();
 
         $data = static::getData($query);

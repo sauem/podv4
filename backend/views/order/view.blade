@@ -1,6 +1,6 @@
 <?php
 
-use common\helper\Helper;
+use backend\models\OrdersContact;use common\helper\Helper;
 use yii\helpers\Url;
 ?>
 @section('content')
@@ -48,25 +48,28 @@ use yii\helpers\Url;
                             <div class="track-order-list">
                                 <ul class="list-unstyled">
                                     <li class="completed">
+                                        <?= $model->status === OrdersContact::STATUS_NEW ? '<span class="active-dot dot"></span>' : ''?>
                                         <h5 class="mt-0 mb-1">Đã chốt đơn</h5>
-                                        <p class="text-muted">
-                                            {!! Helper::dateFormat($model->order_time  , true) !!}
+                                        <p class="text-muted">{!! Helper::isEmpty($model->order_time) ? '--' : Helper::dateFormat($model->order_time, true) !!}</p>
                                         </p>
                                     </li>
                                     <li class="completed">
+                                        <?= $model->status === OrdersContact::STATUS_SHIPPED ? '<span class="active-dot dot"></span>' : ''?>
                                         <h5 class="mt-0 mb-1">Đã chuyển hàng</h5>
                                         <p class="text-muted">{!! Helper::isEmpty($model->time_shipped_success) ? '--' : Helper::dateFormat($model->time_shipped_success, true) !!}</p>
                                         </p>
                                     </li>
                                     <li>
-                                        <span class="active-dot dot"></span>
+                                        <?= $model->status === OrdersContact::STATUS_PAYED ? '<span class="active-dot dot"></span>' : ''?>
                                         <h5 class="mt-0 mb-1">Đã thanh toán</h5>
-                                        <p class="text-muted">April 22 2019 <small class="text-muted">05:16 PM</small>
+                                        <p class="text-muted">{!! Helper::isEmpty($model->time_paid_success) ? '--' : Helper::dateFormat($model->time_paid_success, true) !!}</p>
                                         </p>
                                     </li>
                                     <li>
+                                        <?= $model->status === OrdersContact::STATUS_CROSSED ? '<span class="active-dot dot"></span>' : ''?>
                                         <h5 class="mt-0 mb-1"> Đã đối soát</h5>
-                                        <p class="text-muted">Estimated delivery within 3 days</p>
+                                        <p class="text-muted">{!! Helper::isEmpty($model->remittance_date) ? '--' : Helper::dateFormat($model->remittance_date, true) !!}</p>
+                                        </p>
                                     </li>
                                 </ul>
                             </div>

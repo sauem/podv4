@@ -1,6 +1,6 @@
 <?php
 
-use backend\models\ContactsSource;use backend\models\Products;use kartik\form\ActiveForm;
+use backend\models\Categories;use backend\models\ContactsSource;use backend\models\Products;use kartik\form\ActiveForm;
 use common\helper\Helper;
 use backend\models\UserRole;
 use kartik\select2\Select2;
@@ -13,6 +13,7 @@ use kartik\select2\Select2;
             <?= $form->field($model, 'country')->widget(Select2::className(), [
                 'data' => Helper::countries(),
                 'options' => ['placeholder' => 'Chọn thị trường...'],
+                'disabled' => true,
                 'pluginOptions' => [
                     'allowClear' => true
                 ]
@@ -28,13 +29,13 @@ use kartik\select2\Select2;
             ])->label("Đối tác") ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'sku')->widget(Select2::className(), [
-                'data' => Products::LISTS(),
-                'options' => ['placeholder' => 'Sản phẩm...'],
+            <?= $form->field($model, 'category_id')->widget(Select2::className(), [
+                'data' => Categories::LISTS(),
+                'options' => ['placeholder' => 'Loại sản phẩm...'],
                 'pluginOptions' => [
                     'allowClear' => true
                 ]
-            ])->label("Sản phẩm") ?>
+            ])->label("Loại sản phẩm") ?>
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'contact_source')->widget(Select2::className(), [

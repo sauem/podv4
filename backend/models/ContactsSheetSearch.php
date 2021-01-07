@@ -18,7 +18,7 @@ class ContactsSheetSearch extends ContactsSheet
     {
         return [
             [['id', 'partner_id', 'created_at', 'updated_at'], 'integer'],
-            [['sku', 'contact_source', 'country'], 'safe'],
+            [['category_id', 'contact_source', 'country'], 'safe'],
         ];
     }
 
@@ -64,7 +64,7 @@ class ContactsSheetSearch extends ContactsSheet
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'sku', $this->sku])
+        $query->andFilterWhere(['=', 'category_id', $this->category_id])
             ->andFilterWhere(['like', 'contact_source', $this->contact_source])
             ->andFilterWhere(['like', 'country', $this->country]);
 

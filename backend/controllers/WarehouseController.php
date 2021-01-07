@@ -48,7 +48,7 @@ class WarehouseController extends BaseController
                 'SUM(IF(OC.payment_status = "paid" OR OC.status = "paid", OCS.qty, 0)) as sole',
                 'SUM(IF(OC.payment_status = "refund" OR OC.status = "refund", OCS.qty, 0)) as refund',
                 'SUM(IF(OC.status = "broken", OCS.qty, 0)) as broken',
-                'SUM(IF(OC.shipping_status = "shipping" OR OC.status = "shipping", OCS.qty, 0)) as shipping',
+                'SUM(IF(OC.shipping_status = "shipping" OR OC.status = "shipping" OR OC.checking_number IS NOT NULL, OCS.qty, 0)) as shipping',
             ])->groupBy(['P.sku'])->asArray()->all();
 
         $inventory = array_map(function ($item, $item2) {

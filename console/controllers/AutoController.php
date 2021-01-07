@@ -10,6 +10,10 @@ use yii\web\BadRequestHttpException;
 
 class AutoController extends \yii\console\Controller
 {
+    /**
+     * @return bool
+     * @throws BadRequestHttpException
+     */
     public function actionIndex()
     {
         $api = new SheetApi();
@@ -22,7 +26,8 @@ class AutoController extends \yii\console\Controller
             $sheetId = $partner->sheet_id;
 
             $sheet = new \Google_Service_Sheets($api->client);
-            $range = "ONDK!A1:H";
+            $range = "{$partner->category->name}!A1:I";
+            echo $range . "\n";
             $response = $sheet->spreadsheets_values->get($sheetId, $range);
             $values = $response->getValues();
             unset($values[0]);
@@ -31,9 +36,9 @@ class AutoController extends \yii\console\Controller
             };
 
             foreach ($values as $item) {
-                if (empty($item[0]) || empty($item[1]) || empty($item[2])) {
-                    return false;
-                }
+//                if (empty($item[0]) || empty($item[1]) || empty($item[2])) {
+//                    return false;
+//                }
                 try {
                     $model = new Contacts();
                     $data = [
@@ -45,11 +50,13 @@ class AutoController extends \yii\console\Controller
                         'option' => isset($item[5]) ? $item[5] : null,
                         'note' => isset($item[6]) ? $item[6] : null,
                         'country' => $partner->country,
-                        'partner' => $partner->partner->username
+                        'category' => $partner->category->name,
+                        'partner' => $partner->partner->username,
+                        'type' => isset($item[8]) ? $item[8] : null,
                     ];
                     $model->load($data, "");
                     if (!$model->save()) {
-                        echo Helper::firstError($model) . "\n";
+                        echo "continue\n";
                     }
                 } catch (\Exception $exception) {
                     echo $exception->getMessage() . "\n";

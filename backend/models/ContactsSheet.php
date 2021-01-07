@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int|null $partner_id
- * @property string|null $sku
+ * @property int|null $category_id
  * @property string|null $sheet_id
  * @property string|null $country
  * @property string|null $contact_source
@@ -32,10 +32,27 @@ class ContactsSheet extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['partner_id', 'created_at', 'updated_at'], 'integer'],
+            [['partner_id', 'category_id', 'created_at', 'updated_at'], 'integer'],
             [['sheet_id'], 'string'],
-            [['sku', 'partner_id', 'sheet_id', 'country'], 'required'],
-            [['sku', 'country', 'contact_source'], 'string', 'max' => 255],
+            [['sheet_id', 'category_id','country','partner_id'], 'required'],
+            [['country', 'contact_source'], 'string', 'max' => 255],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'partner_id' => 'Đối tác',
+            'category_id' => 'Loại sản phẩm',
+            'sheet_id' => 'Sheet ID',
+            'country' => 'Thị trường',
+            'contact_source' => 'Nguồn contact',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 
@@ -52,22 +69,9 @@ class ContactsSheet extends \common\models\BaseModel
         return $this->hasOne(ContactsSource::className(), ['slug' => 'contact_source']);
     }
 
-    public function getProduct()
+    public function getCategory()
     {
-        return $this->hasOne(Products::className(), ['sku' => 'sku']);
+        return $this->hasOne(Categories::className(), ['id' => 'category_id']);
     }
 
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'partner_id' => 'Mã đối tác',
-            'sku' => 'Sản phẩm',
-            'sheet_id' => 'Sheet ID',
-            'country' => 'Thị trường',
-            'contact_source' => 'Nguồn liên hệ',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
 }

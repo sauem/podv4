@@ -120,7 +120,7 @@ class OrdersContact extends \common\models\BaseModel
 
     public static function find()
     {
-        return parent::find()->where(['orders_contact.country' => Yii::$app->cache->get('country')]);
+        return parent::find()->where(['{{orders_contact}}.country' => Yii::$app->cache->get('country')]);
     }
 
     public function fields()

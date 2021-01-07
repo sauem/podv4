@@ -23,6 +23,7 @@ class ContactSheetController extends BaseController
     public function actionCreate()
     {
         $model = new ContactsSheet();
+        $model->country = \Yii::$app->cache->get('country');
         if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
             if ($model->save()) {
                 return static::responseSuccess(1, 1, "Thao tác thành công!");

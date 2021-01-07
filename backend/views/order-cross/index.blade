@@ -137,7 +137,7 @@ use common\helper\Component;
 
         $(document).on('click', '#make-cross', function (event) {
             event.preventDefault();
-            let modal = new ModalRemote('#cross-modal', '#crossed-box');
+            let modal = new ModalRemote('#cross-modal', '#cross-box');
             let codes = $('#cross-order').yiiGridView("getSelectedRows");
             if (codes.length <= 0) {
                 toastr.warning('Chọn 1 đơn hàng để thực hiện thao tác!');

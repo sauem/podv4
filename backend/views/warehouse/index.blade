@@ -146,7 +146,7 @@ use common\helper\Helper;
                     [
                         'label' => 'Đang chuyển hàng',
                         'value' => function ($model) {
-                            return $model['shipping'];
+                            return $model['shipping'] - $model['sole'] - $model['refund'];
                         }
                     ],
                     [

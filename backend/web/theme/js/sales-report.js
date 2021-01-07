@@ -202,6 +202,9 @@ function initSaleChart() {
                 series: [{data: data.C8}, {data: data.C6}, {data: data.C7}, {data: data.C4}, {data: data.C0}]
             },
         }
+        if (typeof labels == "undefined" || typeof labels == null || labels.length <= 0) {
+            return false;
+        }
         chartOne.updateOptions(options.optionsOne);
         chartTwo.updateOptions(options.optionsTwo);
     }

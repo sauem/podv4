@@ -270,7 +270,6 @@ class AjaxController extends BaseController
                 }, $skuItems);
                 return array_merge($item, array_values(array_filter($inventory))[0]);
             }, $storage);
-            //Helper::printf($storage);
             return $storage;
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
