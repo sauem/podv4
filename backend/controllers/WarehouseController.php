@@ -24,26 +24,53 @@ class WarehouseController extends BaseController
     {
         $searchModel = new WarehouseSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
-
-        $warehouse_query = Products::find()
-            ->leftJoin('warehouse_transaction WT', 'WT.product_sku = products.sku')
-            ->leftJoin('orders_contact_sku as OCS', 'products.sku = OCS.sku')
-            ->innerJoin('orders_contact as OC', 'OCS.order_id = OC.id')
+        $inventory = Products::find()
+            ->from('products as P')
+            ->leftJoin('warehouse_transaction WT', 'WT.product_sku = P.sku')
             ->addSelect([
+                'P.category_id',
+                'P.sku',
                 'categories.name',
-                'products.sku as sku',
-                'products.category_id',
-                'WT.transaction_type as type',
-                'SUM(CASE WHEN WT.transaction_type = "import" THEN WT.qty END) as import',
-                'SUM(CASE WHEN WT.transaction_type = "export" THEN WT.qty END) as export',
-                'SUM(CASE WHEN WT.transaction_type = "refund" THEN WT.qty END) as refund',
-                'SUM(CASE WHEN WT.transaction_type = "broken" THEN WT.qty END) as broken'
-            ])
-            ->groupBy('products.category_id')
-            ->asArray()->all();
+                'WT.qty',
+                'WT.transaction_type',
+                'SUM(IF(WT.transaction_type = "import", WT.qty, 0)) as import',
+                'SUM(IF(WT.transaction_type = "export", WT.qty, 0)) as export',
+            ])->groupBy(['P.sku'])->asArray()->all();
+
+        $sole = Products::find()->from('products as P')
+            ->leftJoin('orders_contact_sku OCS', 'OCS.sku = P.sku')
+            ->leftJoin('orders_contact OC', 'OC.id = OCS.order_id')
+            ->addSelect([
+                'P.category_id',
+                'P.sku',
+                'categories.name',
+                'SUM(IF(OC.status = "new", OCS.qty, 0)) as holdup',
+                'SUM(IF(OC.payment_status = "paid" OR OC.status = "paid", OCS.qty, 0)) as sole',
+                'SUM(IF(OC.payment_status = "refund" OR OC.status = "refund", OCS.qty, 0)) as refund',
+                'SUM(IF(OC.status = "broken", OCS.qty, 0)) as broken',
+                'SUM(IF(OC.shipping_status = "shipping" OR OC.status = "shipping", OCS.qty, 0)) as shipping',
+            ])->groupBy(['P.sku'])->asArray()->all();
+
+        $inventory = array_map(function ($item, $item2) {
+            return array_merge($item, $item2);
+        }, $inventory, $sole);
+        $inventory = array_map(function ($item) {
+            return [
+                'name' => $item['name'],
+                'qty' => $item['qty'],
+                'import' => $item['import'],
+                'export' => $item['export'],
+                'sku' => $item['sku'],
+                'sole' => $item['sole'],
+                'holdup' => $item['holdup'],
+                'refund' => $item['refund'],
+                'broken' => $item['broken'],
+                'shipping' => $item['shipping'],
+            ];
+        }, $inventory);
 
         $product_warehouse = new ArrayDataProvider([
-            'allModels' => $warehouse_query,
+            'allModels' => $inventory,
         ]);
         return $this->render('index.blade', [
             'dataProvider' => $dataProvider,

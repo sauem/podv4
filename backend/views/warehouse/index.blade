@@ -103,25 +103,25 @@ use common\helper\Helper;
                     [
                         'label' => 'Nhập',
                         'value' => function ($model) {
-                            return $model['import'] ? Helper::decimal($model['import'], 0) : '--';
+                            return Helper::decimal($model['import'], 0);
                         }
                     ],
                     [
                         'label' => 'Xuất bán',
                         'value' => function ($model) {
-                            return $model['export'] ? Helper::decimal($model['export'], 0) : '--';
+                            return $model['sole'] + $model['refund'] + $model['shipping'];
                         }
                     ],
                     [
                         'label' => 'Hoàn',
                         'value' => function ($model) {
-                            return $model['refund'] ? Helper::decimal($model['refund'], 0) : '--';
+                            return Helper::decimal($model['refund'], 0);
                         }
                     ],
                     [
                         'label' => 'Hỏng',
                         'value' => function ($model) {
-                            return $model['broken'] ? Helper::decimal($model['broken'], 0) : '--';
+                            return Helper::decimal($model['broken'], 0);
                         }
                     ],
                     [
@@ -133,20 +133,26 @@ use common\helper\Helper;
                     [
                         'label' => 'Tồn',
                         'value' => function ($model) {
-                            $inventory = $model['import'] + $model['refund'] - $model['export'] + $model['broken'];
+                            $inventory = $model['import'] + $model['refund'] - $model['sole'] - $model['broken'];
                             return Helper::decimal($inventory, 0);
                         }
                     ],
                     [
                         'label' => 'Chưa xuất hàng',
                         'value' => function ($model) {
-                            return isset($model['orderItems']) ? Helper::decimal($model['orderItems']['pending'], 0) : '--';
+                            return $model['holdup'];
+                        }
+                    ],
+                    [
+                        'label' => 'Đang chuyển hàng',
+                        'value' => function ($model) {
+                            return $model['shipping'];
                         }
                     ],
                     [
                         'label' => 'Giao hàng thành công',
                         'value' => function ($model) {
-                            return '--';
+                            return $model['sole'];
                         }
                     ],
                 ],
