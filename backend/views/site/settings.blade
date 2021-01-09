@@ -14,6 +14,8 @@ use kartik\grid\GridView;
                 </div>
                 <div class="card-body">
                     <?php $form = ActiveForm::begin() ?>
+                    <?= $form->field($model, 'callback_to_cancel_time')->textInput(['type' => 'number']) ?>
+                    <?= $form->field($model, 'phone_prioritize_time') ?>
                     <?= $form->field($model, 'sheet_id') ?>
 
                     <small class="text-danger">Thư mục phải share quyền cho email : <a

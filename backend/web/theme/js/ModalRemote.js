@@ -169,15 +169,15 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
         $(this.dialog).removeClass('modal-full-width');
         $(this.dialog).removeClass('modal-xl');
         $(this.dialog).removeClass('modal-md');
-        if (size == 'large')
+        if (size === 'large')
             $(this.dialog).addClass('modal-lg');
-        else if (size == 'small')
+        else if (size === 'small')
             $(this.dialog).addClass('modal-sm');
-        else if (size == 'full')
+        else if (size === 'full')
             $(this.dialog).addClass('modal-full-width');
-        else if (size == 'xl')
+        else if (size === 'xl')
             $(this.dialog).addClass('modal-xl');
-        else if (size == 'md')
+        else if (size === 'md')
             $(this.dialog).addClass('modal-md');
         else if (size !== 'normal')
             console.warn("Not define size" + size);
@@ -206,7 +206,7 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
      *   - content               (string/html)
      *   - footer                (string/html)
      */
-    this.remote = function (elm, bulkData) {
+    this.remote = function (elm, bulkData, overwriteRemote = false) {
 
         let url = $(elm).hasAttr('href') ? $(elm).attr('href') : $(elm).attr('data-url');
         let method = $(elm).hasAttr('data-request-method') ? $(elm).attr('data-request-method') : 'GET';
@@ -222,7 +222,7 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
                 $(elm).attr('data-confirm-ok'),
                 $(elm).attr('data-confirm-cancel'),
                 function (e) {
-                    doRemote.call(instance, url, method, bulkData);
+                    doRemote.call(instance, url, method, bulkData, overwriteRemote);
                 },
                 function (e) {
                     this.hide();
@@ -240,7 +240,7 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
      * @param string url The url of request
      * @param string method The method of request
      */
-    function doRemote(url, method, bulkData) {
+    function doRemote(url, method, bulkData, overwriteRemote = false) {
         let instance = this;
         $.ajax({
             url: url,
@@ -253,7 +253,7 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
                 errorRemoteResponse.call(instance, response);
             },
             success: function (response) {
-                successRemoteResponse.call(instance, response);
+                successRemoteResponse.call(instance, response, overwriteRemote);
             }
         });
     }
@@ -283,7 +283,7 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
     /**
      * When remote receive success response process
      */
-    function successRemoteResponse(response) {
+    function successRemoteResponse(response, overwriteRemote = false) {
         // reload datatable if response contain forceReload field
         if (response.message !== undefined && response.message) {
             toastr[response.type](response.message);
@@ -318,6 +318,7 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
         /**
          * Process when modal have form
          */
+
         if ($(this.content).find("form")[0] !== undefined) {
 
             let modalForm = $(this.content).find("form")[0];
@@ -332,6 +333,10 @@ function ModalRemote(modalId, containerId, pjaxOptions = {}) {
 
                 // Submit form when user click submit button
                 $(modalFormSubmitBtn).click(function (e) {
+
+                    if (overwriteRemote) {
+                        return false;
+                    }
 
                     let url = $(modalForm).attr('action');
                     let method = $(modalForm).hasAttr('method') ? $(modalForm).attr('method') : 'GET';

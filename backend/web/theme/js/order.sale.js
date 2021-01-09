@@ -19,7 +19,7 @@ function orderSaleForm() {
     let districtInput = $('input.district');
     let countrySelect = $('select.country-select');
     initMaskMoney();
-    let ORDER_ITEMS = {
+    window.ORDER_ITEMS = {
         total: {
             total_bill: 0,
             total_price: 0,
@@ -45,6 +45,7 @@ function orderSaleForm() {
         $(element).closest('.order-item').remove();
     }
     this.setOrderItems = function (item) {
+        console.log(item);
         const {sku, id} = item;
         if (ORDER_ITEMS.items.some(value => value.sku === sku)) {
             toastr.warning('Sản phẩm đã tồn tại');
@@ -57,13 +58,13 @@ function orderSaleForm() {
         });
         return true;
     }
-    this.removeOrderItems = function (key) {
-        if (!ORDER_ITEMS.items.some(value => value.sku === key)) {
+    this.removeOrderItems = function (sku) {
+        if (!ORDER_ITEMS.items.some(value => value.sku === sku)) {
             toastr.warning('Sản phẩm không tồn tại!');
             return false;
         }
         let items = ORDER_ITEMS.items;
-        ORDER_ITEMS.items = items.filter(id => key !== id);
+        ORDER_ITEMS.items = items.filter(item => item.sku !== sku);
         return true;
     }
     this.addProductItem = async function (id) {
@@ -159,13 +160,22 @@ function orderSaleForm() {
     }
 }
 
+function setStatusCallback(element, ids) {
+    let modal = new ModalRemote('#callback-modal', '#sale-box');
+    modal.remote(element, {ids: ids, status: 'callback'});
+}
+
 async function changeStatus(model, status, element = null) {
     let ids = $('#default-tab').yiiGridView("getSelectedRows");
-    if (element) {
-        ids = $(element).data('key');
-    }
+    // if (element) {
+    //     ids = $(element).data('key');
+    // }
     if (ids.length <= 0) {
         toastr.warning('Không có contact nào được chọn!');
+        return false;
+    }
+    if (status === 'callback') {
+        setStatusCallback(element, ids);
         return false;
     }
     await swal.fire({

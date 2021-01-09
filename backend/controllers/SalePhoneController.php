@@ -16,6 +16,7 @@ use backend\models\WarehouseHistories;
 use backend\models\WarehouseTransaction;
 use backend\models\ZipcodeCountry;
 use common\helper\Helper;
+use yii\data\ActiveDataProvider;
 use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
@@ -51,10 +52,35 @@ class SalePhoneController extends BaseController
             ]
         ]));
 
-
+        $contactHistories = new ActiveDataProvider([
+            'query' => ContactsLogStatus::find()->orderBy('created_at DESC'),
+            'pagination' => [
+                'pageSize' => 20
+            ]
+        ]);
         return $this->render('index.blade', [
             'dataProvider' => $dataProvider,
             'assignPhone' => $this->assignPhone,
+            'contactHistories' => $contactHistories
+        ]);
+    }
+
+    public function actionPending()
+    {
+        $searchModel = new ContactsSearch();
+
+        $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
+            'ContactsSearch' => [
+                'status' => [
+                    Contacts::STATUS_PENDING,
+                ],
+            ]
+        ]));
+        $dataProvider->query->innerJoin('contacts_assignment', 'contacts.phone = contacts_assignment.phone')
+            ->andFilterWhere(['contacts_assignment.user_id' => \Yii::$app->user->getId()]);
+        return static::responseRemote('tabs/holdup.blade', [
+            'dataProvider' => $dataProvider,
+            'id' => 'pending'
         ]);
     }
 
@@ -65,12 +91,14 @@ class SalePhoneController extends BaseController
         $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
             'ContactsSearch' => [
                 'status' => [
-                    Contacts::STATUS_PENDING,
+                    // Contacts::STATUS_PENDING,
                     Contacts::STATUS_CALLBACK
                 ],
                 'phone' => $this->assignPhone
             ]
         ]));
+        $dataProvider->query->innerJoin('contacts_assignment', 'contacts.phone = contacts_assignment.phone')
+            ->andFilterWhere(['contacts_assignment.user_id' => \Yii::$app->user->getId()]);
         return static::responseRemote('tabs/holdup.blade', [
             'dataProvider' => $dataProvider,
             'id' => 'callback'
@@ -90,10 +118,51 @@ class SalePhoneController extends BaseController
                 'phone' => $this->assignPhone
             ]
         ]));
+        $dataProvider->query->innerJoin('contacts_assignment', 'contacts.phone = contacts_assignment.phone')
+            ->andFilterWhere(['contacts_assignment.user_id' => \Yii::$app->user->getId()]);
         return static::responseRemote('tabs/holdup.blade', [
             'dataProvider' => $dataProvider,
             'id' => 'fail'
         ]);
+    }
+
+    public function actionChangeStatus()
+    {
+        $ids = \Yii::$app->request->get('ids');
+        $status = \Yii::$app->request->get('status');
+        $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
+        if (\Yii::$app->request->isPost) {
+            try {
+                $note = \Yii::$app->request->post('sale_note');
+                $note = Helper::isEmpty($note) ? null : $note;
+
+                Contacts::updateAll(['status' => $status], ['id' => $ids]);
+                if (is_array($ids)) {
+                    foreach ($ids as $id) {
+                        $contact = Contacts::findOne($id);
+                        if (!$contact) {
+                            throw new BadRequestHttpException("Không tìm thấy liên hệ!");
+                        }
+                        ContactsLogStatus::saveRecord($contact->code, $contact->phone, $status, $note);
+                    }
+                } else {
+                    $contact = Contacts::findOne($ids);
+                    if (!$contact) {
+                        throw new BadRequestHttpException("Không tìm thấy liên hệ!");
+                    }
+                    ContactsLogStatus::saveRecord($contact->code, $contact->phone, $status, $note);
+                }
+                ContactsAssignment::completeAssignment(ContactsAssignment::getPhoneAssign());
+                $new = ContactsAssignment::nextAssignment();
+                $transaction->commit();
+                return static::responseSuccess(1, 1, $new ? 'Số mới được áp dung!' : 'Thao tác thành công');
+            } catch
+            (\Exception $exception) {
+                $transaction->rollBack();
+                \Yii::$app->session->setFlash('warning', $exception->getMessage());
+            }
+        }
+        return static::responseRemote('change-status.blade', [], 'Đổi trạng thái', $this->footer());
     }
 
     public function actionSuccess()
@@ -106,6 +175,8 @@ class SalePhoneController extends BaseController
                 'phone' => $this->assignPhone
             ]
         ]));
+        $dataProvider->query->innerJoin('contacts_assignment', 'contacts.phone = contacts_assignment.phone')
+            ->andFilterWhere(['contacts_assignment.user_id' => \Yii::$app->user->getId()]);
         return static::responseRemote('tabs/success.blade', [
             'dataProvider' => $dataProvider
         ]);
@@ -116,7 +187,8 @@ class SalePhoneController extends BaseController
      * @return array|string
      * @throws BadRequestHttpException
      */
-    public function actionCreate($code)
+    public
+    function actionCreate($code)
     {
 
 
@@ -149,7 +221,7 @@ class SalePhoneController extends BaseController
                 //save item order product
                 ContactsLogStatus::saveRecord($code, $model->phone, Contacts::STATUS_OK);
                 //Update warehouse
-                 WarehouseHistories::saveHistories($code, \Yii::$app->request->post('items'));
+                WarehouseHistories::saveHistories($code, \Yii::$app->request->post('items'));
                 //check user has finish current phone
                 $newNumber = ContactsAssignment::completeAssignment($model->phone);
                 $transaction->commit();

@@ -1,16 +1,30 @@
+<?php
+use yii\helpers\Url;$action = Yii::$app->controller->action->id;
+
+?>
 <div class="my-1">
     <button onclick="changeStatus('Contacts','number_fail')" class="btn-sm btn btn-outline-danger"><i
-                class="fe-phone-off"></i> Sai
-        số
+                class="fe-phone-off"></i> Sai số
     </button>
-    <button onclick="changeStatus('Contacts','callback')" class="btn-sm btn btn-outline-warning"><i
+    <?php if($action !== 'callback'){ ?>
+    <button data-request-method="GET" data-url="<?= Url::toRoute(['change-status'])?>"
+            onclick="changeStatus('Contacts','callback',this)" class="btn-sm btn btn-outline-warning"><i
                 class="fe-phone-forwarded"></i>
         Gọi lại
     </button>
+    <?php } ?>
+    <?php if($action !== 'pending'){ ?>
+    <button onclick="changeStatus('Contacts','pending')" class="btn-sm btn btn-outline-warning"><i
+                class="fe-phone-forwarded"></i>
+        pending
+    </button>
+    <?php } ?>
+    <?php if($action !== 'fail'){ ?>
     <button onclick="changeStatus('Contacts','cancel')" class="btn-sm btn btn-outline-warning"><i
                 class="fe-phone-missed"></i>
         Hủy
     </button>
+    <?php } ?>
     <button onclick="changeStatus('Contacts','duplicate')" class="btn-sm btn btn-outline-warning"><i
                 class="fe-phone-missed"></i>
         Trùng

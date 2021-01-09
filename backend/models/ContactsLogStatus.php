@@ -43,6 +43,11 @@ class ContactsLogStatus extends \common\models\BaseModel
         ];
     }
 
+    public function getContact()
+    {
+        return $this->hasOne(Contacts::className(), ['code' => 'code']);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -78,6 +83,8 @@ class ContactsLogStatus extends \common\models\BaseModel
             $model->user_id = Yii::$app->user->getId();
             $model->phone = $phone;
             $model->status = $status;
+            $model->sale_note = $sale_note;
+            $model->customer_note = $customer_note;
             return $model->save();
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());

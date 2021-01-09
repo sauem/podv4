@@ -1,0 +1,45 @@
+<?php
+
+use backend\models\ContactsReason;use kartik\form\ActiveForm;use kartik\select2\Select2;use yii\bootstrap4\Html;
+
+?>
+@section("content")
+    <?php
+    ActiveForm::begin();
+    ?>
+    <div class="form-group">
+        <label>Lý do gọi lại(*)</label>
+        <?= Select2::widget([
+            'name' => 'sale_note',
+            'data' => array_merge(ContactsReason::LISTS(), [
+                'diff' => 'Lý do khác....'
+            ]),
+            'options' => ['required' => true, 'id' => 'list-reason'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ]
+        ])?>
+    </div>
+    <div class="form-group" id="diff-reason" style="display: none">
+        <label>Lý do khác(*)</label>
+        <?= Html::textarea('area_note', null, ['class' => 'form-control', 'id' => 'diff-reason'])?>
+    </div>
+    <?php ActiveForm::end(); ?>
+@stop
+@section("pos_page")
+    <script>
+        $(document).on('change', '#list-reason', function () {
+            let val = $(this).val();
+            let diff_reason = $('#diff-reason');
+            if (val === 'diff') {
+                diff_reason.show();
+                diff_reason.find('textarea').attr('name', 'sale_note');
+                $(this).attr("name", "select_diff");
+            } else {
+                diff_reason.hide();
+                diff_reason.find('textarea').attr('name', 'area_note');
+                $(this).attr("name", "sale_note");
+            }
+        });
+    </script>
+@stop

@@ -60,7 +60,7 @@ use yii\helpers\Url;
             ],
             [
                 'class' => ActionColumn::class,
-                'template' => '{order}{actions}',
+                'template' => '{order}',
                 'width' => '12%',
                 'buttons' => [
                     'order' => function ($url, $model) {
@@ -71,14 +71,6 @@ use yii\helpers\Url;
                             'class' => 'btn-xs btn btn-success'
                         ]);
                     },
-                    'actions' => function ($url, $model) {
-                        return Component::dropDown([
-                            '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`cancel`,this)" class="dropdown-item"><i class="fe-phone-missed"></i> Hủy đặt</a>',
-                            '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`duplicate`,this)" class="dropdown-item"><i class="fe-phone-missed"></i> Trùng số</a>',
-
-                        ]);
-                    },
-
                 ]
             ]
         ]

@@ -36,9 +36,6 @@ class AutoController extends \yii\console\Controller
             };
 
             foreach ($values as $item) {
-//                if (empty($item[0]) || empty($item[1]) || empty($item[2])) {
-//                    return false;
-//                }
                 try {
                     $model = new Contacts();
                     $data = [
@@ -54,12 +51,16 @@ class AutoController extends \yii\console\Controller
                         'partner' => $partner->partner->username,
                         'type' => isset($item[8]) ? $item[8] : null,
                     ];
-                    $model->load($data, "");
-                    if (!$model->save()) {
-                        echo "continue\n";
+                    if ($partner->contact_source === ContactsSheet::SOURCE_REQUIRED && Helper::isEmpty($data['type'])) {
+                        printf("Nguồn liên hệ bắt buộc");
+                    } else {
+                        $model->load($data, "");
+                        if (!$model->save()) {
+                            printf("success\n");
+                        }
                     }
                 } catch (\Exception $exception) {
-                    echo $exception->getMessage() . "\n";
+                    printf($exception->getMessage() . "\n");
                 }
             }
         }

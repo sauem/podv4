@@ -137,4 +137,17 @@ class ContactsAssignment extends BaseModel
         }
         return true;
     }
+
+    public static function getPhoneCallDone()
+    {
+        $user = Yii::$app->user->getId();
+        $count = ContactsAssignment::find()->where(['user_id' => $user])
+            ->andWhere(['contacts_assignment.status' => ContactsAssignment::STATUS_COMPLETED])
+            ->andWhere('FROM_UNIXTIME(contacts_assignment.created_at) >= NOW() - INTERVAL 1 DAY')
+            ->count();
+        if (!$count) {
+            return 0;
+        }
+        return $count;
+    }
 }

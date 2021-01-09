@@ -19,6 +19,7 @@ use backend\models\WarehouseStorage;
 use backend\models\ZipcodeCountry;
 use common\helper\Helper;
 use yii\base\Exception;
+use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
@@ -156,23 +157,40 @@ class AjaxController extends BaseController
         $model = \Yii::$app->request->post('model');
         $status = \Yii::$app->request->post('status');
         $key = \Yii::$app->request->post('ids');
+        $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
 
         try {
             $model = new \ReflectionClass("backend\models\\$model");
             $model = $model->newInstanceWithoutConstructor();
             $model::updateAll(['status' => $status], ['id' => $key]);
-            if (get_class($model) === "backend\models\Contacts") {
-                ContactsLogStatus::saveRecord($model->code, $model->phone, Contacts::STATUS_OK);
+
+            if (is_array($key)) {
+                foreach ($key as $id) {
+                    $contact = Contacts::findOne($id);
+                    if (!$contact) {
+                        throw new BadRequestHttpException("Không tìm thấy liên hệ!");
+                    }
+                    ContactsLogStatus::saveRecord($contact->code, $contact->phone, $status);
+                }
+            } else {
+                $contact = Contacts::findOne($key);
+                if (!$contact) {
+                    throw new BadRequestHttpException("Không tìm thấy liên hệ!");
+                }
+                ContactsLogStatus::saveRecord($contact->code, $contact->phone, $status);
             }
+
             ContactsAssignment::completeAssignment(ContactsAssignment::getPhoneAssign());
             $new = ContactsAssignment::nextAssignment();
-            if ($new) {
-                return ['assigned' => 1];
-            }
+            $transaction->commit();
+            return [
+                'success' => 1,
+                'msg' => $new ? 'Số mới được áp dụng' : 'Thao tác thành công!'
+            ];
         } catch (\Exception $exception) {
+            $transaction->rollBack();
             throw new BadRequestHttpException($exception->getMessage());
         }
-        return true;
     }
 
     public function actionGetPrice()

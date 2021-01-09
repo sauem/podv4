@@ -56,7 +56,7 @@ use yii\helpers\Url;
                         'attribute' => 'contact_source',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return Helper::isEmpty($model->source) ? '---' : $model->source->name;
+                            return $model->contact_source;
                         }
                     ],
 

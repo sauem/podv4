@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use phpDocumentor\Reflection\Types\Self_;
 use Yii;
 
 /**
@@ -21,6 +22,13 @@ class ContactsSheet extends \common\models\BaseModel
     /**
      * {@inheritdoc}
      */
+    const SOURCE_REQUIRED = 'required';
+    const SOURCE_UN_REQUIRED = 'un_required';
+    const SOURCE_REQUIRE = [
+        self::SOURCE_REQUIRED => 'Bắt buộc',
+        self::SOURCE_UN_REQUIRED => 'Không bắt buộc'
+    ];
+
     public static function tableName()
     {
         return 'contacts_sheet';
@@ -34,7 +42,7 @@ class ContactsSheet extends \common\models\BaseModel
         return [
             [['partner_id', 'category_id', 'created_at', 'updated_at'], 'integer'],
             [['sheet_id'], 'string'],
-            [['sheet_id', 'category_id','country','partner_id'], 'required'],
+            [['sheet_id', 'category_id', 'country', 'partner_id'], 'required'],
             [['country', 'contact_source'], 'string', 'max' => 255],
         ];
     }
@@ -50,7 +58,7 @@ class ContactsSheet extends \common\models\BaseModel
             'category_id' => 'Loại sản phẩm',
             'sheet_id' => 'Sheet ID',
             'country' => 'Thị trường',
-            'contact_source' => 'Nguồn contact',
+            'contact_source' => 'Nguồn contact bắt buộc',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -62,11 +70,6 @@ class ContactsSheet extends \common\models\BaseModel
     public function getPartner()
     {
         return $this->hasOne(UserModel::className(), ['id' => 'partner_id']);
-    }
-
-    public function getSource()
-    {
-        return $this->hasOne(ContactsSource::className(), ['slug' => 'contact_source']);
     }
 
     public function getCategory()

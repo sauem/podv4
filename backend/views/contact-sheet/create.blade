@@ -1,6 +1,9 @@
 <?php
 
-use backend\models\Categories;use backend\models\ContactsSource;use backend\models\Products;use kartik\form\ActiveForm;
+use backend\models\Categories;
+use backend\models\ContactsSource;
+use backend\models\Products;
+use kartik\form\ActiveForm;
 use common\helper\Helper;
 use backend\models\UserRole;
 use kartik\select2\Select2;
@@ -39,12 +42,11 @@ use kartik\select2\Select2;
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'contact_source')->widget(Select2::className(), [
-                'data' => ContactsSource::LISTS(),
-                'options' => ['placeholder' => 'Nguồn liên hệ..'],
+                'data' => \backend\models\ContactsSheet::SOURCE_REQUIRE,
                 'pluginOptions' => [
                     'allowClear' => true
                 ]
-            ])->label("Nguồn liên hệ") ?>
+            ])->label("Bắt buộc nguồn liên hệ") ?>
         </div>
         <div class="col-md-12">
             <?= $form->field($model, 'sheet_id')->label('Sheet ID') ?>

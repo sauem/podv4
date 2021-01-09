@@ -9,9 +9,14 @@ use common\helper\Component;
 use backend\models\Payments;
 $formatJs = <<<'JS'
 let order = new orderSaleForm();
+
 let selectSku = function (e) {
     order.addProductItem(e.target.value);
+    e.preventDefault();
  }
+ let resetSelect = function(e){
+
+ };
 let formatRepo = function (repo) {
     if (repo.loading) {
         return repo.sku;
@@ -29,7 +34,7 @@ let formatRepo = function (repo) {
     return '<div style="overflow:hidden;">' + markup + '</div>';
 };
 let formatRepoSelection = function (repo) {
-    return repo.sku;
+    return false;
 }
 JS;
 
@@ -129,7 +134,7 @@ JS;
                         'theme' => Select2::THEME_MATERIAL,
                         'pluginOptions' => [
                             'allowClear' => true,
-                            'minimumInputLength' => 1,
+                            'minimumInputLength' => 0,
                             'ajax' => [
                                 'url' => Url::toRoute(['/ajax/get-list-product']),
                                 'dataType' => 'json',
@@ -140,10 +145,11 @@ JS;
                             ],
                             'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
                             'templateResult' => new JsExpression('formatRepo'),
-                            'templateSelection' => new JsExpression('formatRepoSelection'),
+                            #'templateSelection' => new JsExpression('formatRepoSelection'),
                         ],
                         'pluginEvents' => [
                             "select2:select" => new JsExpression('selectSku'),
+                            "select2:close" => new JsExpression('resetSelect')
                         ]
                     ])?>
                 </div>
@@ -235,6 +241,9 @@ JS;
                 let val = $(this).val();
                 val = val.replaceAll(',', '');
                 let sku = $(this).data('sku');
+                if (!val) {
+                    val = 0;
+                }
                 order.setItemPrice(sku, toNumber(val));
             });
 
@@ -246,11 +255,17 @@ JS;
             });
             $(document).on('change', '#input-shipping-cost', function () {
                 let value = $(this).val();
+                if (!value) {
+                    value = 0;
+                }
                 order.setShippingCost(toNumber(value));
             });
 
             $(document).on('change', '#total-price-input', function () {
                 let value = $(this).val();
+                if (!value) {
+                    value = 0;
+                }
                 order.setTotalPrice(toNumber(value));
             });
         });

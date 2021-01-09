@@ -111,7 +111,7 @@ class Contacts extends \common\models\BaseModel
             'utm_campaign' => 'Utm Campaign',
             'link' => 'Link',
             'short_link' => 'Short Link',
-            'type' => 'Loại contact',
+            'type' => 'Nguồn liên hệ',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

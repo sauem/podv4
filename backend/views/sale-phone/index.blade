@@ -1,4 +1,6 @@
 <?php
+use backend\models\Contacts;use kartik\grid\GridView;
+use common\helper\Helper;
 use yii\helpers\Url;
 ?>
 @section('content')
@@ -19,7 +21,8 @@ use yii\helpers\Url;
             <div class="col-md-4">
                 <div class="d-flex justify-content-between">
                     <h5>Sale : {!! Yii::$app->user->identity->username !!}</h5>
-                    <h5>Hoàn thành hôm nay : 0/{!! Yii::$app->user->identity->phone_of_day !!}</h5>
+                    <h5>Hoàn thành hôm nay : <?= \backend\models\ContactsAssignment::getPhoneCallDone() ?>
+                        /<?= Yii::$app->user->identity->phone_of_day ?></h5>
                 </div>
             </div>
         </div>
@@ -32,19 +35,25 @@ use yii\helpers\Url;
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a data-url="{!! Url::toRoute(['callback']) !!}" href="#tab-2" data-toggle="tab"
+                        <a data-url="{!! Url::toRoute(['pending']) !!}" href="#tab-2" data-toggle="tab"
+                           aria-expanded="false" class="nav-link ">
+                            <i class="fe-phone-call"></i> pending
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a data-url="{!! Url::toRoute(['callback']) !!}" href="#tab-3" data-toggle="tab"
                            aria-expanded="false" class="nav-link ">
                             <i class="fe-phone-call"></i> Gọi lại
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a data-url="{!! Url::toRoute(['fail']) !!}" href="#tab-3" data-toggle="tab"
+                        <a data-url="{!! Url::toRoute(['fail']) !!}" href="#tab-4" data-toggle="tab"
                            aria-expanded="false" class="nav-link">
                             <i class="fe-phone-missed"></i> Hủy
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a data-url="{!! Url::toRoute(['success']) !!}" href="#tab-4" data-toggle="tab"
+                        <a data-url="{!! Url::toRoute(['success']) !!}" href="#tab-5" data-toggle="tab"
                            aria-expanded="false" class="nav-link">
                             <i class="fe-phone-outgoing"></i> Thành công
                         </a>
@@ -59,6 +68,7 @@ use yii\helpers\Url;
                     <div class="tab-pane" id="tab-2"></div>
                     <div class="tab-pane" id="tab-3"></div>
                     <div class="tab-pane" id="tab-4"></div>
+                    <div class="tab-pane" id="tab-5"></div>
                 </div>
             </div>
         </div>
@@ -67,18 +77,100 @@ use yii\helpers\Url;
         <h5 class="text-success card-title"><i class="fe-phone-call"></i> Lịch sử liên hệ: <span
                     class="text-info">{!! $assignPhone !!}</span>
         </h5>
+
+        <?= GridView::widget([
+            'dataProvider' => $contactHistories,
+            'pjax' => true,
+            'layout' => '{items}{pager}',
+            'responsiveWrap' => false,
+            'options' => ['id' => 'default-tab'],
+            'tableOptions' => [
+                'class' => 'table table-sm'
+            ],
+            'pjaxSettings' => [
+                'neverTimeout' => true,
+                'options' => [
+                    'id' => isset($id) ? "$id-box" : 'default-box',
+                ]
+            ],
+            'perfectScrollbar' => true,
+            'columns' => [
+                'code',
+                'phone',
+                [
+                    'label' => 'Khách hàng',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        if (Helper::isEmpty($model->contact)) {
+                            return '---';
+                        }
+                        return $model->contact->name;
+                    }
+                ],
+                [
+                    'label' => 'Ngày ra liên hệ',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        if (Helper::isEmpty($model->contact)) {
+                            return '---';
+                        }
+                        return Helper::dateFormat($model->contact->register_time);
+                    }
+                ],
+                [
+                    'label' => 'Loại sản phẩm',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        if (Helper::isEmpty($model->contact)) {
+                            return '---';
+                        }
+                        return $model->contact->category;
+                    }
+                ],
+                [
+                    'label' => 'Yêu cầu',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        if (Helper::isEmpty($model->contact)) {
+                            return '---';
+                        }
+                        return $model->contact->option;
+                    }
+                ],
+                [
+                    'label' => 'Ghi chú cuộc gọi',
+                    'attribute' => 'sale_note',
+                    'value' => function ($model) {
+                        if (Helper::isEmpty($model->sale_note)) {
+                            return '---';
+                        }
+                        return $model->sale_note;
+                    }
+                ],
+                [
+                    'label' => 'trạng thái',
+                    'attribute' => 'status',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Contacts::StatusLabel($model->status);
+                    }
+                ],
+            ]
+        ]) ?>
     </div>
     <?php \yii\widgets\Pjax::end()?>
     {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'order-modal' ]) !!}
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'callback-modal' ]) !!}
 @stop
 
 @section('pos_page')
     <script>
         initToggleTab();
+
         $(document).on('click', '[role="modal-remote"]', function (event) {
             let modal = new ModalRemote('#order-modal', '#sale-box');
             event.preventDefault();
-            modal.remote(this, null);
+            modal.remote(this, null, false);
         });
 
     </script>
