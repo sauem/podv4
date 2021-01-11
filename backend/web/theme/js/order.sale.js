@@ -5,6 +5,8 @@ Number.prototype.format = function (n, x) {
 }
 
 function orderSaleForm() {
+    localStorage.removeItem('order_items');
+
     let html = $('#sku-template').html();
     let template = Handlebars.compile(html);
     let orderItemsResult = $('#result-sku-list');
@@ -19,7 +21,7 @@ function orderSaleForm() {
     let districtInput = $('input.district');
     let countrySelect = $('select.country-select');
     initMaskMoney();
-    window.ORDER_ITEMS = {
+    let ORDER_ITEMS = {
         total: {
             total_bill: 0,
             total_price: 0,
@@ -45,7 +47,6 @@ function orderSaleForm() {
         $(element).closest('.order-item').remove();
     }
     this.setOrderItems = function (item) {
-        console.log(item);
         const {sku, id} = item;
         if (ORDER_ITEMS.items.some(value => value.sku === sku)) {
             toastr.warning('Sản phẩm đã tồn tại');
@@ -53,10 +54,14 @@ function orderSaleForm() {
         }
         ORDER_ITEMS.items.push({
             sku: sku,
-            price: 0,
-            qty: 0
+            price: item.price > 0 ? item.price : 0,
+            qty: item.qty > 0 ? item.qty : 0
         });
+        this.resetLocalStorage(ORDER_ITEMS);
         return true;
+    }
+    this.resetLocalStorage = function (ORDER_ITEMS) {
+        localStorage.setItem('order_items', JSON.stringify(ORDER_ITEMS.items));
     }
     this.removeOrderItems = function (sku) {
         if (!ORDER_ITEMS.items.some(value => value.sku === sku)) {
@@ -65,7 +70,18 @@ function orderSaleForm() {
         }
         let items = ORDER_ITEMS.items;
         ORDER_ITEMS.items = items.filter(item => item.sku !== sku);
+        this.resetLocalStorage(ORDER_ITEMS);
         return true;
+    }
+    this.renderPrevtItem = function () {
+
+        let items = JSON.parse(localStorage.getItem('order_items'));
+        if (items !== null && items.length > 0) {
+            for (let i in items) {
+                this.setOrderItems(items[i]);
+                this.appendTemplateItem(items[i]);
+            }
+        }
     }
     this.addProductItem = async function (id) {
         try {
@@ -106,9 +122,11 @@ function orderSaleForm() {
         ORDER_ITEMS.total.total_price = value;
         this.sumTotal(true);
     }
-    this.setItemPrice = function (sku, price) {
+    this.setItemPrice = function (sku, price, qty) {
         let index = ORDER_ITEMS.items.findIndex(item => item.sku === sku);
         ORDER_ITEMS.items[index].price = price;
+        ORDER_ITEMS.items[index].qty = qty;
+        this.resetLocalStorage(ORDER_ITEMS);
         this.sumTotal();
     };
     this.removeProductItem = function (sku, element) {
@@ -121,7 +139,7 @@ function orderSaleForm() {
             const res = await this.getPrice(qty, sku);
             const {price} = res;
             element.val(price.format());
-            this.setItemPrice(sku, price);
+            this.setItemPrice(sku, price, qty);
         } catch (e) {
             console.warn(JSON.parse(e.responseText).message);
         }

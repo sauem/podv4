@@ -8,16 +8,12 @@ use yii\web\View;
 use common\helper\Component;
 use backend\models\Payments;
 $formatJs = <<<'JS'
-let order = new orderSaleForm();
-
-let selectSku = function (e) {
-    order.addProductItem(e.target.value);
+window.ORDER = new orderSaleForm();
+function selectSku(e) {
+    ORDER.addProductItem(e.target.value);
     e.preventDefault();
  }
- let resetSelect = function(e){
-
- };
-let formatRepo = function (repo) {
+ function formatRepo(repo) {
     if (repo.loading) {
         return repo.sku;
     }
@@ -33,7 +29,7 @@ let formatRepo = function (repo) {
         markup += `</div>`;
     return '<div style="overflow:hidden;">' + markup + '</div>';
 };
-let formatRepoSelection = function (repo) {
+function formatRepoSelection (repo) {
     return false;
 }
 JS;
@@ -149,7 +145,6 @@ JS;
                         ],
                         'pluginEvents' => [
                             "select2:select" => new JsExpression('selectSku'),
-                            "select2:close" => new JsExpression('resetSelect')
                         ]
                     ])?>
                 </div>
@@ -208,6 +203,25 @@ JS;
                         </tfoot>
                     </table>
                 </div>
+                <hr>
+                <div class="col-12">
+                    <h4 class="card-title"><i class="fe-archive"></i> Trạng thái kho hàng</h4>
+                    <table class="mt-2 align-content-center table table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th>Kho</th>
+                            <th>Loại sản phẩm</th>
+                            <th>Sản phẩm</th>
+                            <th>Khả dụng</th>
+                        </tr>
+                        </thead>
+                        <tbody id="result-warehouse-list">
+
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -216,7 +230,9 @@ JS;
 @stop
 @section('pos_page')
     <script>
+
         $(document).ready(function () {
+            ORDER.renderPrevtItem();
             $(document).on('change', '#payment_method', function () {
                 if ($(this).val() == 3) {
                     $("#bill_link").show();
@@ -226,16 +242,16 @@ JS;
             });
             $(document).on('click', '#btn-add-product', function () {
                 let id = $('#product-sku').val();
-                order.addProductItem(id);
+                ORDER.addProductItem(id);
             });
 
             $(document).on('click', '.btn-remove-product', function () {
                 let sku = $(this).data('sku');
-                order.removeProductItem(sku, this);
+                ORDER.removeProductItem(sku, this);
             });
             $(document).on('change', '.zipcode', function () {
                 let zipcode = $(this).val();
-                order.changeZipcode(zipcode);
+                ORDER.changeZipcode(zipcode);
             });
             $(document).on('change', '.input-product-price', function () {
                 let val = $(this).val();
@@ -244,21 +260,21 @@ JS;
                 if (!val) {
                     val = 0;
                 }
-                order.setItemPrice(sku, toNumber(val));
+                ORDER.setItemPrice(sku, toNumber(val));
             });
 
             $(document).on('change', '.input-product-qty', function () {
-                let qty = $(this).val();
+                let qty = $(this).val() > 0 ? $(this).val() : 1;
                 let sku = $(this).data("sku");
                 let input = $("body").find(`#total-price-${sku}`);
-                order.loadItemPrice(qty, sku, input);
+                ORDER.loadItemPrice(qty, sku, input);
             });
             $(document).on('change', '#input-shipping-cost', function () {
                 let value = $(this).val();
                 if (!value) {
                     value = 0;
                 }
-                order.setShippingCost(toNumber(value));
+                ORDER.setShippingCost(toNumber(value));
             });
 
             $(document).on('change', '#total-price-input', function () {
@@ -266,7 +282,7 @@ JS;
                 if (!value) {
                     value = 0;
                 }
-                order.setTotalPrice(toNumber(value));
+                ORDER.setTotalPrice(toNumber(value));
             });
         });
     </script>

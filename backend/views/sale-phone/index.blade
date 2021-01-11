@@ -1,7 +1,7 @@
 <?php
 use backend\models\Contacts;use kartik\grid\GridView;
 use common\helper\Helper;
-use yii\helpers\Url;
+use yii\helpers\Url;use yii\web\View;
 ?>
 @section('content')
     <?php \yii\widgets\Pjax::begin([
@@ -177,3 +177,4 @@ use yii\helpers\Url;
 @stop
 
 @php($view->registerJSFile('@web/theme/js/order.sale.js',['depends' =>  \yii\web\JqueryAsset::className()]))
+
