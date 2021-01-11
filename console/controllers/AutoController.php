@@ -6,6 +6,7 @@ use backend\models\Contacts;
 use backend\models\ContactsSheet;
 use common\helper\Helper;
 use common\helper\SheetApi;
+use yii\db\Expression;
 use yii\web\BadRequestHttpException;
 
 class AutoController extends \yii\console\Controller
@@ -65,6 +66,30 @@ class AutoController extends \yii\console\Controller
             }
         }
         echo "done";
+    }
+
+    public function actionCallbackToCancel()
+    {
+        try {
+            $timer = Helper::setting('callback_to_cancel_time');
+            if (!$timer) {
+                throw new BadRequestHttpException("Not set timer!");
+            }
+//            $contacts = Contacts::find()->where(['contacts.status' => Contacts::STATUS_CALLBACK])
+//                ->andWhere(["FROM_UNIXTIME(contacts.register_time) >= NOW() - INTERVAL $timer DAY"])
+//                ->all();
+//            if (!$contacts) {
+//                throw new BadRequestHttpException("Not found any contact!");
+//            }
+            Contacts::updateAll(['contacts.status' => Contacts::STATUS_CANCEL], [
+                'AND',
+                ['contacts.status' => Contacts::STATUS_CALLBACK],
+                [">=", "FROM_UNIXTIME(contacts.register_time)", new Expression("NOW() - INTERVAL $timer DAY")]
+            ]);
+        } catch (\Exception $exception) {
+            printf($exception->getMessage());
+        }
+        printf("done");
     }
 
     public function actionTest()

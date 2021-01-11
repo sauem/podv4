@@ -1,6 +1,8 @@
 const MODULE_CONTACT = 'contact';
 const MODULE_CONTACT_LOG = 'contact-log';
 const MODULE_PRODUCT = 'product';
+const MODULE_PRODUCT_CATEGORY = 'category';
+const MODULE_ORDER_EXAMPLE = 'order-example';
 const MODULE_TRACKING = 'tracking';
 const MODULE_REFUND = 'refund';
 const MODULE_PAID = 'paid';
@@ -77,7 +79,9 @@ async function actionSave(module) {
 
         try {
             const res = await doPushData(url, data[index]);
+            console.log("Reponse :", res);
         } catch (e) {
+            console.log("Error :", e);
             errorRows++;
             if (!$("#tab-2").hasClass('active')) {
                 $("a[href='#tab-2']").trigger("click");
@@ -171,6 +175,9 @@ function processRow(sheet) {
     let columnLength = 10;
     let rows = [];
     switch (module) {
+        case MODULE_PRODUCT:
+            columnLength = 8;
+            break;
         case MODULE_CONTACT:
             columnLength = 17;
             break;
@@ -179,6 +186,8 @@ function processRow(sheet) {
             columnLength = 5;
             break;
         case MODULE_CROSSED:
+        case MODULE_ORDER_EXAMPLE:
+        case MODULE_PRODUCT_CATEGORY:
             columnLength = 4;
             break;
         case MODULE_PAID:
@@ -199,6 +208,31 @@ function processRow(sheet) {
 const mappingModel = (module, row) => {
     let item = null;
     switch (module) {
+        case MODULE_PRODUCT_CATEGORY:
+            item = categoryModel();
+            item.name = row[0] ? row[0].v : null;
+            item.country = row[1] ? row[1].v : null;
+            item.partner = row[2] ? row[2].v : null;
+            item.description = row[3] ? row[3].v : null;
+            break;
+        case MODULE_PRODUCT:
+            item = productModel();
+            item.sku = row[0] ? row[0].v : null;
+            item.category_id = row[1] ? row[1].v : null;
+            item.weight = row[2] ? row[2].v : null;
+            item.size = row[3] ? row[3].v : null;
+            item.prices = row[4] ? row[4].v : null;
+            item.marketer_id = row[5] ? row[5].v : null;
+            item.marketer_rage_start = row[6] ? getTimer(row[6].v) : null;
+            item.marketer_rage_end = row[7] ? getTimer(row[7].v) : null;
+            break;
+        case MODULE_ORDER_EXAMPLE:
+            item = orderExampleModel();
+            item.category = row[0] ? row[0].v : null;
+            item.option = row[1] ? row[1].v : null;
+            item.items = row[2] ? row[2].v : null;
+            item.total_bill = row[3] ? row[3].v : null;
+            break;
         case MODULE_TRACKING:
             item = trackingModel();
             item.code = row[0] ? row[0].v : null;
@@ -263,6 +297,45 @@ const mappingModel = (module, row) => {
     }
     return item;
 };
+
+function getColumn(row, position, type = "time") {
+    let item = row[position] ? row[position].v : null;
+    if (type === "time") {
+        return getTimer(item);
+    }
+    return item;
+}
+
+function categoryModel() {
+    return {
+        name: null,
+        country: null,
+        partner: null,
+        description: null
+    }
+}
+
+function productModel() {
+    return {
+        sku: null,
+        category_id: null,
+        marketer_id: null,
+        marketer_rage_start: null,
+        marketer_rage_end: null,
+        weight: null,
+        size: null,
+        prices: null,
+    }
+}
+
+function orderExampleModel() {
+    return {
+        category: null,
+        option: null,
+        total_bill: 0,
+        items: null
+    }
+}
 
 function refundModel() {
     return {

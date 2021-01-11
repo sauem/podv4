@@ -1,0 +1,27 @@
+<script id="order-example-template" type="text/x-handlebars-template">
+    <button onclick="actionSave('{{$module}}')" class="btn btn-sm float-right btn-success"><i class="fe-save"></i> Lưu
+        dữ liệu
+    </button>
+    <table id="contact-table" class="table table-sm table-hover">
+        <thead>
+        <tr>
+            <th>Loại sản phẩm</th>
+            <th>Yêu cầu đặt hàng</th>
+            <th>Sản phẩm</th>
+            <th>Tổng cộng</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{{#each this}}
+        <tr data-key="@{{ @index }}">
+            <td>@{{category}}</td>
+            <td>@{{ option }}</td>
+            <td>
+                @{{ items }}
+            </td>
+            <td>@{{money total_bill }}</td>
+        </tr>
+        @{{/each}}
+        </tbody>
+    </table>
+</script>

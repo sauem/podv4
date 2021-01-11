@@ -4,12 +4,19 @@
 namespace backend\controllers;
 
 
+use backend\models\Categories;
 use backend\models\Contacts;
 use backend\models\OrdersContact;
+use backend\models\OrdersExample;
+use backend\models\OrdersExampleItem;
 use backend\models\OrdersRefund;
 use backend\models\Products;
+use backend\models\ProductsPrice;
+use backend\models\UserModel;
 use backend\models\ZipcodeCountry;
 use common\helper\Helper;
+use yii\db\Transaction;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
@@ -162,6 +169,103 @@ class AjaxImportController extends BaseController
 
         if (!$model->save()) {
             throw new BadRequestHttpException(Helper::firstError($model));
+        }
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public function actionOrderExample()
+    {
+        $data = \Yii::$app->request->post('row');
+        $model = new OrdersExample();
+        $transaction = \Yii::$app->getDb()->beginTransaction();
+        try {
+            if ($model->load($data, "") && $model->save()) {
+                $items = ArrayHelper::getValue($data, 'items', null);
+                if (Helper::isEmpty($items)) {
+                    throw new BadRequestHttpException("Sản phẩm rỗng!");
+                }
+                $items = explode(',', $items);
+                $items = array_map(function ($item) {
+                    $item = explode('*', $item);
+                    return [
+                        'sku' => $item[0],
+                        'qty' => isset($item[1]) ? $item[1] : null,
+                        'price' => isset($item[2]) ? $item[2] : 0
+                    ];
+                }, $items);
+                OrdersExampleItem::saveItems($model->id, $items);
+                $transaction->commit();
+                return true;
+            }
+        } catch (\Exception $exception) {
+            $transaction->rollBack();
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+
+    }
+
+    /**
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public function actionCategory()
+    {
+        $data = \Yii::$app->request->post('row');
+        $model = new Categories();
+        $partner = UserModel::findOne(['username' => $data['partner']]);
+        $data['partner_id'] = $partner ? $partner->getId() : null;
+        unset($data['partner']);
+        if ($model->load($data, "") && $model->save()) {
+            return true;
+        }
+        throw new BadRequestHttpException(Helper::firstError($model));
+    }
+
+    /**
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public function actionProduct()
+    {
+        $data = \Yii::$app->request->post('row');
+        $model = new Products();
+        $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
+        try {
+            $prices = ArrayHelper::getValue($data, 'prices', null);
+            $marketer = UserModel::findOne(['username' => $data['marketer_id']]);
+            $category = Categories::findOne(['name' => $data['category_id']]);
+            if (!$category) {
+                throw new BadRequestHttpException("Không tồn tại loại sản phẩm trên!");
+            }
+            $model->category_id = $category ? $category->id : null;
+            $model->sku = $data['sku'];
+            $model->weight = $data['weight'];
+            $model->size = $data['size'];
+            $model->marketer_id = $marketer ? $marketer->getId() : null;
+            $model->marketer_rage_start = $data['marketer_rage_start'];
+            $model->marketer_rage_end = $data['marketer_rage_end'];
+            if (!$model->save()) {
+                throw new BadRequestHttpException(Helper::firstError($model));
+            }
+            if (!empty($prices)) {
+                $prices = explode(',', $prices);
+                $prices = array_map(function ($item) use ($model) {
+                    $item = explode('*', $item);
+                    return [
+                        'qty' => isset($item[1]) ? $item[1] : null,
+                        'price' => isset($item[2]) ? $item[2] : null
+                    ];
+                }, $prices);
+                ProductsPrice::savePrice($model->sku, $prices);
+            }
+            $transaction->commit();
+        } catch (\Exception $exception) {
+            $transaction->rollBack();
+            throw new BadRequestHttpException($exception->getMessage());
         }
         return true;
     }

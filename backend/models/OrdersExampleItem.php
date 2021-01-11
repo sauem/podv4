@@ -7,26 +7,26 @@ use Yii;
 use yii\web\BadRequestHttpException;
 
 /**
- * This is the model class for table "orders_contact_sku".
+ * This is the model class for table "orders_example_item".
  *
  * @property int $id
- * @property int|null $order_id
- * @property string $sku
+ * @property int|null $order_example_id
+ * @property string|null $sku
  * @property int|null $qty
  * @property float|null $price
  * @property int $created_at
  * @property int $updated_at
  *
- * @property OrdersContact $order
+ * @property OrdersExample $orderExample
  */
-class OrdersContactSku extends \common\models\BaseModel
+class OrdersExampleItem extends \common\models\BaseModel
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'orders_contact_sku';
+        return 'orders_example_item';
     }
 
     /**
@@ -35,11 +35,11 @@ class OrdersContactSku extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['order_id', 'qty', 'created_at', 'updated_at'], 'integer'],
-            [['sku', 'qty', 'price'], 'required'],
+            [['order_example_id', 'qty', 'created_at', 'updated_at'], 'integer'],
             [['price'], 'number'],
+            [['order_example_id', 'qty', 'price', 'sku'], 'required'],
             [['sku'], 'string', 'max' => 255],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrdersContact::className(), 'targetAttribute' => ['order_id' => 'id']],
+            [['order_example_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrdersExample::className(), 'targetAttribute' => ['order_example_id' => 'id']],
         ];
     }
 
@@ -50,36 +50,31 @@ class OrdersContactSku extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'order_id' => 'Mã đơn hàng',
-            'sku' => 'Sản phẩm',
-            'qty' => 'Số lượng',
-            'price' => 'Giá',
+            'order_example_id' => 'Order Example ID',
+            'sku' => 'Sku',
+            'qty' => 'Qty',
+            'price' => 'Price',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
     }
 
     /**
-     * Gets query for [[Order]].
+     * Gets query for [[OrderExample]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getOrder()
+    public function getOrderExample()
     {
-        return $this->hasOne(OrdersContact::className(), ['id' => 'order_id']);
-    }
-
-    public function getProduct()
-    {
-        return $this->hasOne(Products::className(), ['sku' => 'sku']);
+        return $this->hasOne(OrdersExample::className(), ['id' => 'order_example_id']);
     }
 
     /**
-     * @param $orderId
+     * @param $exampleId
      * @param array $items
      * @throws BadRequestHttpException
      */
-    static function saveItems($orderId, $items = [])
+    public static function saveItems($exampleId, $items = [])
     {
         try {
             if (empty($items)) {
@@ -90,9 +85,8 @@ class OrdersContactSku extends \common\models\BaseModel
                 if (!$product) {
                     throw new BadRequestHttpException("không tìm thấy sản phẩm có sẵn!");
                 }
-                
-                $model = new OrdersContactSku();
-                $model->order_id = $orderId;
+                $model = new OrdersExampleItem();
+                $model->order_example_id = $exampleId;
                 $model->sku = $item['sku'];
                 $model->price = Helper::toFloat($item['price']);
                 $model->qty = $item['qty'];
@@ -103,5 +97,6 @@ class OrdersContactSku extends \common\models\BaseModel
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
+
     }
 }

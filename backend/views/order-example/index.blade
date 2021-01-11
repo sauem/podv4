@@ -11,14 +11,14 @@ use yii\helpers\Url;
     <div class="card">
         <div class="card-header">
             <div class="card-widgets">
-                <button role="modal-remote" data-url="{!! Url::toRoute(['create']) !!}" class="btn btn-sm btn-success">
+                <button role="modal-remote" data-url="<?= Url::toRoute(['create']) ?>" class="btn btn-sm btn-success">
                     <i class="fe-plus"></i> Thêm
                 </button>
-                <a href="{!! Url::toRoute(['/import','module' => 'category']) !!}" class="btn btn-sm btn-success">
-                    <i class="fe-plus"></i> Import
+                <a href="<?= Url::toRoute(['/import', 'module' => 'order-example']) ?>" class="btn btn-sm btn-success">
+                    <i class="fe-download"></i> Import
                 </a>
             </div>
-            <h4 class="card-title"><i class="fe-box"></i> Loại sản phẩm</h4>
+            <h4 class="card-title"><i class="fe-box"></i> Mẫu đơn hàng sale</h4>
         </div>
         <div class="card-body">
             <?= GridView::widget([
@@ -30,32 +30,27 @@ use yii\helpers\Url;
                 'pjaxSettings' => [
                     'neverTimeout' => true,
                     'options' => [
-                        'id' => 'categories-box'
+                        'id' => 'order-example-box'
                     ]
                 ],
                 'perfectScrollbar' => true,
                 'dataProvider' => $dataProvider,
                 'columns' => [
-                    'id',
-                    'name',
+                    'category',
+                    'option',
                     [
-                        'attribute' => 'country',
+                        'label' => 'Sản phẩm',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return Helper::countryName($model->country);
+                            return Helper::printString($model);
                         }
                     ],
                     [
-                        'attribute' => 'partner_id',
+                        'label' => 'Tổng đơn',
+                        'attribute' => 'total_bill',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return Helper::isEmpty($model->partner) ? '---' : $model->partner->username;
-                        }
-                    ],
-                    [
-                        'attribute' => 'created_at',
-                        'value' => function ($model) {
-                            return Helper::dateFormat($model->created_at);
+                            return Helper::formatCUR($model->total_bill, null, 0);
                         }
                     ],
                     [
@@ -80,14 +75,14 @@ use yii\helpers\Url;
         </div>
     </div>
 
-    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'category-modal']) !!}
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'order-example-modal']) !!}
 @stop
 
 @section('pos_page')
     <script>
 
         $(document).on('click', '[role="modal-remote"]', function (event) {
-            let modal = new ModalRemote('#category-modal', '#categories-box');
+            let modal = new ModalRemote('#order-example-modal', '#order-example-box');
             event.preventDefault();
             modal.remote(this, null);
         });

@@ -41,6 +41,7 @@ class Categories extends \common\models\BaseModel
             [['name', 'partner_id', 'country'], 'required'],
             [['partner_id', 'created_at', 'updated_at'], 'integer'],
             [['name', 'country', 'description'], 'string', 'max' => 255],
+            ['name', 'unique']
         ];
     }
 
@@ -87,10 +88,10 @@ class Categories extends \common\models\BaseModel
 
     }
 
-    static function LISTS()
+    static function LISTS($from = 'id')
     {
         $categories = Categories::find()->addSelect(['id', 'country', 'name', 'partner_id'])->all();
-        return ArrayHelper::map($categories, 'id', function ($item) {
+        return ArrayHelper::map($categories, $from, function ($item) {
             $partner = UserModel::findOne($item->partner_id);
 
             return $item->name;

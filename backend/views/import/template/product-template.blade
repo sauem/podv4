@@ -1,0 +1,32 @@
+<script id="{{$module}}-template" type="text/x-handlebars-template">
+    <button onclick="actionSave('{{$module}}')" class="btn btn-sm float-right btn-success"><i class="fe-save"></i> Lưu
+        dữ liệu
+    </button>
+    <table id="contact-table" class="table table-sm table-hover">
+        <thead>
+        <tr>
+            <th>Mã sản phẩm</th>
+            <th>Loại sản phẩm</th>
+            <th>Cân nặng</th>
+            <th>Kích thước</th>
+            <th>Các giá</th>
+            <th>Bắt đầu</th>
+            <th>Kết thúc</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{{#each this}}
+        <tr data-key="@{{ @index }}">
+            <td>@{{sku}}</td>
+            <td>@{{ category_id }}</td>
+            <td>@{{ weight }}</td>
+            <td>@{{ size }}</td>
+            <td>@{{ prices }}</td>
+            <td>@{{ marketer_id }}</td>
+            <td>@{{dateFormat marketer_rage_start }}</td>
+            <td>@{{dateFormat marketer_rage_end }}</td>
+        </tr>
+        @{{/each}}
+        </tbody>
+    </table>
+</script>
