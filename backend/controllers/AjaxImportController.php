@@ -256,8 +256,8 @@ class AjaxImportController extends BaseController
                 $prices = array_map(function ($item) use ($model) {
                     $item = explode('*', $item);
                     return [
-                        'qty' => isset($item[1]) ? $item[1] : null,
-                        'price' => isset($item[2]) ? $item[2] : null
+                        'qty' => isset($item[0]) ? $item[0] : null,
+                        'price' => isset($item[1]) ? $item[1] : null
                     ];
                 }, $prices);
                 ProductsPrice::savePrice($model->sku, $prices);
