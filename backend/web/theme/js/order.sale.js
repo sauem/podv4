@@ -29,7 +29,28 @@ function orderSaleForm() {
         },
         items: []
     };
-
+    this.orderExampleReq = async function (code) {
+        return $.ajax({
+            url: AJAX_PATH.getOrderExample,
+            data: {code},
+            cache: false,
+            type: 'POST'
+        });
+    }
+    this.setOrderExample = async function (code) {
+        try {
+            let {total_bill, skuItems} = await this.orderExampleReq(code);
+            if (skuItems.length > 0) {
+                skuItems.map(item => {
+                    this.setOrderItems(item);
+                    this.appendTemplateItem(item);
+                })
+            }
+            this.setTotalPrice(total_bill);
+        } catch (e) {
+            console.log("order example error : ", e);
+        }
+    }
     this.getProductInfo = async function (sku) {
         return $.ajax({
             url: AJAX_PATH.getProductInfo,

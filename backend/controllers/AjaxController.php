@@ -9,6 +9,7 @@ use backend\models\ContactsAssignment;
 use backend\models\ContactsLogStatus;
 use backend\models\Media;
 use backend\models\OrdersContactSku;
+use backend\models\OrdersExample;
 use backend\models\Products;
 use backend\models\ProductsPrice;
 use backend\models\ProductsSearch;
@@ -232,6 +233,28 @@ class AjaxController extends BaseController
             throw new BadRequestHttpException(Helper::firstError($model));
         }
         return ArrayHelper::toArray($model);
+    }
+
+    /**
+     * @return array|array[]|object|object[]|string|string[]
+     * @throws NotFoundHttpException
+     */
+    public function actionGetOrderExample()
+    {
+        $code = \Yii::$app->request->post('code');
+        $contact = Contacts::findOne(['code' => $code]);
+        if (!$contact) {
+            throw new NotFoundHttpException("Không tìm thấy liên hệ!");
+        }
+        $model = OrdersExample::find()
+            ->with(['skuItems'])
+            ->where(['option' => $contact->option, 'category' => $contact->category])
+            ->orWhere(['option' => $contact->option])
+            ->asArray()->one();
+        if (!$model) {
+            throw new NotFoundHttpException("Không có mẫu đơn phù hợp!");
+        }
+        return $model;
     }
 
     /**
