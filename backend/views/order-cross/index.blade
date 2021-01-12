@@ -98,29 +98,42 @@ use common\helper\Component;
                             }
                         ],
                         [
+                            'label' => 'Doanh thu',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                return Helper::formatCUR($model->total_bill, '', 0);
+                            }
+                        ],
+                        [
                             'label' => 'Phí vận chuyển',
                             'format' => 'html',
                             'value' => function ($model) {
-                                return Helper::formatCUR($model->shipping_cost, '', 2);
+                                return Helper::formatCUR($model->trasport_fee, '', 0);
                             }
                         ],
                         [
-                            'label' => 'Tổng đơn',
+                            'label' => 'Phí thu hộ',
                             'format' => 'html',
                             'value' => function ($model) {
-                                return Helper::formatCUR($model->total_bill, '', 2);
+                                return Helper::formatCUR($model->collection_fee, '', 0);
                             }
                         ],
                         [
-                            'class' => ActionColumn::class,
-                            'template' => '{update}',
-                            'width' => '5%',
-                            'buttons' => [
-                                'update' => function ($url, $model) {
-                                    return Component::btnUpdate($url);
-                                },
-
-                            ]
+                            'label' => 'Phí dịch vụ',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner;
+                                return Helper::formatCUR($service->service_fee, '', 0);
+                            }
+                        ],
+                        [
+                            'label' => 'doanh thu đối soát',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner;
+                                $amount = $model->total_bill - $model->collection_fee->$service->service_fee;
+                                return Helper::formatCUR($amount, '', 0);
+                            }
                         ]
                     ]
                 ]) ?>
