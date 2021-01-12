@@ -1,0 +1,10 @@
+<script id="warehouse-template" type="text/x-handlebars-template">
+    @{{#each this}}
+    <tr class="order-item">
+        <td>@{{ warehouse }}</td>
+        <td>@{{ category }}</td>
+        <td>@{{ sku }}</td>
+        <td>@{{ inventory }}</td>
+    </tr>
+    @{{/each }}
+</script>

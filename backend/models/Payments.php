@@ -31,6 +31,7 @@ class Payments extends \common\models\BaseModel
     {
         return [
             [['name'], 'required'],
+            [['name'], 'unique'],
             [['created_at', 'updated_at'], 'integer'],
             [['name', 'description'], 'string', 'max' => 255],
         ];

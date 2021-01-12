@@ -277,41 +277,36 @@ class AjaxController extends BaseController
 
             $storage = WarehouseStorage::find()
                 ->innerJoin('warehouse', 'storage.warehouse_id = warehouse.id')
+                ->innerJoin('products', 'products.sku = storage.sku')
+                ->leftJoin('categories','products.category_id = categories.id')
                 ->from('warehouse_storage as storage')
                 ->addSelect([
-                    'warehouse.name',
+                    'warehouse.name as warehouse',
+                    'categories.name as category',
                     'storage.sku',
                     'SUM(storage.qty) as inventory'
-                ])->groupBy(['storage.sku'])
+                ])->groupBy(['products.category_id', 'products.sku'])
                 ->asArray()->all();
             $histories = WarehouseHistories::find()
                 ->from('warehouse_histories as histories')
+                ->innerJoin('products', 'products.sku = histories.product_sku')
                 ->addSelect([
                     'histories.product_sku as sku',
                     'SUM(IF(histories.transaction_type = "output" , histories.qty , 0)) as minus'
                 ])
                 ->groupBy(['histories.product_sku'])
                 ->asArray()->all();
-            $storage = array_map(function ($item) use ($histories) {
-                $invalid = array_map(function ($hist) use ($item) {
-                    if ($item['sku'] == $hist['sku']) {
-                        return [
-                            'invalid' => $item['inventory'] - $hist['minus'],
-                        ];
-                    }
-                }, $histories);
-                return array_merge($item, array_values(array_filter($invalid))[0]);
-            }, $storage);
 
-            $storage = array_map(function ($item) use ($skuItems) {
-                $inventory = array_map(function ($sku) use ($item) {
-                    if ($sku['sku'] == $item['sku']) {
-                        return array_merge($sku, $item);
-                    }
-                }, $skuItems);
-                return array_merge($item, array_values(array_filter($inventory))[0]);
-            }, $storage);
-            return $storage;
+            $inventory = array_map(function ($item1, $item2) {
+                return array_merge($item1, $item2);
+            }, $storage, $histories);
+            $inventory = array_map(function ($item) {
+                return array_merge($item, [
+                    'inventory' => $item['inventory'] - $item['minus']
+                ]);
+            }, $inventory);
+
+            return $inventory;
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }

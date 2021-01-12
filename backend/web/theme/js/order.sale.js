@@ -10,6 +10,9 @@ function orderSaleForm() {
     let html = $('#sku-template').html();
     let template = Handlebars.compile(html);
     let orderItemsResult = $('#result-sku-list');
+    let htmlWarehouse = $('#warehouse-template').html();
+    let templateWarehouse = Handlebars.compile(htmlWarehouse);
+    let warehouseResult = $('#result-warehouse-list');
     let totalShip = $('#total-ship-text');
     let totalBill = $('#total-bill-text');
     let totalBillHidden = $('input#cost_bill');
@@ -59,7 +62,19 @@ function orderSaleForm() {
             type: 'POST'
         })
     }
-
+    this.showWarehouse = async function () {
+        try {
+            const res = await $.ajax({
+                url: AJAX_PATH.getWarehouseAvailable,
+                type: 'POST',
+                data: {},
+                cache: false
+            });
+            warehouseResult.html(templateWarehouse(res));
+        } catch (e) {
+            console.log("warehouse req:", e);
+        }
+    }
     this.appendTemplateItem = function (item) {
         orderItemsResult.append(template(item));
         initMaskMoney();
@@ -213,7 +228,7 @@ async function changeStatus(model, status, element = null) {
         toastr.warning('Không có contact nào được chọn!');
         return false;
     }
-    if (status === 'callback') {
+    if (status === 'callback' | status == 'pending') {
         setStatusCallback(element, ids);
         return false;
     }

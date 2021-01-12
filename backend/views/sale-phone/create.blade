@@ -227,6 +227,7 @@ JS;
     </div>
     @php(\kartik\form\ActiveForm::end())
     {!! $view->render('template/sku-template.blade') !!}
+    {!! $view->render('template/warehouse-template.blade') !!}
 @stop
 @section('pos_page')
     <script>
@@ -234,9 +235,9 @@ JS;
         $(document).ready(function () {
             ORDER.renderPrevtItem();
             ORDER.setOrderExample("{{Yii::$app->request->get('code')}}");
-
+            ORDER.showWarehouse();
             $(document).on('change', '#payment_method', function () {
-                if ($(this).val() === 3) {
+                if ($(this).val() == 9999) {
                     $("#bill_link").show();
                 } else {
                     $("#bill_link").hide();

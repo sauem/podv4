@@ -40,12 +40,12 @@ use yii\helpers\Url;use yii\web\View;
                             <i class="fe-phone-call"></i> pending
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a data-url="{!! Url::toRoute(['callback']) !!}" href="#tab-3" data-toggle="tab"
-                           aria-expanded="false" class="nav-link ">
-                            <i class="fe-phone-call"></i> Gọi lại
-                        </a>
-                    </li>
+{{--                    <li class="nav-item">--}}
+{{--                        <a data-url="{!! Url::toRoute(['callback']) !!}" href="#tab-3" data-toggle="tab"--}}
+{{--                           aria-expanded="false" class="nav-link ">--}}
+{{--                            <i class="fe-phone-call"></i> Gọi lại--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
                     <li class="nav-item">
                         <a data-url="{!! Url::toRoute(['fail']) !!}" href="#tab-4" data-toggle="tab"
                            aria-expanded="false" class="nav-link">
@@ -66,7 +66,7 @@ use yii\helpers\Url;use yii\web\View;
                             'dataProvider' => $dataProvider]) ?>
                     </div>
                     <div class="tab-pane" id="tab-2"></div>
-                    <div class="tab-pane" id="tab-3"></div>
+{{--                    <div class="tab-pane" id="tab-3"></div>--}}
                     <div class="tab-pane" id="tab-4"></div>
                     <div class="tab-pane" id="tab-5"></div>
                 </div>
@@ -74,8 +74,7 @@ use yii\helpers\Url;use yii\web\View;
         </div>
     </div>
     <div class="card-box mt-4">
-        <h5 class="text-success card-title"><i class="fe-phone-call"></i> Lịch sử liên hệ: <span
-                    class="text-info">{!! $assignPhone !!}</span>
+        <h5 class="text-success card-title"><i class="fe-phone-call"></i> Lịch sử tất cả liên hệ:</span>
         </h5>
 
         <?= GridView::widget([

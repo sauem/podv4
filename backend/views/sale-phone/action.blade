@@ -14,7 +14,8 @@ use yii\helpers\Url;$action = Yii::$app->controller->action->id;
     </button>
     <?php } ?>
     <?php if($action !== 'pending'){ ?>
-    <button onclick="changeStatus('Contacts','pending')" class="btn-sm btn btn-outline-warning"><i
+    <button data-request-method="GET" data-url="<?= Url::toRoute(['change-status'])?>"
+            onclick="changeStatus('Contacts','pending', this)" class="btn-sm btn btn-outline-warning"><i
                 class="fe-phone-forwarded"></i>
         pending
     </button>
