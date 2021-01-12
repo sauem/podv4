@@ -181,8 +181,8 @@ function processRow(sheet) {
         case MODULE_CONTACT:
             columnLength = 17;
             break;
-        case MODULE_TRACKING:
         case MODULE_REFUND:
+        case MODULE_PAID:
             columnLength = 5;
             break;
         case MODULE_CROSSED:
@@ -190,8 +190,8 @@ function processRow(sheet) {
         case MODULE_PRODUCT_CATEGORY:
             columnLength = 4;
             break;
-        case MODULE_PAID:
         case MODULE_COUNTRY:
+        case MODULE_TRACKING:
             columnLength = 6;
             break;
     }
@@ -240,6 +240,7 @@ const mappingModel = (module, row) => {
             item.sub_transport = row[2] ? row[2].v : null;
             item.checking_number = row[3] ? row[3].v : null;
             item.sub_transport_tracking = row[4] ? row[4].v : null;
+            item.transport_fee = row[5] ? row[5].v : null;
             break;
         case MODULE_COUNTRY:
             item = countryModel();
@@ -285,7 +286,6 @@ const mappingModel = (module, row) => {
             item.time_shipped_success = row[2] ? getTimer(row[2].v) : null;
             item.cod_cost = row[3] ? row[3].v : null;
             item.collection_fee = row[4] ? row[4].v : null;
-            item.transport_fee = row[5] ? row[5].v : null;
             break;
         case MODULE_CROSSED:
             item = paidModel();
@@ -353,8 +353,7 @@ function paidModel() {
         time_shipped_success: null,
         checking_number: null,
         cod_cost: null,
-        collection_fee: null,
-        transport_fee: null
+        collection_fee: null
     }
 }
 
@@ -374,7 +373,8 @@ function trackingModel() {
         transport_partner: null,
         checking_number: null,
         sub_transport: null,
-        sub_transport_tracking: null
+        sub_transport_tracking: null,
+        transport_fee: null
     }
 }
 

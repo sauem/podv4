@@ -58,8 +58,6 @@ class AjaxImportController extends BaseController
         if ($model->load($data, '')) {
             $model->status = OrdersContact::STATUS_SHIPPING;
             $model->shipping_status = OrdersContact::STATUS_SHIPPING;
-
-
             if (!$model->save()) {
                 throw new BadRequestHttpException(Helper::firstError($model));
             }
@@ -110,7 +108,6 @@ class AjaxImportController extends BaseController
         $model->cod_cost = $data['cod_cost'];
         $model->time_shipped_success = $data['time_shipped_success'];
         $model->collection_fee = $data['collection_fee'];
-        $model->transport_fee = $data['transport_fee'];
         $model->payment_status = OrdersContact::STATUS_PAYED;
         $model->status = OrdersContact::STATUS_PAYED;
         $model->time_paid_success = time();
