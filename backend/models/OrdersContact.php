@@ -6,6 +6,7 @@ use common\helper\Helper;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "orders_contact".
@@ -47,11 +48,14 @@ use yii\helpers\Html;
  * @property int|null $remittance_date
  * @property string|null $cross_check_code
  * @property int|null $time_paid_success
+ * @property int|null $partner
  *
  * @property OrdersContactSku[] $ordersContactSkus
  */
 class OrdersContact extends \common\models\BaseModel
 {
+    public $partner;
+
     const STATUS_NEW = 'new';
     const STATUS_PENDING = 'pending';
     const STATUS_SHIPPING = 'shipping';
@@ -112,7 +116,7 @@ class OrdersContact extends \common\models\BaseModel
             [['name', 'code', 'address', 'zipcode', 'email', 'city', 'district', 'order_source', 'note', 'vendor_note', 'country', 'checking_number', 'po_code', 'sub_transport_tracking', 'cross_check_code'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 25],
             [['status'], 'string', 'max' => 100],
-            [['shipping_cost'], 'safe'],
+            [['shipping_cost', 'partner'], 'safe'],
             [['bill_link'], 'string'],
             [['payment_status', 'cross_status', 'shipping_status'], 'string', 'max' => 50],
         ];
@@ -149,6 +153,7 @@ class OrdersContact extends \common\models\BaseModel
             'name' => 'Khách hàng',
             'phone' => 'Số điện thoại',
             'code' => 'Mã đơn hàng',
+            'partner' => 'Đối tác',
             'address' => 'Địa chỉ',
             'zipcode' => 'Mã bưu chính',
             'shipping_cost' => 'Phi giao hàng',
@@ -227,7 +232,18 @@ class OrdersContact extends \common\models\BaseModel
         if (!Helper::isEmpty($this->total_price)) {
             $this->total_price = Helper::toFloat($this->total_price);
         }
-        if($insert){
+        if (Helper::isEmpty($this->code)) {
+            try {
+                $partner = UserModel::findOne($this->partner);
+                $this->partner = $partner->username;
+                $this->code = Contacts::generateCode($this->partner, $this->country);
+
+            } catch (BadRequestHttpException $e) {
+                $this->addError('code', $e->getMessage());
+                return false;
+            }
+        }
+        if ($insert) {
             if ($this->payment_method === self::STATIC_PAYMENT_TRANSFER && Helper::isEmpty($this->bill_link)) {
                 $this->addError("bill_link", "Link hóa đơn chuyển khoản trống!");
                 return false;

@@ -24,7 +24,7 @@ function orderSaleForm() {
     let districtInput = $('input.district');
     let countrySelect = $('select.country-select');
     initMaskMoney();
-    let ORDER_ITEMS = {
+    window.ORDER_ITEMS = {
         total: {
             total_bill: 0,
             total_price: 0,

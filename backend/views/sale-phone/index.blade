@@ -1,7 +1,8 @@
 <?php
 use backend\models\Contacts;use kartik\grid\GridView;
 use common\helper\Helper;
-use yii\helpers\Url;use yii\web\View;
+use yii\helpers\Url;
+use yii\web\View;
 ?>
 @section('content')
     <?php \yii\widgets\Pjax::begin([
@@ -14,7 +15,7 @@ use yii\helpers\Url;use yii\web\View;
     ])?>
     <div class="card-box">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <h5 class="text-success card-title"><i class="fe-phone-call"></i> <span
                             onclick="copy(this.id)" id="phone">{!! $assignPhone !!}</span> (copy)</h5>
             </div>
@@ -24,6 +25,11 @@ use yii\helpers\Url;use yii\web\View;
                     <h5>Hoàn thành hôm nay : <?= \backend\models\ContactsAssignment::getPhoneCallDone() ?>
                         /<?= Yii::$app->user->identity->phone_of_day ?></h5>
                 </div>
+            </div>
+            <div class="col-md-2 text-right">
+                <button id="createNewOrder" class="btn btn-outline-success btn-sm"><i class="fe-shopping-cart"></i> Tạo
+                    đơn
+                </button>
             </div>
         </div>
         <div class="row mt-3">
@@ -40,12 +46,12 @@ use yii\helpers\Url;use yii\web\View;
                             <i class="fe-phone-call"></i> pending
                         </a>
                     </li>
-{{--                    <li class="nav-item">--}}
-{{--                        <a data-url="{!! Url::toRoute(['callback']) !!}" href="#tab-3" data-toggle="tab"--}}
-{{--                           aria-expanded="false" class="nav-link ">--}}
-{{--                            <i class="fe-phone-call"></i> Gọi lại--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
+                    {{--                    <li class="nav-item">--}}
+                    {{--                        <a data-url="{!! Url::toRoute(['callback']) !!}" href="#tab-3" data-toggle="tab"--}}
+                    {{--                           aria-expanded="false" class="nav-link ">--}}
+                    {{--                            <i class="fe-phone-call"></i> Gọi lại--}}
+                    {{--                        </a>--}}
+                    {{--                    </li>--}}
                     <li class="nav-item">
                         <a data-url="{!! Url::toRoute(['fail']) !!}" href="#tab-4" data-toggle="tab"
                            aria-expanded="false" class="nav-link">
@@ -66,7 +72,7 @@ use yii\helpers\Url;use yii\web\View;
                             'dataProvider' => $dataProvider]) ?>
                     </div>
                     <div class="tab-pane" id="tab-2"></div>
-{{--                    <div class="tab-pane" id="tab-3"></div>--}}
+                    {{--                    <div class="tab-pane" id="tab-3"></div>--}}
                     <div class="tab-pane" id="tab-4"></div>
                     <div class="tab-pane" id="tab-5"></div>
                 </div>
@@ -171,7 +177,74 @@ use yii\helpers\Url;use yii\web\View;
             event.preventDefault();
             modal.remote(this, null, false);
         });
-
+        $(document).on('click', '#createNewOrder', async function () {
+            let nav = $('.nav-tabs'),
+                tab = $('.tab-content'),
+                toggleTab = $('a[data-toggle="tab"]'),
+                pane = document.createElement('div'),
+                navItem = $('.nav-tabs li.nav-item:first-child').clone();
+            navItem.find('a').attr('href', '#tab-order-new');
+            navItem.find('a').text('Đơn hàng mới');
+            nav.prepend(navItem);
+            toggleTab.removeClass('active');
+            tab.find('.tab-pane').removeClass('active show');
+            navItem.find('a').addClass('active');
+            pane.setAttribute('id', 'tab-order-new');
+            pane.setAttribute('class', 'tab-pane active show');
+            tab.append(pane);
+            let btn = $(this);
+            try {
+                $(pane).html('<div class="text-center"><div class="spinner-border text-secondary m-2" role="status"></div></div>');
+                const res = await $.ajax({
+                    url: '{{Url::toRoute(['create' , 'code' => 'new'])}}',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if (data.status === 1) {
+                            $(pane).html(data.content);
+                            btn.attr('disabled', true);
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e.statusText);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        });
+        $(document).on('beforeSubmit', '#OrderContact', function (e) {
+            //e.preventDefault();
+            let formData = new FormData($(this)[0]);
+            try {
+                $.ajax({
+                    url: '{{Url::toRoute(['create' , 'code' => 'new'])}}',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    cache: false,
+                    beforeSend: () => {
+                        if (window.ORDER_ITEMS.length <= 0) {
+                            toastr.warning('Chưa có sản phẩm nào được chọn!');
+                            return false;
+                        }
+                    },
+                    success: ({forceReload, forceClose, message}) => {
+                        $.pjax.reload('#sale-box', {});
+                        $('#tab-order-new').remove();
+                        $('a[data-toggle="tab"]:first-child').remove();
+                        $('a[data-toggle="tab"]:first-child').addClass('active');
+                        toastr.success(message);
+                        return false;
+                    }
+                });
+                return false;
+            } catch (e) {
+                console.log(e);
+            }
+            return false;
+        })
     </script>
 @stop
 

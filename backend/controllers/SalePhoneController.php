@@ -190,23 +190,25 @@ class SalePhoneController extends BaseController
     public
     function actionCreate($code)
     {
-
-
-        $contact = Contacts::findOne(['code' => $code]);
         $model = new OrdersContact();
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
-        $country = ZipcodeCountry::findOne(['zipcode' => $contact->zipcode]);
-        $data = ArrayHelper::toArray($contact);
-        unset($data['id']);
-        $model->load($data, '');
-        if ($country) {
-            $model->city = $country->city;
-            $model->district = $country->district;
-            $model->country = $contact->country;
-        }
         $products = Products::find()->asArray()->all();
-        if (!$contact) {
-            throw new BadRequestHttpException('Contact not founded!');
+        $model->country = \Yii::$app->cache->get('country');
+
+        if ($code !== 'new') {
+            $contact = Contacts::findOne(['code' => $code]);
+            $country = ZipcodeCountry::findOne(['zipcode' => $contact->zipcode]);
+            $data = ArrayHelper::toArray($contact);
+            unset($data['id']);
+            $model->load($data, '');
+            if ($country) {
+                $model->city = $country->city;
+                $model->district = $country->district;
+                $model->country = $contact->country;
+            }
+            if (!$contact) {
+                throw new BadRequestHttpException('Contact not founded!');
+            }
         }
 
         if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
@@ -219,14 +221,14 @@ class SalePhoneController extends BaseController
                 // Save contact call log
                 OrdersContactSku::saveItems($model->id, \Yii::$app->request->post('items'));
                 //save item order product
-                ContactsLogStatus::saveRecord($code, $model->phone, Contacts::STATUS_OK);
+                ContactsLogStatus::saveRecord($model->code, $model->phone, Contacts::STATUS_OK);
                 //Update warehouse
-                WarehouseHistories::saveHistories($code, \Yii::$app->request->post('items'));
+                WarehouseHistories::saveHistories($model->code, \Yii::$app->request->post('items'));
                 //check user has finish current phone
                 $newNumber = ContactsAssignment::completeAssignment($model->phone);
                 $transaction->commit();
 
-                return static::responseSuccess(1, 1, $newNumber ? "Số mới được áp dụng!" : null);
+                return static::responseSuccess(1, 1, $newNumber ? "Số mới được áp dụng!" : 'Thao tác thành công!');
             } catch (\Exception $exception) {
                 $transaction->rollBack();
                 \Yii::$app->session->setFlash('warning', $exception->getMessage());
@@ -234,7 +236,7 @@ class SalePhoneController extends BaseController
         }
         return static::responseRemote('create.blade', [
             'model' => $model,
-            'contact' => $contact,
+            'contact' => isset($contact) ? $contact : null,
             'products' => $products,
         ], '<i class="fe-shopping-cart"></i> Tạo đơn hàng', $this->footer(), 'xl');
     }
