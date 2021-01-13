@@ -66,7 +66,6 @@ class SiteController extends BaseController
 
     public function actionIndex()
     {
-
         $sources = ContactsSource::LISTS();
         $products = Products::LISTS();
         $marketers = UserRole::LISTS(UserRole::ROLE_MARKETER);

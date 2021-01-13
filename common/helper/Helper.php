@@ -134,7 +134,7 @@ class Helper
     {
         $limitTimer = Helper::setting('phone_prioritize_time');
         $now = date('H:i A');
-        return $limitTimer < $now;
+        return $limitTimer > $now;
     }
 
     static function timer($string)

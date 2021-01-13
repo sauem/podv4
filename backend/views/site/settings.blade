@@ -16,11 +16,14 @@ use kartik\time\TimePicker;
                 <div class="card-body">
                     <?php $form = ActiveForm::begin() ?>
                     <?= $form->field($model, 'callback_to_cancel_time')->textInput(['type' => 'number']) ?>
-                    <?= $form->field($model, 'phone_prioritize_time')->widget(TimePicker::className(),[
+                    <?= $form->field($model, 'phone_prioritize_time')->widget(TimePicker::className(), [
                         'addon' => '<i class="fe-clock"></i>',
                         'addonOptions' => [
                             'asButton' => true,
                             'buttonOptions' => ['class' => 'btn btn-warning']
+                        ],
+                        'pluginOptions' => [
+                            'showMeridian' => false,
                         ]
                     ]) ?>
                     <?= $form->field($model, 'sheet_id') ?>
