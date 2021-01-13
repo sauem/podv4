@@ -25,7 +25,15 @@ return [
             ],
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\redis\Cache',
+            'keyPrefix' => 'tcom_'
+        ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => REDIS_HOST,
+            'port' => REDIS_PORT,
+            'database' => 0,
+            'retries' => 1,
         ],
         'db' => [
             'class' => 'yii\db\Connection',
