@@ -164,11 +164,14 @@ class Helper
         return round($number1 / $number2 * 100, $float);
     }
 
-    static function symbol($country = 'TH')
+    static function symbol($country = null)
     {
         $symbols = \Yii::$app->params['symbols'];
         if (!$country) {
             $country = \Yii::$app->cache->get('country');
+        }
+        if (!$country) {
+            return '';
         }
         return ArrayHelper::getValue($symbols, $country, '');
     }
