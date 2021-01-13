@@ -13,6 +13,7 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web/theme';
     public $css = [
         'libs/c3/c3.min.css',
+        'https://use.fontawesome.com/releases/v5.3.1/css/all.css',
         'libs/bootstrap-select/css/bootstrap-select.min.css',
         'libs/jquery-toast-plugin/jquery.toast.min.css',
         'libs/flatpickr/flatpickr.min.css',

@@ -65,9 +65,9 @@ JS;
                 <div class="col-md-6">
                     <?= $form->field($model, 'partner')->widget(Select2::className(), [
                         'data' => UserRole::LISTS(),
-                        'options' => ['placeholder' => 'Chọn đối tác...'],
+                        'options' => ['placeholder' => 'Chọn đối tác...', 'required' => true,],
                         'pluginOptions' => ['allowClear' => true]
-                    ])?>
+                    ])->label('Đối tác <small class="text-danger">*</small>')?>
                 </div>
                 <?php } ?>
                 <div class="col-md-6">
@@ -236,8 +236,9 @@ JS;
         </div>
         <?php if (!$contact) { ?>
         <div class="col-12 text-right">
-            <button type="submit" class="btn btn-success btn-sm btn-select">Lưu</button>
-            <button class="cancel-order btn btn-success btn-sm btn-select">Hủy</button>
+            <button type="submit" class="btn btn-success btn-sm btn-select"><i class="fe-save"></i> Lưu</button>
+            <button type="button" class="cancel-order btn btn-danger btn-sm btn-select"><i class="fe-x"></i> Hủy
+            </button>
         </div>
         <?php } ?>
     </div>

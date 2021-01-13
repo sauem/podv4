@@ -232,6 +232,9 @@ class SalePhoneController extends BaseController
             } catch (\Exception $exception) {
                 $transaction->rollBack();
                 \Yii::$app->session->setFlash('warning', $exception->getMessage());
+                if ($code == 'new') {
+                    return static::responseSuccess(0, 0, $exception->getMessage());
+                }
             }
         }
         return static::responseRemote('create.blade', [

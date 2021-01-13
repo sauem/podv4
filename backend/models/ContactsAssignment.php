@@ -5,6 +5,7 @@ namespace backend\models;
 use common\helper\Helper;
 use Yii;
 use common\models\BaseModel;
+use yii\db\Expression;
 use yii\web\BadRequestHttpException;
 
 /**
@@ -115,7 +116,17 @@ class ContactsAssignment extends BaseModel
         $contact = Contacts::find()
             ->leftJoin('contacts_assignment', 'contacts_assignment.phone = contacts.phone')
             ->where('contacts_assignment.phone IS NULL')
-            ->andWhere(['contacts.country' => Yii::$app->cache->get('country'), 'contacts.status' => Contacts::STATUS_NEW])->groupBy('phone')->one();
+            ->andWhere(['contacts.country' => Yii::$app->cache->get('country')]);
+        if (Helper::compareTimeNow()) {
+            $contact->andWhere([
+                'contacts.status' => Contacts::STATUS_NEW
+            ]);
+        } else {
+            $contact->andWhere([
+                'contacts.status' => [Contacts::STATUS_CALLBACK, Contacts::STATUS_NEW],
+            ])->orderBy(new Expression('FIELD(status, "callback, new")'));
+        }
+        $contact = $contact->groupBy('phone')->one();
 
         if ($contact) {
             $model = new ContactsAssignment();

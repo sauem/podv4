@@ -10,6 +10,7 @@ use backend\models\ZipcodeCountry;
 use common\helper\Helper;
 use common\helper\SheetApi;
 use common\models\Common;
+use Illuminate\Support\Facades\Date;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -65,6 +66,7 @@ class SiteController extends BaseController
 
     public function actionIndex()
     {
+
         $sources = ContactsSource::LISTS();
         $products = Products::LISTS();
         $marketers = UserRole::LISTS(UserRole::ROLE_MARKETER);

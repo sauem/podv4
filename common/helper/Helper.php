@@ -130,6 +130,13 @@ class Helper
         return $val;
     }
 
+    static function compareTimeNow()
+    {
+        $limitTimer = Helper::setting('phone_prioritize_time');
+        $now = date('H:i A');
+        return $limitTimer < $now;
+    }
+
     static function timer($string)
     {
         if (strtotime($string)) {
@@ -166,7 +173,7 @@ class Helper
         return ArrayHelper::getValue($symbols, $country, '');
     }
 
-    static function printString( $model, $string = false)
+    static function printString($model, $string = false)
     {
         $items = Helper::isEmpty($model->skuItems) ? null : $model->skuItems;
         if (!$items || empty($items)) {

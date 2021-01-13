@@ -5,6 +5,7 @@ namespace common\models;
 
 
 use yii\base\Model;
+use yii\db\ActiveRecord;
 
 class Common extends Model
 {
@@ -15,8 +16,8 @@ class Common extends Model
     public function rules()
     {
         return [
-            [['phone_prioritize_time', 'callback_to_cancel_time'], 'number'],
-            [['sheet_id',], 'string']
+            [['callback_to_cancel_time'], 'number'],
+            [['phone_prioritize_time', 'sheet_id',], 'string']
         ];
     }
 

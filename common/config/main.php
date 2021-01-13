@@ -6,6 +6,7 @@ return [
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'language' => 'vi-VN',
+    'timeZone' => 'Asia/Ho_Chi_Minh',
     'components' => [
         'i18n' => [
             'translations' => [

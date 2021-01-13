@@ -177,6 +177,14 @@ use yii\web\View;
             event.preventDefault();
             modal.remote(this, null, false);
         });
+        $(document).on('click', '.cancel-order', function () {
+            $('#createNewOrder').removeAttr('disabled');
+            $('#tab-order-new').remove();
+            $('.nav-tabs li:first-child').remove();
+            $('div.tab-pane:first-child').addClass('active show');
+            $('.nav-tabs li:first-child').find('a').addClass('active');
+
+        });
         $(document).on('click', '#createNewOrder', async function () {
             let nav = $('.nav-tabs'),
                 tab = $('.tab-content'),
@@ -231,10 +239,16 @@ use yii\web\View;
                         }
                     },
                     success: ({forceReload, forceClose, message}) => {
+                        let tab = $('a[data-toggle="tab"]:first-child');
+                        if (!forceReload && !forceClose) {
+                            toastr.warning(message);
+                            return false;
+                        }
                         $.pjax.reload('#sale-box', {});
                         $('#tab-order-new').remove();
-                        $('a[data-toggle="tab"]:first-child').remove();
-                        $('a[data-toggle="tab"]:first-child').addClass('active');
+                        $('.nav-tabs li:first-child').remove();
+                        tab.addClass('active');
+                        $('#createNewOrder').removeAttr('disabled');
                         toastr.success(message);
                         return false;
                     }
