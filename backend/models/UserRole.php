@@ -4,8 +4,10 @@
 namespace backend\models;
 
 
+use common\helper\Helper;
 use mdm\admin\models\Assignment;
 use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 
 class UserRole extends UserModel
 {
@@ -50,5 +52,22 @@ class UserRole extends UserModel
         }
         $query = $query->all();
         return ArrayHelper::map($query, 'id', 'username');
+    }
+
+    /**
+     * @param $permissions
+     * @throws BadRequestHttpException
+     */
+    public static function assignPermission($model, $permissions)
+    {
+        try {
+            if (Helper::isEmpty($permissions)) {
+                throw new BadRequestHttpException("Chưa trọn quyền quản trị!");
+            }
+            $auth = new Assignment($model->id, $model);
+            return $auth->assign($permissions);
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
     }
 }

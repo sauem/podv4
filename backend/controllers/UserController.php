@@ -4,6 +4,7 @@
 namespace backend\controllers;
 
 
+use backend\models\AuthItem;
 use backend\models\UserRole;
 use backend\models\UserSearch;
 use common\helper\Helper;
@@ -39,10 +40,12 @@ class UserController extends BaseController
     {
         $model = new UserModel();
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
+        $permissions = AuthItem::LISTS();
         try {
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
                 if ($model->save()) {
                     UserRole::assignRole($model);
+                    UserRole::assignPermission($model, $model->permission);
                     $transaction->commit();
                     return static::responseSuccess();
                 }
@@ -54,6 +57,7 @@ class UserController extends BaseController
 
         return static::responseRemote('create.blade', [
             'model' => $model,
+            'permissions' => $permissions,
         ], 'Tạo tài khoản', parent::footer('* các thông tin bắt buộc!'));
     }
 

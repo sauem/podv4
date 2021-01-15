@@ -8,40 +8,89 @@
 @section('content')
     <div class="card-box border-success px-2 border-top">
         @php($form = ActiveForm::begin())
+        <?= $form->errorSummary($model)?>
         <div class="row">
-            <div class="col-md-6">
-                {!! $form->field($model,'username')->label('Tài khoản') !!}
-            </div>
-            <div class="col-md-6">
-                {!! $form->field($model,'email')->label('Email') !!}
-            </div>
-            @if($model->isNewRecord)
-                <div class="col-md-6">
-                    {!! $form->field($model,'password_hash')->label('Mật khẩu') !!}
+            <div class="col-12">
+                <div class="accordion custom-accordion" id="custom-accordion-one">
+                    <div class="card mb-0">
+                        <div class="card-header" id="headingNine">
+                            <h5 class="m-0 position-relative">
+                                <a class="custom-accordion-title text-reset d-block collapsed" data-toggle="collapse"
+                                   href="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                                    Tài khoản <i class="mdi mdi-chevron-down accordion-arrow"></i>
+                                </a>
+                            </h5>
+                        </div>
+
+                        <div id="collapseNine" class="collapse show" aria-labelledby="headingFour"
+                             data-parent="#custom-accordion-one" style="">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {!! $form->field($model,'username')->label('Tài khoản') !!}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {!! $form->field($model,'email')->label('Email') !!}
+                                    </div>
+                                    @if($model->isNewRecord)
+                                        <div class="col-md-6">
+                                            {!! $form->field($model,'password_hash')->label('Mật khẩu') !!}
+                                        </div>
+                                    @endif
+                                    <div class="col-md-6">
+                                        <?= $form->field($model, 'role')->widget(Select2::className(), [
+                                            'data' => UserRole::ROLES(),
+                                            'options' => ['placeholder' => 'Chọn vai trò...'],
+                                            'pluginOptions' => [
+                                                'allowClear' => true
+                                            ],
+                                        ]) ?>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <?= $form->field($model, 'phone_of_day')->textInput(['type' => 'number'])->label('Số điện thoại/ngày') ?>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <?= $form->field($model, 'country')->widget(Select2::className(), [
+                                            'data' => Helper::countries(),
+                                            'options' => ['placeholder' => 'Chọn quốc gia...'],
+                                            'pluginOptions' => [
+                                                'allowClear' => true
+                                            ],
+                                        ])->label('Quốc gia') ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-0">
+                        <div class="card-header" id="headingFive">
+                            <h5 class="m-0 position-relative">
+                                <a class="custom-accordion-title text-reset collapsed d-block" data-toggle="collapse"
+                                   href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    Q.Phân quyền <i class="mdi mdi-chevron-down accordion-arrow"></i>
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapseFive" class="collapse" aria-labelledby="headingFive"
+                             data-parent="#custom-accordion-one">
+                            <?= $form->field($model, 'permission[]')->dropDownList($permissions, [
+                                'multiple' => true,
+                                'class' => 'multi-select',
+                                'data-plugin' => 'multiselect',
+                                'data-selectable-optgroup' => "true"
+                            ])?>
+                        </div>
+                    </div>
+
                 </div>
-            @endif
-            <div class="col-md-6">
-                <?= $form->field($model, 'role')->widget(Select2::className(), [
-                    'data' => UserRole::ROLES(),
-                    'options' => ['placeholder' => 'Chọn vai trò...'],
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],
-                ]) ?>
-            </div>
-            <div class="col-md-6">
-                <?= $form->field($model, 'phone_of_day')->textInput(['type' => 'number'])->label('Số điện thoại/ngày') ?>
-            </div>
-            <div class="col-md-6">
-                <?= $form->field($model, 'country')->widget(Select2::className(), [
-                    'data' => Helper::countries(),
-                    'options' => ['placeholder' => 'Chọn quốc gia...'],
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],
-                ])->label('Quốc gia') ?>
             </div>
         </div>
         @php(ActiveForm::end())
     </div>
+@stop
+
+@section("pos_page")
+    <script>
+        $('.multi-select').multiSelect();
+    </script>
 @stop

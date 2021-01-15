@@ -2,7 +2,9 @@
 
 namespace backend\models;
 
+use common\helper\Helper;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "auth_item".
@@ -121,5 +123,14 @@ class AuthItem extends \yii\db\ActiveRecord
     public function getParents()
     {
         return $this->hasMany(AuthItem::className(), ['name' => 'parent'])->viaTable('auth_item_child', ['child' => 'name']);
+    }
+
+    public static function LISTS()
+    {
+        $query = AuthItem::findAll([
+            'rule_name' => 'Permission',
+            'type' => 2
+        ]);
+        return ArrayHelper::map($query, 'name', 'name');
     }
 }

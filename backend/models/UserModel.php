@@ -12,6 +12,7 @@ use Yii;
 
 class UserModel extends BaseModel implements IdentityInterface
 {
+    public $permission;
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
@@ -39,9 +40,10 @@ class UserModel extends BaseModel implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password_hash', 'role'], 'required'],
+            [['username', 'password_hash', 'role','permission'], 'required'],
             [['email', 'username'], 'unique'],
             [['email'], 'email'],
+            [['permission'], 'safe'],
             [['password_hash', 'auth_key', 'email', 'password_reset_token', 'username', 'full_name', 'role', 'country'], 'string'],
             [['status', 'created_at', 'updated_at', 'phone_of_day'], 'integer'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
