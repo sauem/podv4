@@ -1,4 +1,5 @@
 <?php
+use backend\models\UserRole;
 use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
 use yii\helpers\Url;
@@ -7,6 +8,7 @@ use yii\helpers\Html;
 use common\helper\Helper;
 ?>
 @section('content')
+    <?php if(Helper::isRole(UserRole::ROLE_ADMIN)){ ?>
     <div class="card">
         <div class="card-header">
             <div class="card-widgets">
@@ -66,7 +68,7 @@ use common\helper\Helper;
             ]) ?>
         </div>
     </div>
-
+    <?php } ?>
 
     <div class="card">
         <div class="card-header">

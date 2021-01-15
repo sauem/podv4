@@ -5,6 +5,7 @@ namespace backend\controllers;
 
 
 use backend\models\Contacts;
+use backend\models\ContactsLogStatus;
 use backend\models\ContactsSearch;
 use backend\models\ContactsSource;
 use common\helper\Helper;
@@ -28,13 +29,20 @@ class ContactController extends BaseController
             ->where('contacts_assignment.phone IS NULL')
             ->andWhere(['contacts.country' => \Yii::$app->cache->get('country')]);
 
-        $allContact = $searchModel->search(\Yii::$app->request->queryParams);
         return $this->render('index.blade', [
             'model' => $model,
             'searchModel' => $searchModel,
-            'allContact' => $allContact,
             'waitingContact' => $waitingContact
         ]);
+    }
+
+    public function actionAll()
+    {
+        $searchModel = new ContactsSearch();
+        $allContact = $searchModel->search(\Yii::$app->request->queryParams);
+        return static::responseRemote('tabs/all.blade', [
+            'dataProvider' => $allContact
+        ], null, null);
     }
 
     public function actionSource()
@@ -99,5 +107,18 @@ class ContactController extends BaseController
         }
         $model->delete();
         return self::responseSuccess();
+    }
+
+    public function actionHistories()
+    {
+        $contactHistories = new ActiveDataProvider([
+            'query' => ContactsLogStatus::find()->orderBy('created_at DESC'),
+            'pagination' => [
+                'pageSize' => 20
+            ]
+        ]);
+        return $this->render('histories.blade', [
+            'dataProvider' => $contactHistories
+        ]);
     }
 }

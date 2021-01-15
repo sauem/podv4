@@ -1,3 +1,4 @@
+
 @php
     use yii\helpers\Url;
     use kartik\grid\GridView;
@@ -22,11 +23,12 @@
                         <i class="fe-phone-forwarded"></i> Chờ phân sale
                     </a>
                 </li>
-{{--                <li class="nav-item">--}}
-{{--                    <a href="#tab-2" data-toggle="tab" aria-expanded="false" class="nav-link ">--}}
-{{--                        <i class="fe-phone-call"></i> Tất cả lên hệ--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+                <li class="nav-item">
+                    <a href="#tab-2" data-url="<?= Url::toRoute(['all'])?>" data-toggle="tab" aria-expanded="false"
+                       class="nav-link ">
+                        <i class="fe-phone-call"></i> Tất cả lên hệ
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="#tab-3" data-toggle="tab" aria-expanded="false" class="nav-link">
                         <i class="fe-phone-missed"></i> Chờ duyệt
@@ -48,15 +50,9 @@
                     ])?>
                 </div>
                 <div class="tab-pane" id="tab-2">
-                    <?= $view->render('tabs/default.blade', [
-                        'dataProvider' => $allContact,
-                    ])?>
                 </div>
-
                 <div class="tab-pane" id="tab-3">
-                    <?= $view->render('tabs/pending.blade', [
 
-                    ])?>
                 </div>
             </div>
         </div>
@@ -64,3 +60,9 @@
     {!! $view->render('modal/apr-modal.blade') !!}
     {!! $view->render('template/assign-phone-template.blade') !!}
 @stop
+@section('pos_page')
+    <script>
+        initToggleTab();
+    </script>
+@stop
+

@@ -164,6 +164,11 @@ class Helper
         return round($number1 / $number2 * 100, $float);
     }
 
+    static function isRole($role)
+    {
+        return \Yii::$app->user->identity->role === $role;
+    }
+
     static function symbol($country = null)
     {
         $symbols = \Yii::$app->params['symbols'];

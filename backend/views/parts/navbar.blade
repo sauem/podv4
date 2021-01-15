@@ -1,6 +1,6 @@
 <?php
 
-use yii\bootstrap4\Nav;
+use backend\models\UserRole;use yii\bootstrap4\Nav;
 use mdm\admin\components\MenuHelper;
 use common\helper\Helper;
 use yii\helpers\ArrayHelper;
@@ -18,13 +18,23 @@ $callback = function ($menu) {
         'items' => $menu['children']
     ];
 };
-$root = 1;
-
+switch (Yii::$app->user->identity->role) {
+//    case UserRole::ROLE_PARTNER:
+//        $root = 27;
+//        break;
+    case UserRole::ROLE_SALE:
+        $root = 10;
+        break;
+    default:
+        $root = 1;
+        break;
+}
 $menu = MenuHelper::getAssignedMenu(Yii::$app->user->id, $root, $callback);
 $controller = Yii::$app->controller->id;
 $action = Url::toRoute(Yii::$app->controller->getRoute());
 $path = explode('/', $action);
 $path = array_filter($path);
+
 ?>
 
 <div class="left-side-menu">

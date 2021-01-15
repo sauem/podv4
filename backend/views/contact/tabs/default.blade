@@ -7,7 +7,7 @@ use kartik\grid\ActionColumn;
 use backend\models\Contacts;
 
 ?>
-<?= GridView::widget([
+    <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'pjax' => true,
     'persistResize' => true,
@@ -40,13 +40,6 @@ use backend\models\Contacts;
                 return "<b class='text-info'>$model->code</b><br>" . Helper::dateFormat($model->register_time);
             }
         ],
-        [
-            'label' => 'Sale',
-            'format' => 'html',
-            'value' => function ($model) {
-                return Helper::isEmpty($model->sale) ? '--' : $model->sale->user->username;
-            }
-        ],
         'phone',
         'name',
         'option',
@@ -58,14 +51,6 @@ use backend\models\Contacts;
                 return Contacts::StatusLabel($model->status);
             }
         ],
-        [
-            'attribute' => 'country',
-            'format' => 'html',
-            'value' => function ($model) {
-                return Helper::countryName($model->country);
-            }
-        ],
-
         'type',
         'category',
     ]

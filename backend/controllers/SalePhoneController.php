@@ -52,16 +52,22 @@ class SalePhoneController extends BaseController
             ]
         ]));
 
+
+        return $this->render('index.blade', [
+            'dataProvider' => $dataProvider,
+            'assignPhone' => $this->assignPhone,
+
+        ]);
+    }
+    public function actionHistories(){
         $contactHistories = new ActiveDataProvider([
             'query' => ContactsLogStatus::find()->orderBy('created_at DESC'),
             'pagination' => [
                 'pageSize' => 20
             ]
         ]);
-        return $this->render('index.blade', [
-            'dataProvider' => $dataProvider,
-            'assignPhone' => $this->assignPhone,
-            'contactHistories' => $contactHistories
+        return $this->render('histories.blade',[
+            'dataProvider' => $contactHistories
         ]);
     }
 

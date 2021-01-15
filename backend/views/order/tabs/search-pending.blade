@@ -1,5 +1,5 @@
 <?php
-use kartik\daterange\DateRangePicker;use kartik\select2\Select2;
+use backend\models\Warehouse;use kartik\daterange\DateRangePicker;use kartik\select2\Select2;
 use yii\widgets\Pjax;
 use kartik\form\ActiveForm;
 use backend\models\Products;
@@ -24,7 +24,13 @@ $form = ActiveForm::begin();
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
     </div>
-
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'warehouse_id')->widget(Select2::className(), [
+            'data' => Warehouse::LISTS(),
+            'options' => ['placeholder' => 'Kho hàng...'],
+            'pluginOptions' => ['allowClear' => true, 'multiple' => true]
+        ])->label(false);?>
+    </div>
     <div class="col-md-3">
         <?= $form->field($searchModel, 'country')->widget(DateRangePicker::className(), [
             'name' => 'order_time',

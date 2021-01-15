@@ -1,0 +1,83 @@
+<?php
+
+use backend\models\OrdersContact;use common\helper\Helper;
+use kartik\grid\CheckboxColumn;
+use kartik\grid\GridView;
+use kartik\grid\ActionColumn;
+use backend\models\Contacts;
+
+?>
+@section("content")
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'pjax' => true,
+        'persistResize' => true,
+        'layout' => "{items}\n{summary}{pager}",
+        'responsiveWrap' => false,
+        'tableOptions' => [
+            'class' => 'table table-sm'
+        ],
+        'options' => ['id' => 'all-box'],
+        'pjaxSettings' => [
+            'neverTimeout' => true,
+            'options' => [
+                'id' => 'all-box',
+            ]
+        ],
+        'perfectScrollbar' => true,
+        'columns' => [
+            [
+                'attribute' => 'code',
+                'format' => 'html',
+                'value' => function ($model) {
+                    return "<b class='text-info'>$model->code</b><br>" . Helper::dateFormat($model->register_time);
+                }
+            ],
+            'phone',
+            'name',
+            'option',
+            'partner',
+            [
+                'label' => 'Mã đơn vị vận chuyển',
+                'format' => 'html',
+                'value' => function ($model) {
+                    if(Helper::isEmpty($model->order)) return  '---';
+                    return $model->order->sub_transport_tracking;
+                }
+            ],
+            [
+                'label' => 'TT vận chuyển',
+                'format' => 'html',
+                'value' => function ($model) {
+                    if(Helper::isEmpty($model->order)) return  '---';
+                    return OrdersContact::StatusLabel($model->order->shipping_status);
+                }
+            ],
+            [
+                'label' => 'TT thanh toán',
+                'format' => 'html',
+                'value' => function ($model) {
+                    if(Helper::isEmpty($model->order)) return  '---';
+                    return OrdersContact::StatusLabel($model->order->payment_status);
+                }
+            ],
+            [
+                'label' => 'TT đối soát',
+                'format' => 'html',
+                'value' => function ($model) {
+                    if(Helper::isEmpty($model->order)) return  '---';
+                    return OrdersContact::StatusLabel($model->order->cross_status);
+                }
+            ],
+            [
+                'attribute' => 'status',
+                'format' => 'html',
+                'value' => function ($model) {
+                    return Contacts::StatusLabel($model->status);
+                }
+            ],
+            'type',
+            'category',
+        ]
+    ]) ?>
+@stop
