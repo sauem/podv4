@@ -124,7 +124,7 @@ class ContactsAssignment extends BaseModel
         } else {
             $contact->andWhere([
                 'contacts.status' => [Contacts::STATUS_CALLBACK, Contacts::STATUS_NEW],
-            ])->orderBy(new Expression('FIELD(status, "callback, new")'));
+            ])->orderBy(new Expression('FIELD(contacts.status, "callback, new")'));
         }
         $contact = $contact->groupBy('phone')->one();
 
