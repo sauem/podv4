@@ -4,30 +4,30 @@ use yii\helpers\Url;$action = Yii::$app->controller->action->id;
 ?>
 <div class="my-1">
     <button onclick="changeStatus('Contacts','number_fail')" class="btn-sm btn btn-outline-danger"><i
-                class="fe-phone-off"></i> Sai số
+                class="fe-phone-off"></i> {{Yii::t('app','fail_contact')}}
     </button>
     <?php if($action !== 'callback'){ ?>
     <button data-request-method="GET" data-url="<?= Url::toRoute(['change-status'])?>"
             onclick="changeStatus('Contacts','callback',this)" class="btn-sm btn btn-outline-warning"><i
                 class="fe-phone-forwarded"></i>
-        Gọi lại
+        {{Yii::t('app','callback_contact')}}
     </button>
     <?php } ?>
     <?php if($action !== 'pending'){ ?>
     <button data-request-method="GET" data-url="<?= Url::toRoute(['change-status'])?>"
             onclick="changeStatus('Contacts','pending', this)" class="btn-sm btn btn-outline-warning"><i
                 class="fe-phone-forwarded"></i>
-        pending
+        {{Yii::t('app','pending_contact')}}
     </button>
     <?php } ?>
     <?php if($action !== 'fail'){ ?>
     <button onclick="changeStatus('Contacts','cancel')" class="btn-sm btn btn-outline-warning"><i
                 class="fe-phone-missed"></i>
-        Hủy
+        {{Yii::t('app','cancel_contact')}}
     </button>
     <?php } ?>
     <button onclick="changeStatus('Contacts','duplicate')" class="btn-sm btn btn-outline-warning"><i
                 class="fe-phone-missed"></i>
-        Trùng
+        {{Yii::t('app','duplicate_contact')}}
     </button>
 </div>

@@ -3,7 +3,7 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
 ?>
 @section("content")
     <div class="card-box mt-4">
-        <h5 class="text-success card-title"><i class="fe-phone-call"></i> Lịch sử tất cả liên hệ:</span>
+        <h5 class="text-success card-title"><i class="fe-phone-call"></i> {{Yii::t('app','contact_histories')}}:</span>
         </h5>
 
         <?= GridView::widget([
@@ -36,7 +36,7 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
                     }
                 ],
                 [
-                    'label' => 'Khách hàng',
+                    'label' => Yii::t('app','customer'),
                     'format' => 'html',
                     'value' => function ($model) {
                         if (Helper::isEmpty($model->contact)) {
@@ -46,7 +46,7 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
                     }
                 ],
                 [
-                    'label' => 'Ngày ra liên hệ',
+                    'label' => Yii::t('app','register_time'),
                     'format' => 'html',
                     'value' => function ($model) {
                         if (Helper::isEmpty($model->contact)) {
@@ -56,7 +56,7 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
                     }
                 ],
                 [
-                    'label' => 'Loại sản phẩm',
+                    'label' => Yii::t('app','product_type'),
                     'format' => 'html',
                     'value' => function ($model) {
                         if (Helper::isEmpty($model->contact)) {
@@ -66,7 +66,7 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
                     }
                 ],
                 [
-                    'label' => 'Yêu cầu',
+                    'label' => Yii::t('app','buy_option'),
                     'format' => 'html',
                     'value' => function ($model) {
                         if (Helper::isEmpty($model->contact)) {
@@ -76,7 +76,7 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
                     }
                 ],
                 [
-                    'label' => 'Ghi chú cuộc gọi',
+                    'label' => Yii::t('app','call_note'),
                     'attribute' => 'sale_note',
                     'value' => function ($model) {
                         if (Helper::isEmpty($model->sale_note)) {
@@ -86,7 +86,7 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
                     }
                 ],
                 [
-                    'label' => 'trạng thái',
+                    'label' =>  Yii::t('app','contact_status'),
                     'attribute' => 'status',
                     'format' => 'html',
                     'value' => function ($model) {

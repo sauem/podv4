@@ -40,7 +40,6 @@ class SalePhoneController extends BaseController
 
     public function actionIndex()
     {
-
         ContactsAssignment::completeAssignment($this->assignPhone);
         ContactsAssignment::nextAssignment();
 

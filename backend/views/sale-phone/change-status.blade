@@ -8,11 +8,11 @@ use backend\models\ContactsReason;use kartik\form\ActiveForm;use kartik\select2\
     ActiveForm::begin();
     ?>
     <div class="form-group">
-        <label>Lý do gọi lại(*)</label>
+        <label>{!! Yii::t('app','callback_reason') !!}(*)</label>
         <?= Select2::widget([
             'name' => 'sale_note',
             'data' => array_merge(ContactsReason::LISTS(), [
-                'diff' => 'Lý do khác....'
+                'diff' => 'Other....'
             ]),
             'options' => ['required' => true, 'id' => 'list-reason'],
             'pluginOptions' => [
@@ -21,7 +21,7 @@ use backend\models\ContactsReason;use kartik\form\ActiveForm;use kartik\select2\
         ])?>
     </div>
     <div class="form-group" id="diff-reason" style="display: none">
-        <label>Lý do khác(*)</label>
+        <label>{{Yii::t('app','other_reason')}}(*)</label>
         <?= Html::textarea('area_note', null, ['class' => 'form-control', 'id' => 'diff-reason'])?>
     </div>
     <?php ActiveForm::end(); ?>

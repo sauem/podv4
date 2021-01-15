@@ -278,7 +278,7 @@ class AjaxController extends BaseController
             $storage = WarehouseStorage::find()
                 ->innerJoin('warehouse', 'storage.warehouse_id = warehouse.id')
                 ->innerJoin('products', 'products.sku = storage.sku')
-                ->leftJoin('categories','products.category_id = categories.id')
+                ->leftJoin('categories', 'products.category_id = categories.id')
                 ->from('warehouse_storage as storage')
                 ->addSelect([
                     'warehouse.name as warehouse',
@@ -310,5 +310,13 @@ class AjaxController extends BaseController
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
+    }
+
+    public function actionChangeLanguage()
+    {
+        $code = \Yii::$app->request->post('code');
+        \Yii::$app->cache->set('language', $code);
+        \Yii::$app->language = \Yii::$app->cache->get('language');
+        return true;
     }
 }

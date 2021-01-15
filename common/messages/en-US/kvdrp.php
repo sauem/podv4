@@ -17,10 +17,17 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Are you sure you want to delete this item?' => '',
-    'Cancel Changes' => '',
-    'Delete' => '',
-    'Save' => '',
-    'Update' => '',
-    'View' => '',
+    'Apply' => '',
+    'Cancel' => '',
+    'Custom Range' => '',
+    'From' => '',
+    'Last Month' => '',
+    'Last {n} Days' => '',
+    'Last {n} Months' => '',
+    'Select Date Range' => '',
+    'This Month' => '',
+    'To' => '',
+    'Today' => '',
+    'W' => '',
+    'Yesterday' => '',
 ];

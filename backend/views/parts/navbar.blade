@@ -53,7 +53,7 @@ $path = array_filter($path);
                 <li>
                     <a href="#parent_<?= $key?>" data-toggle="collapse">
                         <i class="<?= $item['icon'] ?>"></i>
-                        <span> <?= $item['label'] ?> </span>
+                        <span> <?= Yii::t('app', $item['label']) ?> </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <?php if ($children) {
@@ -65,7 +65,7 @@ $path = array_filter($path);
                             ?>
                             <li data-route='<?= json_encode($path) ?>'>
                                 <a class="<?= $action == $child['url'][0] ? 'active' : '' ?>"
-                                   href="<?= $child['url'][0] ?>"><?= $child['label'] ?></a>
+                                   href="<?= $child['url'][0] ?>"><?= Yii::t('app', $child['label']) ?></a>
                             </li>
                             <?php
                             }
@@ -84,7 +84,7 @@ $path = array_filter($path);
                     <a href="<?= $item['url'][0] ?>"
                        class="<?= $action == $item['url'][0] ? 'active' : '' ?>">
                         <i class="<?= $item['icon'] ?>"></i>
-                        <span> <?= $item['label'] ?> </span>
+                        <span> <?= Yii::t('app', $item['label']) ?> </span>
                     </a>
                 </li>
                 <?php

@@ -114,8 +114,11 @@ class BaseController extends Controller
         return \Yii::$app->view->render('@backend/views/' . \Yii::$app->controller->id . '/' . $view, $params);
     }
 
-    public function footer($note = '* các trường bắt buộc!')
+    public function footer($note = null)
     {
-        return '<div class="d-flex w-100 justify-content-between"><button class="btn btn-secondary" data-dismiss="modal" >Đóng</button><div><span class="mr-3 text-warning">' . $note . '</span><button class="btn btn-success" type="submit">Lưu</button></div></div>';
+        if (!$note) {
+            $note = '* ' . \Yii::t('app', 'required_note');
+        }
+        return '<div class="d-flex w-100 justify-content-between"><button class="btn btn-secondary" data-dismiss="modal" >'.\Yii::t('app','close').'</button><div><span class="mr-3 text-warning">' . $note . '</span><button class="btn btn-success" type="submit">'.\Yii::t('app','save').'</button></div></div>';
     }
 }

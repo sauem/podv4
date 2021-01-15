@@ -22,13 +22,13 @@ use yii\web\View;
             <div class="col-md-4">
                 <div class="d-flex justify-content-between">
                     <h5>Sale : {!! Yii::$app->user->identity->username !!}</h5>
-                    <h5>Hoàn thành hôm nay : <?= \backend\models\ContactsAssignment::getPhoneCallDone() ?>
+                    <h5>{{Yii::t('app', 'today_completed')}} : <?= \backend\models\ContactsAssignment::getPhoneCallDone() ?>
                         /<?= Yii::$app->user->identity->phone_of_day ?></h5>
                 </div>
             </div>
             <div class="col-md-2 text-right">
-                <button id="createNewOrder" class="btn btn-outline-success btn-sm"><i class="fe-shopping-cart"></i> Tạo
-                    đơn
+                <button id="createNewOrder" class="btn btn-outline-success btn-sm"><i class="fe-shopping-cart"></i>
+                    {{Yii::t('app','create_order')}}
                 </button>
             </div>
         </div>
@@ -37,13 +37,13 @@ use yii\web\View;
                 <ul class="nav nav-tabs nav-bordered nav-justified">
                     <li class="nav-item">
                         <a href="#tab-1" data-toggle="tab" aria-expanded="true" class="nav-link active">
-                            <i class="fe-phone-forwarded"></i> Chờ xử lý
+                            <i class="fe-phone-forwarded"></i> {!! Yii::t('app','new_contact') !!}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a data-url="{!! Url::toRoute(['pending']) !!}" href="#tab-2" data-toggle="tab"
                            aria-expanded="false" class="nav-link ">
-                            <i class="fe-phone-call"></i> pending
+                            <i class="fe-phone-call"></i> {!! Yii::t('app','pending_contact') !!}
                         </a>
                     </li>
                     {{--                    <li class="nav-item">--}}
@@ -55,13 +55,13 @@ use yii\web\View;
                     <li class="nav-item">
                         <a data-url="{!! Url::toRoute(['fail']) !!}" href="#tab-4" data-toggle="tab"
                            aria-expanded="false" class="nav-link">
-                            <i class="fe-phone-missed"></i> Hủy
+                            <i class="fe-phone-missed"></i> {!! Yii::t('app','cancel_contact') !!}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a data-url="{!! Url::toRoute(['success']) !!}" href="#tab-5" data-toggle="tab"
                            aria-expanded="false" class="nav-link">
-                            <i class="fe-phone-outgoing"></i> Thành công
+                            <i class="fe-phone-outgoing"></i> {!! Yii::t('app','success_contact') !!}
                         </a>
                     </li>
                 </ul>
@@ -151,7 +151,7 @@ use yii\web\View;
                     cache: false,
                     beforeSend: () => {
                         if (window.ORDER_ITEMS.length <= 0) {
-                            toastr.warning('Chưa có sản phẩm nào được chọn!');
+                            toastr.warning('Please chose one product!');
                             return false;
                         }
                     },

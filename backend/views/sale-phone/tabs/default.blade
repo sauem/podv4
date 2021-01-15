@@ -63,7 +63,7 @@ use yii\helpers\Url;
             'width' => '15%',
             'buttons' => [
                 'order' => function ($url, $model) {
-                    return Html::button("<i class='fe-shopping-cart'></i> tạo đơn", [
+                    return Html::button("<i class='fe-shopping-cart'></i> " . Yii::t('app', 'create_order'), [
                         'data-pjax' => "0",
                         'data-url' => Url::toRoute(['create', 'code' => $model->code]),
                         'role' => 'modal-remote',

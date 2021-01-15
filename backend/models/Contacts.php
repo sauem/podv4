@@ -52,7 +52,7 @@ class Contacts extends \common\models\BaseModel
     const STATUS_NUMBER_FAIL = 'number_fail';
 
     const STATUS = [
-        self::STATUS_NEW => 'Liên hệ mới',
+        self::STATUS_NEW => "Liên hệ mới",
         self::STATUS_PENDING => 'Thuê bao',
         self::STATUS_CALLBACK => 'Hẹn gọi lại',
         self::STATUS_CANCEL => 'Hủy đặt hàng',
@@ -89,21 +89,21 @@ class Contacts extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'register_time' => 'Ngày đặt',
+            'register_time' => Yii::t('app', 'register_time'),
             'code' => 'Code',
-            'phone' => 'SĐT',
-            'name' => 'Tên khách hàng',
+            'phone' => Yii::t('app', 'phone'),
+            'name' => Yii::t('app', 'customer'),
             'email' => 'Email',
-            'address' => 'Địa chỉ',
-            'zipcode' => 'Zipcode',
-            'option' => 'Yêu cầu',
+            'address' => Yii::t('app', 'address'),
+            'zipcode' => Yii::t('app', 'zipcode'),
+            'option' => Yii::t('app', 'buy_option'),
             'ip' => 'Ip',
-            'note' => 'Ghi chú',
-            'partner' => 'Đối tác',
+            'note' => Yii::t('app', 'note'),
+            'partner' => Yii::t('app', 'partner'),
             'hash_key' => 'Hash Key',
-            'category' => 'Loại sản phẩm',
-            'status' => 'Trạng thái',
-            'country' => 'Quốc gia',
+            'category' => Yii::t('app', 'product_type'),
+            'status' => Yii::t('app', 'contact_status'),
+            'country' => Yii::t('app', 'country'),
             'utm_source' => 'Utm Source',
             'utm_medium' => 'Utm Medium',
             'utm_content' => 'Utm Content',
@@ -111,9 +111,9 @@ class Contacts extends \common\models\BaseModel
             'utm_campaign' => 'Utm Campaign',
             'link' => 'Link',
             'short_link' => 'Short Link',
-            'type' => 'Nguồn liên hệ',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'type' => Yii::t('app', 'contact_source'),
+            'created_at' => Yii::t('app', 'created_at'),
+            'updated_at' => Yii::t('app', 'updated_at'),
         ];
     }
 
@@ -255,7 +255,7 @@ class Contacts extends \common\models\BaseModel
             default:
                 $color = 'success';
         }
-        return Html::tag('span', ArrayHelper::getValue(self::STATUS, $status, '--'), [
+        return Html::tag('span', Yii::t('app', $status ), [
             'class' => "badge badge-pill m-auto badge-$color"
         ]);
     }

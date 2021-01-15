@@ -5,7 +5,7 @@ return [
         '@npm' => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
-    'language' => 'vi-VN',
+    'language' => 'en',
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'components' => [
         'i18n' => [
@@ -14,18 +14,11 @@ return [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@common/messages',
                 ],
-                'backend*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@common/messages',
-                ],
-                'yii2mod.settings' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@yii2mod/settings/messages',
-                ],
             ],
         ],
         'cache' => [
             'class' => 'yii\redis\Cache',
+            #'class' => 'yii\caching\FileCache',
             'keyPrefix' => 'tcom_'
         ],
         'redis' => [

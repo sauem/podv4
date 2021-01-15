@@ -17,8 +17,17 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Apply' => '',
     'Cancel' => '',
-    'Confirmation' => '',
-    'Information' => '',
-    'Ok' => '',
+    'Custom Range' => '',
+    'From' => '',
+    'Last Month' => '',
+    'Last {n} Days' => '',
+    'Last {n} Months' => '',
+    'Select Date Range' => '',
+    'This Month' => '',
+    'To' => '',
+    'Today' => '',
+    'W' => '',
+    'Yesterday' => '',
 ];
