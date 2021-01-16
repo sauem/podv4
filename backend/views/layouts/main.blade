@@ -48,5 +48,21 @@
 </html>
 @yield('js_template')
 @yield('pos_page')
-
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.btn-lang', function () {
+            let lang = $(this).data('lang');
+            $.ajax({
+                url: AJAX_PATH.changeLanguage,
+                data: {lang},
+                type: 'POST',
+                cache: false,
+                success: (res) => {
+                    console.log(res);
+                    window.location.reload();
+                }
+            })
+        });
+    });
+</script>
 {{$view->endPage() }}

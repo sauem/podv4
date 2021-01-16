@@ -23,6 +23,7 @@ class BaseController extends Controller
         $symbols = ArrayHelper::map($countries, 'code', 'symbol');
         \Yii::$app->params['countries'] = $countriesParams;
         \Yii::$app->params['symbols'] = $symbols;
+        \Yii::$app->language = \Yii::$app->cache->get('language');
         parent::init();
     }
 
@@ -119,6 +120,6 @@ class BaseController extends Controller
         if (!$note) {
             $note = '* ' . \Yii::t('app', 'required_note');
         }
-        return '<div class="d-flex w-100 justify-content-between"><button class="btn btn-secondary" data-dismiss="modal" >'.\Yii::t('app','close').'</button><div><span class="mr-3 text-warning">' . $note . '</span><button class="btn btn-success" type="submit">'.\Yii::t('app','save').'</button></div></div>';
+        return '<div class="d-flex w-100 justify-content-between"><button class="btn btn-secondary" data-dismiss="modal" >' . \Yii::t('app', 'close') . '</button><div><span class="mr-3 text-warning">' . $note . '</span><button class="btn btn-success" type="submit">' . \Yii::t('app', 'save') . '</button></div></div>';
     }
 }

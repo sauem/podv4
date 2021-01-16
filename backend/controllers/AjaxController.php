@@ -314,9 +314,8 @@ class AjaxController extends BaseController
 
     public function actionChangeLanguage()
     {
-        $code = \Yii::$app->request->post('code');
+        $code = \Yii::$app->request->post('lang');
         \Yii::$app->cache->set('language', $code);
-        \Yii::$app->language = \Yii::$app->cache->get('language');
-        return true;
+        return $code;
     }
 }
