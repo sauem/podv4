@@ -35,7 +35,8 @@
         "yiisoft/yii2-queue": "^2.0@dev",
         "yii2tech/crontab": "^1.0@dev",
         "kartik-v/yii2-widget-timepicker": "dev-master",
-        "yiisoft/yii2-redis": "~2.0.0"
+        "yiisoft/yii2-redis": "~2.0.0",
+        "kartik-v/yii2-export": "dev-master"
 
     },
     "require-dev": {
