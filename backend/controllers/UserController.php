@@ -72,6 +72,7 @@ class UserController extends BaseController
     public function actionUpdate($id)
     {
         $model = static::findModel($id);
+        $permissions = AuthItem::LISTS();
         try {
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
                 if ($model->save()) {
@@ -81,9 +82,9 @@ class UserController extends BaseController
         } catch (\Exception $exception) {
             return static::responseSuccess($exception->getMessage());
         }
-
         return static::responseRemote('create.blade', [
-            'model' => $model
+            'model' => $model,
+            'permissions' => $permissions
         ], 'Cập nhật tài khoản', '<button class="btn btn-success" type="submit">Cập nhật</button>');
     }
 

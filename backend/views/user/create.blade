@@ -73,12 +73,23 @@
                         </div>
                         <div id="collapseFive" class="collapse" aria-labelledby="headingFive"
                              data-parent="#custom-accordion-one">
-                            <?= $form->field($model, 'permission[]')->dropDownList($permissions, [
-                                'multiple' => true,
-                                'class' => 'multi-select',
-                                'data-plugin' => 'multiselect',
-                                'data-selectable-optgroup' => "true"
-                            ])?>
+                            <div class="card-body mt-2">
+
+                                @if(isset($permissions))
+                                    @foreach($permissions as $k=> $name)
+                                        <div class="mt-1 custom-control custom-switch">
+                                            <input
+                                                <?= !empty($model->permission) && in_array($name, $model->permission) || $name =="Ajax" ? 'checked' : ''?> value="{{$name}}"
+                                                type="checkbox" class="custom-control-input"
+                                                name="UserModel[permission][]"
+                                                id="custom-{{$k}}">
+                                            <label class="custom-control-label" for="custom-{{$k}}">
+                                                {{$name}}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
                     </div>
 
