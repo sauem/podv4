@@ -1,13 +1,14 @@
 <?php
 
 use backend\models\OrdersContact;use backend\models\UserRole;use common\helper\Helper;
-use kartik\grid\CheckboxColumn;
+use kartik\export\ExportMenu;use kartik\grid\CheckboxColumn;
 use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
 use backend\models\Contacts;
 
 ?>
 @section("content")
+
     <div class="<?= Helper::isRole(UserRole::ROLE_SALE) || Helper::isRole(UserRole::ROLE_PARTNER) ? 'card card-body' : '' ?>">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
