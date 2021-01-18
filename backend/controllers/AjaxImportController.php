@@ -290,13 +290,13 @@ class AjaxImportController extends BaseController
                     'price' => Helper::toFloat($product[2])
                 ];
             }
-            $order = new OrdersContact();
-            $order->items = $items;
-            $order->load($data, '');
-            if (!$order->save()) {
-                throw new BadRequestHttpException(Helper::firstError($order));
+            $model = new OrdersContact();
+            $model->items = $items;
+            $model->load($data, '');
+            if (!$model->save()) {
+                throw new BadRequestHttpException(Helper::firstError($model));
             }
-            OrdersContactSku::saveItems($order->id, $items);
+            OrdersContactSku::saveItems($model->id, $items);
             $transaction->commit();
         } catch (\Exception $exception) {
             $transaction->rollBack();

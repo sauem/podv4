@@ -245,14 +245,14 @@ class OrdersContact extends \common\models\BaseModel
             $this->service_fee = $partner->service_fee;
             $this->country = $partner->country;
 
-//            if (Helper::isEmpty($this->code)) {
-//                try {
-//                    $this->code = Contacts::generateCode($partner->username, $this->country);
-//                } catch (\Exception $e) {
-//                    $this->addError('code', $e->getMessage() . $this->code);
-//                    return false;
-//                }
-//            }
+            if (Helper::isEmpty($this->code) && $insert) {
+                try {
+                    $this->code = Contacts::generateCode($partner->username, $this->country);
+                } catch (\Exception $e) {
+                    $this->addError('code', $e->getMessage() . $this->code);
+                    return false;
+                }
+            }
         }
 
         if (!Helper::isEmpty($this->status)) {
