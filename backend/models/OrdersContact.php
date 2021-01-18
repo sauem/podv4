@@ -83,7 +83,7 @@ class OrdersContact extends \common\models\BaseModel
             [['bill_link'], 'string'],
             [['name', 'partner_name', 'code', 'address', 'zipcode', 'email', 'city', 'district', 'order_source', 'note', 'vendor_note', 'country', 'checking_number', 'po_code', 'sub_transport_tracking', 'cross_check_code'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 25],
-            [['code'], 'unique'],
+            //[['code'], 'unique'],
             [['status'], 'string', 'max' => 100],
             [['partner', 'items', 'shipping_cost'], 'safe'],
             [['payment_status', 'cross_status', 'shipping_status'], 'string', 'max' => 50],
@@ -244,15 +244,17 @@ class OrdersContact extends \common\models\BaseModel
             }
             $this->service_fee = $partner->service_fee;
             $this->country = $partner->country;
+
             if (Helper::isEmpty($this->code) && $insert) {
                 try {
                     $this->code = Contacts::generateCode($partner->username, $this->country);
-                } catch (BadRequestHttpException $e) {
-                    $this->addError('code', $e->getMessage());
+                } catch (\Exception $e) {
+                    $this->addError('code', $e->getMessage() . $this->code);
                     return false;
                 }
             }
         }
+
         if (!Helper::isEmpty($this->status)) {
             $this->status = Helper::toLower($this->status);
         }
