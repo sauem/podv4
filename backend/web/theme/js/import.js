@@ -292,7 +292,7 @@ const mappingModel = (module, row) => {
             item.zipcode = row[5] ? row[5].v : null;
             item.option = row[6] ? row[6].v : null;
             item.note = row[7] ? row[7].v : null;
-            item.country = row[8] ? row[9].v : null;
+            item.country = row[8] ? row[8].v : null;
             item.partner = row[9] ? row[9].v : null;
             item.category = row[10] ? row[10].v : null;
             item.type = row[11] ? toUnicode(row[11].v).toLowerCase() : null;

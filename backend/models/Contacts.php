@@ -120,7 +120,7 @@ class Contacts extends \common\models\BaseModel
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->hash_key = self::generateKey($this->phone, $this->partner, $this->option);
+            $this->hash_key = self::generateKey($this->phone, $this->partner, $this->option, $this->country);
             $this->code = $this->code ? $this->code : self::generateCode($this->partner);
             if (self::isExisted($this->hash_key)) {
                 $this->addError('register_time', 'Đã tồn tại liên hệ này trong 3 ngày trước!');
@@ -129,7 +129,7 @@ class Contacts extends \common\models\BaseModel
             if (!$this->status) {
                 $this->status = self::STATUS_NEW;
             }
-            if (!$this->country) {
+            if (Helper::isEmpty($this->country)) {
                 $this->country = static::getCountryPartner($this->partner);
             }
         }
@@ -226,9 +226,12 @@ class Contacts extends \common\models\BaseModel
         }
     }
 
-    public static function generateKey($phone, $partner, $option)
+    public static function generateKey($phone, $partner, $option, $country)
     {
-        return md5($phone . $partner . $option);
+        if (!$country) {
+            $country = Yii::$app->cache->get('country');
+        }
+        return md5($phone . $partner . $option . $country);
     }
 
     public function getSale()
@@ -255,7 +258,7 @@ class Contacts extends \common\models\BaseModel
             default:
                 $color = 'success';
         }
-        return Html::tag('span', Yii::t('app', $status ), [
+        return Html::tag('span', Yii::t('app', $status), [
             'class' => "badge badge-pill m-auto badge-$color"
         ]);
     }
