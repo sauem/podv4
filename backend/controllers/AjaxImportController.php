@@ -293,6 +293,7 @@ class AjaxImportController extends BaseController
             $model = new OrdersContact();
             $model->items = $items;
             $model->load($data, '');
+            $model->status = OrdersContact::STATUS_NEW;
             if (!$model->save()) {
                 throw new BadRequestHttpException(Helper::firstError($model));
             }
