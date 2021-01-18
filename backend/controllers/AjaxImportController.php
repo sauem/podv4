@@ -271,7 +271,7 @@ class AjaxImportController extends BaseController
     public function actionOrder()
     {
         $data = \Yii::$app->request->post('row');
-        $transaction = \Yii::$app->getDb()->beginTransaction();
+        $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
         try {
             $contact = Contacts::findOne(['code' => $data['code']]);
             if (!$contact) {
