@@ -12,8 +12,9 @@ class m210118_023215_add_column extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn("contacts_order", "service_fee", $this->double(15.2)->defaultValue(0));
-        $this->addColumn("contacts_order", "sale", $this->integer()->null());
+        $this->addColumn("orders_contact", "service_fee", $this->double(15.2)->defaultValue(0));
+        $this->addColumn("orders_contact", "sale", $this->integer()->null());
+        $this->addColumn("payments", "slug", $this->string(255)->null());
     }
 
     /**
