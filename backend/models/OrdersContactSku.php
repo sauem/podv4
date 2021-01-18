@@ -39,7 +39,7 @@ class OrdersContactSku extends \common\models\BaseModel
             [['sku', 'qty', 'price'], 'required'],
             [['price'], 'number'],
             [['sku'], 'string', 'max' => 255],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrdersContact::className(), 'targetAttribute' => ['order_id' => 'id']],
+           // [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrdersContact::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
     }
 
