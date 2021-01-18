@@ -296,7 +296,8 @@ class AjaxImportController extends BaseController
             if (!$model->save()) {
                 throw new BadRequestHttpException(Helper::firstError($model));
             }
-            OrdersContactSku::saveItems($model->id, $items);
+            $orderId = $model->id;
+            OrdersContactSku::saveItems($orderId, $items);
             $transaction->commit();
         } catch (\Exception $exception) {
             $transaction->rollBack();
