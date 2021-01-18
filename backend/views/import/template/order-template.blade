@@ -1,0 +1,65 @@
+<script id="order-template" type="text/x-handlebars-template">
+    <button onclick="actionSave('{{$module}}')" class="btn btn-sm float-right btn-success"><i class="fe-save"></i> Lưu
+        dữ liệu
+    </button>
+    <table id="contact-table" class="table table-sm table-hover">
+        <thead>
+        <tr>
+            <th>Contact code</th>
+            <th>Khách hàng</th>
+            <th>Số điện thoại</th>
+            <th>Địa chỉ</th>
+            <th>Yêu cầu sản phẩm</th>
+            <th>Zipcode</th>
+            <th>Tỉnh</th>
+            <th>Thành phố</th>
+            <th>Đối tác</th>
+            <th>Sale</th>
+            <th>Markter</th>
+            <th>Nguồn liên hệ</th>
+            <th>Phương thức thanh toán</th>
+            <th>Ảnh hóa đơn</th>
+            <th>Tổng tiền</th>
+            <th>Phí ship</th>
+            <th>Doanh thu</th>
+            <th>Ghi chú vận chuyển</th>
+            <th>Tình trạng chốt đơn</th>
+            <th>Loại sản phẩm</th>
+            <th>Sản phẩm 1</th>
+            <th>Sản phẩm 2</th>
+            <th>Sản phẩm 3</th>
+            <th>Sản phẩm 4</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{{#each this}}
+        <tr data-key="@{{ @index }}">
+            <td>@{{ code }}</td>
+            <td>@{{ name }}</td>
+            <td>@{{ phone }}</td>
+            <td>@{{ address }}</td>
+            <td>@{{ option }}</td>
+            <td>@{{ zipcode }}</td>
+            <td>@{{ district }}</td>
+            <td>@{{ city }}</td>
+            <td>@{{ partner_name }}</td>
+            <td>@{{ sale }}</td>
+            <td>@{{ marketer }}</td>
+            <td>@{{ type }}</td>
+            <td>@{{ payment_method }}</td>
+            <td>@{{ bill_link }}</td>
+            <td>@{{ total_price }}</td>
+            <td>@{{ shipping_cost }}</td>
+            <td>@{{ total_bill }}</td>
+            <td>@{{ note }}</td>
+            <td>@{{ status }}</td>
+            <td>@{{ category }}</td>
+            <td>@{{ product_1 }}</td>
+            <td>@{{ product_2 }}</td>
+            <td>@{{ product_3 }}</td>
+            <td>@{{ product_4 }}</td>
+        </tr>
+        @{{/each}}
+        </tbody>
+    </table>
+</script>

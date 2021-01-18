@@ -7,6 +7,7 @@ namespace backend\controllers;
 use backend\models\Categories;
 use backend\models\Contacts;
 use backend\models\OrdersContact;
+use backend\models\OrdersContactSku;
 use backend\models\OrdersExample;
 use backend\models\OrdersExampleItem;
 use backend\models\OrdersRefund;
@@ -259,6 +260,44 @@ class AjaxImportController extends BaseController
                 }, $prices);
                 ProductsPrice::savePrice($model->sku, $prices);
             }
+            $transaction->commit();
+        } catch (\Exception $exception) {
+            $transaction->rollBack();
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+        return true;
+    }
+
+    public function actionOrder()
+    {
+        $data = \Yii::$app->request->post('row');
+        $transaction = \Yii::$app->getDb()->beginTransaction();
+        try {
+            $contact = Contacts::findOne(['code' => $data['code']]);
+            if (!$contact) {
+                throw new  BadRequestHttpException("Không tìm thấy liên hệ!");
+            }
+            $items = [];
+            for ($i = 1; $i <= 4; $i++) {
+                $product = ArrayHelper::getValue($data, "product_$i", null);
+                if (!$product) {
+                    continue;
+                }
+                $product = explode('*', $product);
+                $items[] = [
+                    'sku' => $product[0],
+                    'qty' => $product[1],
+                    'price' => Helper::toFloat($product[2])
+                ];
+            }
+            $order = new OrdersContact();
+            $order->items = $items;
+
+            $order->load($data, '');
+            if (!$order->save()) {
+                throw new BadRequestHttpException(Helper::firstError($order));
+            }
+            OrdersContactSku::saveItems($order->id, $items);
             $transaction->commit();
         } catch (\Exception $exception) {
             $transaction->rollBack();

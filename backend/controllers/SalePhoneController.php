@@ -58,14 +58,16 @@ class SalePhoneController extends BaseController
 
         ]);
     }
-    public function actionHistories(){
+
+    public function actionHistories()
+    {
         $contactHistories = new ActiveDataProvider([
             'query' => ContactsLogStatus::find()->orderBy('created_at DESC'),
             'pagination' => [
                 'pageSize' => 20
             ]
         ]);
-        return $this->render('histories.blade',[
+        return $this->render('histories.blade', [
             'dataProvider' => $contactHistories
         ]);
     }
@@ -215,7 +217,7 @@ class SalePhoneController extends BaseController
                 throw new BadRequestHttpException('Contact not founded!');
             }
         }
-
+        $model->items = \Yii::$app->request->post('items');
         if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
             try {
                 if (!$model->save()) {

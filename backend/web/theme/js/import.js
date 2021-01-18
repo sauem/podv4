@@ -1,4 +1,5 @@
 const MODULE_CONTACT = 'contact';
+const MODULE_ORDER = 'order';
 const MODULE_CONTACT_LOG = 'contact-log';
 const MODULE_PRODUCT = 'product';
 const MODULE_PRODUCT_CATEGORY = 'category';
@@ -178,6 +179,9 @@ function processRow(sheet) {
         case MODULE_PRODUCT:
             columnLength = 8;
             break;
+        case MODULE_ORDER:
+            columnLength = 24;
+            break;
         case MODULE_CONTACT:
             columnLength = 17;
             break;
@@ -214,6 +218,33 @@ const mappingModel = (module, row) => {
             item.country = row[1] ? row[1].v : null;
             item.partner = row[2] ? row[2].v : null;
             item.description = row[3] ? row[3].v : null;
+            break;
+        case MODULE_ORDER:
+            item = orderModel();
+            item.code = row[0] ? row[0].v : null;
+            item.name = row[1] ? row[1].v : null;
+            item.phone = row[2] ? row[2].v : null;
+            item.address = row[3] ? row[3].v : null;
+            item.option = row[4] ? row[4].v : null;
+            item.zipcode = row[5] ? row[5].v : null;
+            item.district = row[6] ? row[6].v : null;
+            item.city = row[7] ? row[7].v : null;
+            item.partner_name = row[8] ? row[8].v : null;
+            item.sale = row[9] ? row[9].v : null;
+            item.marketer = row[10] ? row[10].v : null;
+            item.type = row[11] ? row[11].v : null;
+            item.payment_method = row[12] ? row[12].v : null;
+            item.bill_link = row[13] ? row[13].v : null;
+            item.total_price = row[14] ? row[14].v : null;
+            item.shipping_cost = row[15] ? row[15].v : null;
+            item.total_bill = row[16] ? row[16].v : null;
+            item.note = row[17] ? row[17].v : null;
+            item.status = row[18] ? row[18].v : null;
+            item.category = row[19] ? row[19].v : null;
+            item.product_1 = row[20] ? row[20].v : null;
+            item.product_2 = row[21] ? row[21].v : null;
+            item.product_3 = row[22] ? row[22].v : null;
+            item.product_4 = row[23] ? row[23].v : null;
             break;
         case MODULE_PRODUCT:
             item = productModel();
@@ -414,9 +445,6 @@ function contactModel() {
 function orderModel() {
     return {
         code: null,
-        partner: null,
-        category: null,
-        sale: null,
         name: null,
         phone: null,
         address: null,
@@ -424,15 +452,22 @@ function orderModel() {
         zipcode: null,
         district: null,
         city: null,
-        contact_source: null,
+        type: null,
+        partner_name: null,
+        sale: null,
         marketer: null,
         payment_method: null,
         bill_link: null,
-        total_bill: null,
+        total_price: null,
         shipping_cost: null,
-        shipping_note: null,
+        total_bill: null,
+        note: null,
         status: null,
-        products: null
+        category: null,
+        product_1: null,
+        product_2: null,
+        product_3: null,
+        product_4: null
     }
 }
 
