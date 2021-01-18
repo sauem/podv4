@@ -295,7 +295,7 @@ const mappingModel = (module, row) => {
             item.country = row[8] ? row[9].v : null;
             item.partner = row[9] ? row[9].v : null;
             item.category = row[10] ? row[10].v : null;
-            item.type = row[11] ? toUnicode(row[11].v) : null;
+            item.type = row[11] ? row[11].v : null;
             item.utm_source = row[12] ? row[12].v : null;
             item.utm_medium = row[13] ? row[13].v : null;
             item.utm_campaign = row[14] ? row[14].v : null;
