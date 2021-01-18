@@ -292,7 +292,6 @@ class AjaxImportController extends BaseController
             }
             $order = new OrdersContact();
             $order->items = $items;
-
             $order->load($data, '');
             if (!$order->save()) {
                 throw new BadRequestHttpException(Helper::firstError($order));
