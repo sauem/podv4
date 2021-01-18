@@ -11,7 +11,8 @@ use yii\helpers\Url;
     <div class="card-box">
         <ul class="nav nav-tabs nav-bordered nav-justified">
             <li class="nav-item">
-                <a data-pjax="0" href="#tab-1" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                <a data-pjax="0" href="#tab-1" data-toggle="tab"
+                   aria-expanded="true" class="nav-link active">
                     Chưa chuyển hàng ({!! $waitShippingOrder->getTotalCount () !!})
                 </a>
             </li>
@@ -52,6 +53,7 @@ use yii\helpers\Url;
 @section('pos_page')
     <script>
         initToggleTab();
+
     </script>
 @stop
 @php($view->registerJSFile('@web/theme/js/order.vendor.js',['depends' =>  \yii\web\JqueryAsset::className()]))

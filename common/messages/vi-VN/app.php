@@ -58,6 +58,7 @@ return [
     'buy_option' => 'Yêu cầu',
     'contact_status' => 'Trạng thái',
     'register_time' => 'Ngày ra liên hệ',
+    'tracking_number' => 'Mã đơn vị vận chuyển',
     //
     'created_at' => 'Ngày tạo',
     'updated_at' => 'Ngày cập nhật',

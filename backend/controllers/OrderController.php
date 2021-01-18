@@ -54,6 +54,20 @@ class OrderController extends BaseController
         ]);
     }
 
+    public function actionGetIndex()
+    {
+        $contactOrder = new OrdersContactSearch();
+        $waitShippingOrder = $contactOrder->search(array_merge(\Yii::$app->request->queryParams, [
+            'OrdersContactSearch' => [
+                'status' => [OrdersContact::STATUS_NEW]
+            ]
+        ]));
+        return static::responseRemote('tabs/default.blade', [
+            'dataProvider' => $waitShippingOrder,
+            'searchModel' => $contactOrder
+        ], null, null);
+    }
+
     public function actionPending()
     {
         $searchModel = new OrdersContactSearch();

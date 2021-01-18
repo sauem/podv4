@@ -22,12 +22,16 @@ use common\helper\Component;
         <a href="javascript:;" onclick="exportOrderSelect()" class="btn btn-sm btn-info"><i
                     class="fe-download-cloud"></i> Xuất đơn đã chọn
         </a>
+        <div id="result-amount-view" class="float-right">
+
+        </div>
+
     </div>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'pjax' => true,
         'options' => ['id' => 'w2'],
-        'persistResize' => true,
+        # 'persistResize' => true,
         'layout' => '{items}{pager}',
         'responsiveWrap' => false,
         'tableOptions' => [
@@ -83,6 +87,10 @@ use common\helper\Component;
             ],
             [
                 'label' => 'sản phẩm',
+                'width' => '200px',
+                'headerOptions' => [
+                    'width' => '200px'
+                ],
                 'format' => 'html',
                 'value' => function ($model) {
                     return Helper::printString($model);
@@ -99,46 +107,62 @@ use common\helper\Component;
                 'label' => 'Phí vận chuyển',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return Helper::formatCUR($model->shipping_cost, '', 2);
+                    return Helper::formatCUR($model->shipping_cost, '',0);
                 }
             ],
             [
                 'label' => 'Tổng đơn',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return Helper::formatCUR($model->total_bill, '', 2);
+                    return Helper::formatCUR($model->total_bill, '', 0);
                 }
-            ],
-            [
-                'class' => ActionColumn::class,
-                'template' => '{update}',
-                'width' => '150px',
-                'buttons' => [
-                    'update' => function ($url, $model) {
-                        return Html::button("<i class='mdi mdi-square-edit-outline'></i> Cập nhật", [
-                            'data-pjax' => "0",
-                            'class' => 'btn btn-sm btn-warning',
-                            'role' => 'modal-remote',
-                            'data-url' => $url
-                        ]);
-                    },
-
-                ]
             ]
         ]
     ]) ?>
+    <?= $view->render('../template/amount-view.blade')?>
+
 @stop
-@section("pos_page")
+@section("pre_page")
+
     <script>
-        $(document).on("click", "#createOrderVendor", function() {
+
+        $(document).on("click", "#createOrderVendor", function () {
             let ids = $('#w1').yiiGridView("getSelectedRows");
 
-            if(ids.length <= 0){
+            if (ids.length <= 0) {
                 toastr.warning('Chọn 1 đơn hàng để thực hiện thao tác!');
                 return false;
             }
             let order = new HandleOrder();
             order.create('#vendor-modal', '#default-box', this, {ids});
+        });
+        let checkbox = $('body #w2 input[type="checkbox"]');
+        $(document).on('change', checkbox, async function () {
+            let codes = [];
+            $.each(checkbox, function () {
+                if ($(this).is(":checked") && typeof $(this).data('code') !== "undefined") {
+                    if (codes.includes($(this).data('code'))) {
+                        return false;
+                    }
+                    codes.push($(this).data('code'));
+                } else {
+                    delete codes[$(this).data('code')];
+                }
+            });
+            try {
+                const res = await $.ajax({
+                    url: AJAX_PATH.getTotalAmount,
+                    data: {codes},
+                    type: 'GET',
+                    cache: false
+                });
+
+                let resultView = $('#result-amount-view'),
+                    templateAmount = Handlebars.compile($('#amount-view-template').html());
+                resultView.html(templateAmount(res));
+            } catch (e) {
+                console.log(e);
+            }
         });
 
     </script>

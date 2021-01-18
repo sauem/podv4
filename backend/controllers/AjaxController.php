@@ -8,6 +8,7 @@ use backend\models\Contacts;
 use backend\models\ContactsAssignment;
 use backend\models\ContactsLogStatus;
 use backend\models\Media;
+use backend\models\OrdersContact;
 use backend\models\OrdersContactSku;
 use backend\models\OrdersExample;
 use backend\models\Products;
@@ -265,7 +266,7 @@ class AjaxController extends BaseController
     {
         try {
             $codes = \Yii::$app->request->post('codes');
-            $codes = ['#CCVN0002317'];
+            // $codes = ['#CCVN0002317'];
             $skuItems = OrdersContactSku::find()->
             innerJoin('orders_contact', 'orders_contact.id = orders_contact_sku.order_id')
                 ->addSelect([
@@ -317,5 +318,20 @@ class AjaxController extends BaseController
         $code = \Yii::$app->request->post('lang');
         \Yii::$app->cache->set('language', $code);
         return $code;
+    }
+
+    public function actionSumTotal()
+    {
+        $codes = \Yii::$app->request->get('codes');
+        $orders = OrdersContact::find()
+            ->where(['code' => $codes])
+            ->addSelect([
+                'SUM( shipping_cost) as shipping_total',
+                'SUM( total_bill) as total_amount',
+            ])->asArray()->all();
+        if (!$orders) {
+            return false;
+        }
+        return $orders[0];
     }
 }

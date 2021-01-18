@@ -411,6 +411,31 @@ function contactModel() {
     }
 }
 
+function orderModel() {
+    return {
+        code: null,
+        partner: null,
+        category: null,
+        sale: null,
+        name: null,
+        phone: null,
+        address: null,
+        option: null,
+        zipcode: null,
+        district: null,
+        city: null,
+        contact_source: null,
+        marketer: null,
+        payment_method: null,
+        bill_link: null,
+        total_bill: null,
+        shipping_cost: null,
+        shipping_note: null,
+        status: null,
+        products: null
+    }
+}
+
 const getMaterial = () => {
     return [
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
