@@ -73,13 +73,18 @@ class UserController extends BaseController
     {
         $model = static::findModel($id);
         $permissions = AuthItem::LISTS();
+        $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
         try {
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
                 if ($model->save()) {
+                    UserRole::assignRole($model);
+                    UserRole::assignPermission($model, $model->permission);
+                    $transaction->commit();
                     return static::responseSuccess();
                 }
             }
         } catch (\Exception $exception) {
+            $transaction->rollBack();
             return static::responseSuccess($exception->getMessage());
         }
         return static::responseRemote('create.blade', [

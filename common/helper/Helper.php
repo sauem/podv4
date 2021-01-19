@@ -116,7 +116,7 @@ class Helper
 
     static function isEmpty($val)
     {
-        if (!$val || $val === '' || $val === null || empty($val)) {
+        if (!$val || $val === '' || $val === null || empty($val) || !isset($val)) {
             return true;
         }
         return false;

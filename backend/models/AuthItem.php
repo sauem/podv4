@@ -128,7 +128,7 @@ class AuthItem extends \yii\db\ActiveRecord
     public static function LISTS()
     {
         $query = AuthItem::findAll([
-            'rule_name' => 'Permission',
+            'description' => 'role',
             'type' => 2
         ]);
         return ArrayHelper::map($query, 'name', 'name');

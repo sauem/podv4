@@ -81,6 +81,7 @@
 
                                 @if(isset($permissions))
                                     @foreach($permissions as $k=> $name)
+
                                         <div class="mt-1 custom-control custom-switch">
                                             <input
                                                 <?= !empty($model->permission) && in_array($name, $model->permission) || $name == "Ajax" ? 'checked' : ''?> value="{{$name}}"
