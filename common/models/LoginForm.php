@@ -86,7 +86,9 @@ class LoginForm extends Model
     {
         if ($this->_user === null) {
             $this->_user = UserModel::findByUsername($this->username);
-            $this->_user->role = $this->_user->position->item_name;
+            if(isset($this->_user->position)){
+                $this->_user->role = $this->_user->position->item_name;
+            }
         }
 
         return $this->_user;
