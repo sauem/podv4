@@ -257,7 +257,9 @@ class UserModel extends BaseModel implements IdentityInterface
 
     public function getPosition()
     {
-        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
+        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id'])->where([
+            '{{auth_item}}.type' => 1
+        ]);
     }
 
     public function afterFind()
