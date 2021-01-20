@@ -240,6 +240,7 @@ class Contacts extends \common\models\BaseModel
             ->with('user');
     }
 
+
     public static function StatusLabel($status)
     {
         switch ($status) {
@@ -273,7 +274,7 @@ class Contacts extends \common\models\BaseModel
         return $this->hasOne(OrdersContact::className(), ['code' => 'code'])->with('skuItems');
     }
 
-    public function getPartner()
+    public function getPartnerName()
     {
         return $this->hasOne(UserModel::className(), ['username' => 'partner']);
     }

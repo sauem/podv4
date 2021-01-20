@@ -91,9 +91,9 @@ class AjaxExportController extends BaseController
                     'value' => function ($model) {
                         $partner = Helper::isEmpty($model->partner_name) ? null : $model->partner_name;
                         if (!$partner) {
-                            $contact = !Helper::isEmpty($model->contact) ? $model->contact->partner : null;
-                            if($contact){
-                                return $contact->partner;
+                            $contact = !Helper::isEmpty($model->contact) ? $model->contact->partnerName : null;
+                            if ($contact) {
+                                return $contact->partnerName->username;
                             }
                         }
                         return $partner;
