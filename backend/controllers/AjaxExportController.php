@@ -89,7 +89,7 @@ class AjaxExportController extends BaseController
                 [
                     'label' => 'Đối tác',
                     'value' => function ($model) {
-                        $partner = Helper::isEmpty($model->partner_name) ? null : $model->partner_name;
+                        $partner = !Helper::isEmpty($model->partner_name) ? $model->partner_name : null;
                         if (!$partner) {
                             $contact = !Helper::isEmpty($model->contact) ? $model->contact->partnerName : null;
                             if ($contact) {
@@ -152,7 +152,7 @@ class AjaxExportController extends BaseController
                                 if (!$item->product) {
                                     continue;
                                 }
-                                $qty .= $item->product->qty . ',';
+                                $qty .= $item->product->weight . ',';
                             }
                         }
                         return substr($qty, 0, -1);

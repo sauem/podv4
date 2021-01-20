@@ -183,7 +183,7 @@ class OrdersContact extends \common\models\BaseModel
 
     public function getContact()
     {
-        return $this->hasOne(Contacts::className(), ['code' => 'code'])->with('partner');
+        return $this->hasOne(Contacts::className(), ['code' => 'code'])->with('partnerName');
     }
 
     public function getWarehouse()
