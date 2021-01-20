@@ -217,12 +217,10 @@ class OrdersContact extends \common\models\BaseModel
                 $this->country = $partner->country;
             }
         }
-        if (!Helper::isEmpty($this->payment_method) && is_string($this->payment_method)) {
+        if ($this->payment_method) {
             $payment = Payments::findOne(['slug' => Helper::toLower($this->payment_method)]);
             if ($payment) {
                 $this->payment_method = $payment->id;
-            } else {
-                $this->payment_method = OrdersContact::STATIC_PAYMENT_TRANSFER;
             }
         }
         if (!Helper::isEmpty($this->sale) && is_string($this->sale)) {
