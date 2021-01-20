@@ -87,7 +87,8 @@ class SalePhoneController extends BaseController
             ->andFilterWhere(['contacts_assignment.user_id' => \Yii::$app->user->getId()]);
         return static::responseRemote('tabs/holdup.blade', [
             'dataProvider' => $dataProvider,
-            'id' => 'pending'
+            'id' => 'pending',
+            'flash' => false
         ]);
     }
 
@@ -108,7 +109,8 @@ class SalePhoneController extends BaseController
             ->andFilterWhere(['contacts_assignment.user_id' => \Yii::$app->user->getId()]);
         return static::responseRemote('tabs/holdup.blade', [
             'dataProvider' => $dataProvider,
-            'id' => 'callback'
+            'id' => 'callback',
+            'flash' => false
         ]);
     }
 
@@ -129,7 +131,8 @@ class SalePhoneController extends BaseController
             ->andFilterWhere(['contacts_assignment.user_id' => \Yii::$app->user->getId()]);
         return static::responseRemote('tabs/holdup.blade', [
             'dataProvider' => $dataProvider,
-            'id' => 'fail'
+            'id' => 'fail',
+            'flash' => false
         ]);
     }
 
