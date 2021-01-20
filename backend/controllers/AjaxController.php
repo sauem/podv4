@@ -229,7 +229,7 @@ class AjaxController extends BaseController
     public function actionGetZipcode()
     {
         $zipcode = \Yii::$app->request->post('zipcode');
-        $model = ZipcodeCountry::findOne(['zipcode' => $zipcode, 'country' => \Yii::$app->cache->get('country')]);
+        $model = ZipcodeCountry::findOne(['zipcode' => $zipcode, 'code' => \Yii::$app->cache->get('country')]);
         if (!$model) {
             throw new BadRequestHttpException(Helper::firstError($model));
         }
