@@ -22,7 +22,7 @@ async function exportOrderSelect() {
         toastr.warning('Chọn 1 đơn hàng để thực hiện thao tác!');
         return false;
     }
-    let url = new URL('http://' + window.location.hostname + AJAX_PATH.exportOrder);
+    let url = new URL('https://' + window.location.hostname + AJAX_PATH.exportOrder);
     url.search = new URLSearchParams({ids: ids});
     window.location.href = url;
 }
