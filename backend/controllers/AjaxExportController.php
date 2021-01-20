@@ -96,7 +96,7 @@ class AjaxExportController extends BaseController
                                 return $contact->partner;
                             }
                         }
-                        return null;
+                        return $partner;
                     }
                 ],
                 [
