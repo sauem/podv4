@@ -57,6 +57,7 @@ use backend\models\Contacts;
                 ],
                 [
                     'label' => 'TT thanh toán',
+                    'visible' => Helper::isRole(UserRole::ROLE_ADMIN),
                     'format' => 'html',
                     'value' => function ($model) {
                         if (Helper::isEmpty($model->order)) return '---';
@@ -65,6 +66,7 @@ use backend\models\Contacts;
                 ],
                 [
                     'label' => 'TT đối soát',
+                    'visible' => Helper::isRole(UserRole::ROLE_ADMIN),
                     'format' => 'html',
                     'value' => function ($model) {
                         if (Helper::isEmpty($model->order)) return '---';
