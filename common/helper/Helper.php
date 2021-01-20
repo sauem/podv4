@@ -192,7 +192,7 @@ class Helper
             $str .= $item->sku . "*" . $item->qty . " + ";
         }
         if ($string) {
-            return $str;
+            return substr($str, 0, -2);
         }
         return "<small>" . substr($str, 0, -2) . "</small>";
     }

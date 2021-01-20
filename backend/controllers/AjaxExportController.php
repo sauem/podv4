@@ -61,7 +61,7 @@ class AjaxExportController extends BaseController
                     }
                 ],
                 [
-                    'attribute' => 'transport_id',
+                    'label' => 'Delivery count',
                     'value' => function ($model) {
                         return 1;
                     }
@@ -89,6 +89,13 @@ class AjaxExportController extends BaseController
                 [
                     'label' => 'Đối tác',
                     'value' => function ($model) {
+                        $partner = Helper::isEmpty($model->partner_name) ? null : $model->partner_name;
+                        if (!$partner) {
+                            $contact = !Helper::isEmpty($model->contact) ? $model->contact->partner : null;
+                            if ($contact) {
+                                return $contact->partner->username;
+                            }
+                        }
                         return null;
                     }
                 ],
@@ -126,7 +133,10 @@ class AjaxExportController extends BaseController
                         $items = Helper::isEmpty($model->skuItems) ? [] : $model->skuItems;
                         if (!empty($items)) {
                             foreach ($items as $item) {
-                                $qty .= $item->qty . ',';
+                                if (!$item->product) {
+                                    continue;
+                                }
+                                $qty .= $item->product->size . ',';
                             }
                         }
                         return substr($qty, 0, -1);
@@ -139,7 +149,10 @@ class AjaxExportController extends BaseController
                         $items = Helper::isEmpty($model->skuItems) ? [] : $model->skuItems;
                         if (!empty($items)) {
                             foreach ($items as $item) {
-                                $qty .= $item->qty . ',';
+                                if (!$item->product) {
+                                    continue;
+                                }
+                                $qty .= $item->product->qty . ',';
                             }
                         }
                         return substr($qty, 0, -1);
@@ -150,6 +163,12 @@ class AjaxExportController extends BaseController
                     'value' => function ($model) {
                         $payment = Helper::isEmpty($model->payment) ? null : $model->payment->name;
                         return $payment;
+                    }
+                ],
+                [
+                    'label' => 'Link ảnh hóa đơn',
+                    'value' => function ($model) {
+                        return $model->bill_link;
                     }
                 ],
                 [

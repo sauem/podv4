@@ -249,6 +249,9 @@ class OrdersContact extends \common\models\BaseModel
             }
             $this->service_fee = $partner->service_fee;
             $this->country = $partner->country;
+            if (Helper::isEmpty($this->partner_name)) {
+                $this->partner_name = $partner->username;
+            }
 
             if (Helper::isEmpty($this->code) && $insert) {
                 try {
