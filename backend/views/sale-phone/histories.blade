@@ -29,7 +29,10 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
                     'label' => 'Sale',
                     'format' => 'html',
                     'value' => function ($model) {
-                        if (Helper::isEmpty($model->contact)) {
+                        if (Helper::isEmpty($model->contact) ||
+                            Helper::isEmpty($model->contact->sale) ||
+                            Helper::isEmpty($model->contact->sale->user)
+                        ) {
                             return '---';
                         }
                         return $model->contact->sale->user->username;

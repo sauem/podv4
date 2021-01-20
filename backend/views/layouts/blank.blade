@@ -7,7 +7,7 @@
     ]);
 @endphp
 @yield('pre_page')
-@if ($flash !== false)
+@if (!isset($flash) || $flash !== false)
     {!! $view->render("@backend/views/parts/FlashMessage.blade") !!}
 @endif
 @yield('content')

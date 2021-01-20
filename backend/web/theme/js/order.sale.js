@@ -214,9 +214,9 @@ function orderSaleForm() {
     }
 }
 
-function setStatusCallback(element, ids) {
+function setStatusCallback(element, ids, status) {
     let modal = new ModalRemote('#callback-modal', '#sale-box');
-    modal.remote(element, {ids: ids, status: 'callback'});
+    modal.remote(element, {ids: ids, status: status});
 }
 
 async function changeStatus(model, status, element = null) {
@@ -228,8 +228,8 @@ async function changeStatus(model, status, element = null) {
         toastr.warning('Không có contact nào được chọn!');
         return false;
     }
-    if (status === 'callback' | status == 'pending') {
-        setStatusCallback(element, ids);
+    if (status === 'callback' || status === 'pending') {
+        setStatusCallback(element, ids ,status);
         return false;
     }
     await swal.fire({
