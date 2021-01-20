@@ -101,7 +101,7 @@ class SalePhoneController extends BaseController
                     // Contacts::STATUS_PENDING,
                     Contacts::STATUS_CALLBACK
                 ],
-                'phone' => $this->assignPhone
+                #'phone' => $this->assignPhone
             ]
         ]));
         $dataProvider->query->innerJoin('contacts_assignment', 'contacts.phone = contacts_assignment.phone')
@@ -122,7 +122,7 @@ class SalePhoneController extends BaseController
                     Contacts::STATUS_DUPLICATE,
                     Contacts::STATUS_NUMBER_FAIL
                 ],
-                'phone' => $this->assignPhone
+                #'phone' => $this->assignPhone
             ]
         ]));
         $dataProvider->query->innerJoin('contacts_assignment', 'contacts.phone = contacts_assignment.phone')
@@ -179,7 +179,7 @@ class SalePhoneController extends BaseController
         $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
             'ContactsSearch' => [
                 'status' => [Contacts::STATUS_OK],
-                'phone' => $this->assignPhone
+                #'phone' => $this->assignPhone
             ]
         ]));
         $dataProvider->query->innerJoin('contacts_assignment', 'contacts.phone = contacts_assignment.phone')
