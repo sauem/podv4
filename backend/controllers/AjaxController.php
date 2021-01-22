@@ -159,6 +159,7 @@ class AjaxController extends BaseController
         $model = \Yii::$app->request->post('model');
         $status = \Yii::$app->request->post('status');
         $key = \Yii::$app->request->post('ids');
+        $reason = \Yii::$app->request->post('reason');
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
 
         try {
@@ -172,7 +173,7 @@ class AjaxController extends BaseController
                     if (!$contact) {
                         throw new BadRequestHttpException("Không tìm thấy liên hệ!");
                     }
-                    ContactsLogStatus::saveRecord($contact->code, $contact->phone, $status);
+                    ContactsLogStatus::saveRecord($contact->code, $contact->phone, $status, $reason);
                 }
             } else {
                 $contact = Contacts::findOne($key);
@@ -181,12 +182,12 @@ class AjaxController extends BaseController
                 }
                 ContactsLogStatus::saveRecord($contact->code, $contact->phone, $status);
             }
-
-            ContactsAssignment::completeAssignment(ContactsAssignment::getPhoneAssign());
-            $new = ContactsAssignment::nextAssignment();
+            $new = ContactsAssignment::completeAssignment(ContactsAssignment::getPhoneAssign());
+            #$new = ContactsAssignment::nextAssignment();
             $transaction->commit();
             return [
                 'success' => 1,
+                'assigned' => !$new ? 0 : 1,
                 'msg' => $new ? 'Số mới được áp dụng' : 'Thao tác thành công!'
             ];
         } catch (\Exception $exception) {
@@ -298,7 +299,7 @@ class AjaxController extends BaseController
                 ])
                 ->groupBy(['histories.product_sku'])
                 ->asArray()->all();
-            if(!Helper::isEmpty($storage) || Helper::isEmpty($histories)){
+            if (!Helper::isEmpty($storage) || Helper::isEmpty($histories)) {
                 $inventory = array_map(function ($item1, $item2) {
                     return array_merge($item1, $item2);
                 }, $storage, $histories);

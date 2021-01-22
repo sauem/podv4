@@ -228,6 +228,37 @@ async function changeStatus(model, status, element = null) {
         toastr.warning('Không có contact nào được chọn!');
         return false;
     }
+    const {value: formValues} = await Swal.fire({
+        title: 'Change satus..',
+        html:
+            '<select id="swal-input1" class="swal2-select">' +
+            `<option ${status == 'cancel' ? 'selected' : ''} value="cancel">Cancel</option>` +
+            `<option ${status == 'callback' ? 'selected' : ''} value="callback">Callback</option>` +
+            `<option ${status == 'duplicate' ? 'selected' : ''} value="duplicate">Duplicate</option>` +
+            `<option ${status == 'pending' ? 'selected' : ''} value="pending">Pending</option>` +
+            `<option ${status == 'number_fail' ? 'selected' : ''} value="number_fail">Number fail</option>` +
+            '</select>' +
+            '<textarea placeholder="Reason..." id="swal-input2" class="swal2-input">',
+        focusConfirm: false,
+        preConfirm: async () => {
+            let status = document.getElementById('swal-input1').value,
+                reason = document.getElementById('swal-input2').value;
+            try {
+                const res = await service(model, status, ids, reason);
+                //$.pjax.reload('#sale-box', {});
+                console.log(res);
+                if (res.assigned) {
+                    toastr.success(res.msg);
+                }
+            } catch (e) {
+                toastr.warning(e.message);
+            } finally {
+                $.pjax.reload('#sale-box', {});
+            }
+        }
+    })
+
+    return false;
     if (status === 'callback' || status === 'pending' || status === 'cancel') {
         setStatusCallback(element, ids, status);
         return false;
@@ -254,10 +285,10 @@ async function changeStatus(model, status, element = null) {
     })
 
 
-    async function service(model, status, ids) {
+    async function service(model, status, ids, reason = null) {
         return $.ajax({
             url: AJAX_PATH.changeStatus,
-            data: {model, status, ids},
+            data: {model, status, ids, reason},
             type: 'POST',
             cache: false
         });
