@@ -298,9 +298,11 @@ class AjaxController extends BaseController
                 ])
                 ->groupBy(['histories.product_sku'])
                 ->asArray()->all();
-            $inventory = array_map(function ($item1, $item2) {
-                return array_merge($item1, $item2);
-            }, $storage, $histories);
+            if(!Helper::isEmpty($storage) || Helper::isEmpty($histories)){
+                $inventory = array_map(function ($item1, $item2) {
+                    return array_merge($item1, $item2);
+                }, $storage, $histories);
+            }
 
             $inventory = array_map(function ($item) {
                 return array_merge($item, [
