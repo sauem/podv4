@@ -299,15 +299,12 @@ class AjaxController extends BaseController
                 ->groupBy(['histories.product_sku'])
                 ->asArray()->all();
             $inventory = array_map(function ($item1, $item2) {
-                if (Helper::isEmpty($item2)) {
-                    return $item1;
-                }
                 return array_merge($item1, $item2);
             }, $storage, $histories);
 
             $inventory = array_map(function ($item) {
                 return array_merge($item, [
-                    'inventory' => $item['inventory'] - $item['minus']
+                    'inventory' => $item['inventory'] - (isset($item['minus']) ? $item['minus'] : 0)
                 ]);
             }, $inventory);
 
