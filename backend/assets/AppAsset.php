@@ -44,6 +44,7 @@ class AppAsset extends AssetBundle
         'libs/c3/c3.min.js',
         'js/pages/form-wizard.init.js',
         'js/app.min.js',
+        ['js/search.js', 'async' => true],
         'js/main.js',
         'js/upload.js',
         ['js/ModalRemote.js', 'async' => true],

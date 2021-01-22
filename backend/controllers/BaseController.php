@@ -99,6 +99,19 @@ class BaseController extends Controller
         ];
     }
 
+    static function responseSearch($context, $view, $params = [])
+    {
+        if (\Yii::$app->request->isAjax) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'data' => $params,
+                'content' => $context->renderAjax("@backend/views/" . \Yii::$app->controller->id . "/$view", $params)
+            ];
+        } else {
+            return $context->render("@backend/views/" . \Yii::$app->controller->id . "/$view", $params);
+        }
+    }
+
     static function responseRemote($view, $params = [], $title = null, $footer = null, $size = 'normal')
     {
         if (\Yii::$app->request->isAjax) {

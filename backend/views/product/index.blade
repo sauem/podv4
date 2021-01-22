@@ -109,6 +109,17 @@ use yii\helpers\Url;
             event.preventDefault();
             modal.remote(this, null);
         });
-
+        $(document).on('submit', 'form#formProduct', function (event) {
+            event.preventDefault();
+            let data = $(this).serialize();
+            let action = $(this).attr('action');
+            action = `${action}?${data}`;
+            console.log(action);
+            $.pjax.reload('#product-box', {
+                url: action,
+                replace: false,
+            });
+            return false;
+        })
     </script>
 @stop

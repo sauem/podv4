@@ -104,6 +104,18 @@ use backend\models\UserModel;
 @section('pos_page')
     <script>
         initToggleTab();
+        $(document).on('submit', 'form#searchForm', function (event) {
+            event.preventDefault();
+            let data = $(this).serialize();
+            let action = $(this).attr('action');
+            action = `${action}?${data}`;
+            console.log(action);
+            $.pjax.reload('#contact-box', {
+                url: action,
+                replace: false,
+            });
+            return false;
+        })
     </script>
 @stop
 
