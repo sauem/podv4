@@ -101,6 +101,7 @@ use yii\web\View;
             $('#tab-order-new').remove();
             $('.nav-tabs li:first-child').remove();
             $('div.tab-pane:first-child').addClass('active show');
+            $('#tab-1').addClass('active show');
             $('.nav-tabs li:first-child').find('a').addClass('active');
 
         });
@@ -191,6 +192,7 @@ use yii\web\View;
                         $('#tab-order-new').remove();
                         $('.nav-tabs li:first-child').remove();
                         tab.addClass('active');
+                        $('#tab-1').addClass("show active");
                         $('#createNewOrder').removeAttr('disabled');
                         toastr.success(message);
                         resultOrderCreate.collapse('hide');
