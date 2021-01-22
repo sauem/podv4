@@ -267,6 +267,7 @@ class AjaxController extends BaseController
         try {
             $codes = \Yii::$app->request->post('codes');
             // $codes = ['#CCVN0002317'];
+            $inventory = [];
             $skuItems = OrdersContactSku::find()->
             innerJoin('orders_contact', 'orders_contact.id = orders_contact_sku.order_id')
                 ->addSelect([
@@ -297,18 +298,20 @@ class AjaxController extends BaseController
                 ])
                 ->groupBy(['histories.product_sku'])
                 ->asArray()->all();
-            if(!Helper::isEmpty($histories)){
-                $storage = array_map(function ($item1, $item2) {
-                    return array_merge($item1, $item2);
-                }, $storage, $histories);
-            }
-            $storage = array_map(function ($item) {
+            $inventory = array_map(function ($item1, $item2) {
+                if (Helper::isEmpty($item2)) {
+                    return $item1;
+                }
+                return array_merge($item1, $item2);
+            }, $storage, $histories);
+
+            $inventory = array_map(function ($item) {
                 return array_merge($item, [
                     'inventory' => $item['inventory'] - $item['minus']
                 ]);
-            }, $storage);
+            }, $inventory);
 
-            return $storage;
+            return $inventory;
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
