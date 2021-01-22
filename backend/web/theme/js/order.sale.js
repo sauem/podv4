@@ -228,8 +228,8 @@ async function changeStatus(model, status, element = null) {
         toastr.warning('Không có contact nào được chọn!');
         return false;
     }
-    if (status === 'callback' || status === 'pending') {
-        setStatusCallback(element, ids ,status);
+    if (status === 'callback' || status === 'pending' || status === 'cancel') {
+        setStatusCallback(element, ids, status);
         return false;
     }
     await swal.fire({

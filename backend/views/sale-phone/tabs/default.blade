@@ -66,8 +66,8 @@ use yii\helpers\Url;
                     return Html::button("<i class='fe-shopping-cart'></i> " . Yii::t('app', 'create_order'), [
                         'data-pjax' => "0",
                         'data-url' => Url::toRoute(['create', 'code' => $model->code]),
-                        'role' => 'modal-remote',
-                        'class' => 'btn-xs btn btn-success'
+                        #'role' => 'modal-remote',
+                        'class' => 'btn-xs btn btn-success createNewExistOrder'
                     ]);
                 },
 

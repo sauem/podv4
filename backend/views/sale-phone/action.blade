@@ -21,7 +21,7 @@ use yii\helpers\Url;$action = Yii::$app->controller->action->id;
     </button>
     <?php } ?>
     <?php if($action !== 'fail'){ ?>
-    <button onclick="changeStatus('Contacts','cancel')" class="btn-sm btn btn-outline-warning"><i
+    <button data-request-method="GET" data-url="<?= Url::toRoute(['change-status'])?>" onclick="changeStatus('Contacts','cancel',this)" class="btn-sm btn btn-outline-warning"><i
                 class="fe-phone-missed"></i>
         {{Yii::t('app','cancel_contact')}}
     </button>

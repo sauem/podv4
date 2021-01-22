@@ -133,6 +133,6 @@ class BaseController extends Controller
         if (!$note) {
             $note = '* ' . \Yii::t('app', 'required_note');
         }
-        return '<div class="d-flex w-100 justify-content-between"><button class="btn btn-secondary" data-dismiss="modal" >' . \Yii::t('app', 'close') . '</button><div><span class="mr-3 text-warning">' . $note . '</span><button class="btn btn-success" type="submit">' . \Yii::t('app', 'save') . '</button></div></div>';
+        return '<div class="d-flex w-100 justify-content-between"><button data-toggle="collapse" data-target=".collapse" class="btn btn-secondary" data-dismiss="modal" >' . \Yii::t('app', 'close') . '</button><div><span class="mr-3 text-warning">' . $note . '</span><button class="btn btn-success" type="submit" form="OrderContact">' . \Yii::t('app', 'save') . '</button></div></div>';
     }
 }

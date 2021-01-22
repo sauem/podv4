@@ -52,7 +52,12 @@ function (data, params) {
 JS;
 ?>
 @section('content')
-    @php($form = \kartik\form\ActiveForm::begin(['id' => 'OrderContact']))
+    @php($form = \kartik\form\ActiveForm::begin([
+    'id' =>'OrderContact',
+    'options' => [
+         'data-code' =>$model->code
+    ]
+ ]))
     {!! $form->errorSummary($model,['class' => 'text-danger']) !!}
     <div class="row">
         <div class="col-md-5">
