@@ -88,6 +88,9 @@ class AjaxReportController extends BaseController
                 'SUM(IF(orders_contact.payment_status = "crossed", orders_contact.total_bill ,0)) as revenue_C13',
                 'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
             ])->groupBy('day');
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
+        }
 
         if (\Yii::$app->request->isPost) {
             try {
@@ -172,9 +175,7 @@ class AjaxReportController extends BaseController
                     $query->andWhere('orders_contact.register_time >= P.marketer_rage_start AND orders_contact.register_time <= P.marketer_rage_end');
                 }
             }
-            if (Helper::isRole(UserRole::ROLE_PARTNER)) {
-                $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
-            }
+
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
@@ -204,7 +205,9 @@ class AjaxReportController extends BaseController
                 'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
             ])->groupBy('day');
         $error = "";
-
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
+        }
         if (\Yii::$app->request->isPost) {
             try {
                 $query = static::saleSearch($query, \Yii::$app->request->post());
