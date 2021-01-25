@@ -5,6 +5,7 @@ namespace backend\controllers;
 
 
 use backend\models\Products;
+use backend\models\UserRole;
 use backend\models\Warehouse;
 use backend\models\WarehouseSearch;
 use backend\models\WarehouseStorage;
@@ -35,7 +36,8 @@ class WarehouseController extends BaseController
                 'WT.transaction_type',
                 'SUM(IF(WT.transaction_type = "import", WT.qty, 0)) as import',
                 'SUM(IF(WT.transaction_type = "export", WT.qty, 0)) as export',
-            ])->groupBy(['P.sku'])->asArray()->all();
+            ]);
+
 
         $sole = Products::find()->from('products as P')
             ->leftJoin('orders_contact_sku OCS', 'OCS.sku = P.sku')
@@ -49,8 +51,13 @@ class WarehouseController extends BaseController
                 'SUM(IF(OC.payment_status = "refund" OR OC.status = "refund", OCS.qty, 0)) as refund',
                 'SUM(IF(OC.status = "broken", OCS.qty, 0)) as broken',
                 'SUM(IF(OC.shipping_status = "shipping" OR OC.status = "shipping" OR OC.checking_number IS NOT NULL, OCS.qty, 0)) as shipping',
-            ])->groupBy(['P.sku'])->asArray()->all();
-
+            ]);
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $sole->where(['P.partner_id' => \Yii::$app->user->getId()]);
+            $inventory->where(['P.partner_id' => \Yii::$app->user->getId()]);
+        }
+        $inventory = $inventory->groupBy(['P.sku'])->asArray()->all();
+        $sole = $sole->groupBy(['P.sku'])->asArray()->all();
         $inventory = array_map(function ($item, $item2) {
             return array_merge($item, $item2);
         }, $inventory, $sole);
