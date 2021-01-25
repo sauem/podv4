@@ -39,9 +39,9 @@ use yii\helpers\Html;use yii\web\JsExpression;use yii\web\View;
     ],
     'pjaxSettings' => [
         'neverTimeout' => true,
-        'enablePushState' => false,
         'options' => [
-            'id' => isset($id) ? "$id-box" : 'default-box'
+            'id' => isset($id) ? "$id-box" : 'default-box',
+            'enablePushState' => false,
         ]
     ],
     'perfectScrollbar' => true,
