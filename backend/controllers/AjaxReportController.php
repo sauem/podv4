@@ -9,6 +9,7 @@ use backend\models\OrdersContact;
 use backend\models\OrdersContactSearch;
 use backend\models\OrdersTopup;
 use backend\models\OrdersTopupSearch;
+use backend\models\UserRole;
 use common\helper\Helper;
 use Illuminate\Support\Arr;
 use yii\helpers\ArrayHelper;
@@ -170,6 +171,9 @@ class AjaxReportController extends BaseController
                 } else {
                     $query->andWhere('orders_contact.register_time >= P.marketer_rage_start AND orders_contact.register_time <= P.marketer_rage_end');
                 }
+            }
+            if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+                $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
             }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
