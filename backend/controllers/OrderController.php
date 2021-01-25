@@ -45,7 +45,7 @@ class OrderController extends BaseController
                 ]
             ]
         ]));
-        $waitShippingOrder->pagination = false;
+        #$waitShippingOrder->pagination = false;
         return $this->render('index.blade', [
             'waitShippingOrder' => $waitShippingOrder,
             'pendingShippingOrder' => $pendingShippingOrder,
