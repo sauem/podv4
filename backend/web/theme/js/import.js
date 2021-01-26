@@ -183,7 +183,7 @@ function processRow(sheet) {
             columnLength = 24;
             break;
         case MODULE_CONTACT:
-            columnLength = 17;
+            columnLength = 18;
             break;
         case MODULE_REFUND:
         case MODULE_PAID:
@@ -296,11 +296,12 @@ const mappingModel = (module, row) => {
             item.partner = row[9] ? row[9].v : null;
             item.category = row[10] ? row[10].v : null;
             item.type = row[11] ? toUnicode(row[11].v).toLowerCase() : null;
-            item.utm_source = row[12] ? row[12].v : null;
-            item.utm_medium = row[13] ? row[13].v : null;
-            item.utm_campaign = row[14] ? row[14].v : null;
-            item.utm_term = row[15] ? row[15].v : null;
-            item.utm_content = row[16] ? row[16].v : null;
+            item.status = row[12] ? toUnicode(row[12].v).toLowerCase() : null;
+            item.utm_source = row[13] ? row[13].v : null;
+            item.utm_medium = row[14] ? row[14].v : null;
+            item.utm_campaign = row[15] ? row[15].v : null;
+            item.utm_term = row[16] ? row[16].v : null;
+            item.utm_content = row[17] ? row[17].v : null;
             break;
         case MODULE_REFUND:
             item = refundModel();
@@ -434,6 +435,7 @@ function contactModel() {
         partner: null,
         category: null,
         type: null,
+        status: null,
         utm_source: null,
         utm_medium: null,
         utm_content: null,
