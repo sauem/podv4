@@ -54,30 +54,33 @@ class OrdersContactSearch extends OrdersContact
 
         $this->load($params);
 
-        if(Helper::isRole(UserRole::ROLE_PARTNER)){
-            $query->where(['partner' => \Yii::$app->user->identity->username]);
-        }
+
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
-
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'phone', $this->phone])
-            ->andFilterWhere(['IN', 'id', $this->id])
-            ->andFilterWhere(['like', 'code', $this->code])
-            ->andFilterWhere(['like', 'address', $this->address])
-            ->andFilterWhere(['like', 'zipcode', $this->zipcode])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'city', $this->city])
-            ->andFilterWhere(['like', 'district', $this->district])
-            ->andFilterWhere(['like', 'order_source', $this->order_source])
-            ->andFilterWhere(['like', 'note', $this->note])
-            ->andFilterWhere(['like', 'vendor_note', $this->vendor_note])
-            ->andFilterWhere(['IN', 'status', $this->status])
-            ->andFilterWhere(['IN', 'payment_status', $this->payment_status])
-            ->andFilterWhere(['like', 'country', $this->country]);
+        if(Helper::isRole(UserRole::ROLE_PARTNER)){
+            $query->innerJoin('contacts','contacts.code=orders_contact.code')
+                ->andFilterWhere([
+                    'contacts.partner' => \Yii::$app->user->identity->username
+                ]);
+        }
+        $query->andFilterWhere(['like', 'orders_contact.name', $this->name])
+            ->andFilterWhere(['like', 'orders_contact.phone', $this->phone])
+            ->andFilterWhere(['IN', 'orders_contact.id', $this->id])
+            ->andFilterWhere(['like', 'orders_contact.code', $this->code])
+            ->andFilterWhere(['like', 'orders_contact.address', $this->address])
+            ->andFilterWhere(['like', 'orders_contact.zipcode', $this->zipcode])
+            ->andFilterWhere(['like', 'orders_contact.email', $this->email])
+            ->andFilterWhere(['like', 'orders_contact.city', $this->city])
+            ->andFilterWhere(['like', 'orders_contact.district', $this->district])
+            ->andFilterWhere(['like', 'orders_contact.order_source', $this->order_source])
+            ->andFilterWhere(['like', 'orders_contact.note', $this->note])
+            ->andFilterWhere(['like', 'orders_contact.vendor_note', $this->vendor_note])
+            ->andFilterWhere(['IN', 'orders_contact.status', $this->status])
+            ->andFilterWhere(['IN', 'orders_contact.payment_status', $this->payment_status])
+            ->andFilterWhere(['like', 'orders_contact.country', $this->country]);
 
         return $dataProvider;
     }
