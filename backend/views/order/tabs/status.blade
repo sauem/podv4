@@ -8,11 +8,13 @@ use common\helper\Helper;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use common\helper\Component;
+use backend\models\UserRole;
 ?>
 @section('content')
     {!! $view->render('search-status.blade',[
            'searchModel' => $searchModel
        ]) !!}
+    @if(!Helper::isRole(UserRole::ROLE_PARTNER))
 
     <div class="my-2 btn-group">
         <a href="{!! Url::toRoute(['/import','module' => 'refund']) !!}" class="btn btn-sm btn-outline-warning"><i
@@ -22,6 +24,7 @@ use common\helper\Component;
                     class="fe-check-square"></i> Nhập đơn đã thanh toán
         </a>
     </div>
+    @endif
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'pjax' => true,

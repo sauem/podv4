@@ -6,12 +6,13 @@ use common\helper\Component;
 use kartik\grid\ActionColumn;
 use kartik\export\ExportMenu;
 use backend\models\UserModel;
-
+use backend\models\UserRole;
 ?>
 @section('content')
     <div class="card">
         <div class="card-header">
             <div class="card-widgets d-flex align-items-center">
+                @if(!Helper::isRole(UserRole::ROLE_PARTNER))
                 <?php
                 echo ExportMenu::widget([
                     'dataProvider' => $allContact,
@@ -50,9 +51,9 @@ use backend\models\UserModel;
                     ]
                 ])
                 ?>
-
-                <a href="{!! Url::toRoute(['/import','module' => 'contact']) !!}"
-                   class="waves-effect btn-sm"><i class="fe-upload"></i> Nhập file</a>
+                    <a href="{!! Url::toRoute(['/import','module' => 'contact']) !!}"
+                       class="waves-effect btn-sm"><i class="fe-upload"></i> Nhập file</a>
+                @endif
 
             </div>
             <h4 class="card-title"><i class="fe-phone-call"></i> Danh sách liên hệ</h4>

@@ -8,12 +8,14 @@ use common\helper\Helper;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use common\helper\Component;
+use backend\models\UserRole;
 ?>
 
 @section('content')
     {!! $view->render('search-pending.blade',[
             'searchModel' => $searchModel
         ]) !!}
+    @if(!Helper::isRole(UserRole::ROLE_PARTNER))
 
     <div class="my-2">
         <a href="{!! Url::toRoute(['/import','module' => 'tracking']) !!}" class="btn btn-sm btn-success"><i
@@ -27,6 +29,7 @@ use common\helper\Component;
         </div>
 
     </div>
+    @endif
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'pjax' => true,

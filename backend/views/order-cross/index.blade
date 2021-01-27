@@ -8,6 +8,7 @@ use common\helper\Helper;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use common\helper\Component;
+use backend\models\UserRole;
 ?>
 @section('content')
     <div class="card-box">
@@ -27,6 +28,7 @@ use common\helper\Component;
         </ul>
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
+                @if(!Helper::isRole(UserRole::ROLE_PARTNER))
                 <div class="btn-group mb-2">
                     <button id="make-cross"
                             data-url="{!! Url::toRoute(['make-cross']) !!}"
@@ -37,7 +39,7 @@ use common\helper\Component;
                                 class="fe-check-square"></i> Nhập đơn đã đối soát
                     </a>
                 </div>
-
+                @endif
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'pjax' => true,

@@ -3,16 +3,20 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use kartik\grid\ActionColumn;
 use common\helper\Component;
+use common\helper\Helper;
+use backend\models\UserRole;
 ?>
 
 @section('content')
     <div class="card">
         <div class="card-header">
+            @if(!Helper::isRole(UserRole::ROLE_PARTNER))
             <div class="card-widgets">
                 <button role="modal-remote" data-url="{!! Url::toRoute(['create']) !!}" class="btn btn-sm btn-success">
                     <i class="fe-plus"></i> Thêm
                 </button>
             </div>
+            @endif
             <h4 class="card-title"><i class="fe-box"></i> Lý do cuộc gọi</h4>
         </div>
         <div class="card-body">

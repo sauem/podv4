@@ -6,7 +6,9 @@ use kartik\grid\ActionColumn;
 use backend\models\OrdersContact;
 use common\helper\Helper;
 use yii\helpers\Url;
-use yii\helpers\Html;use yii\web\JsExpression;use yii\web\View;
+use yii\helpers\Html;
+use yii\web\JsExpression;
+use yii\web\View;
 ?>
 
 <div class="row">
@@ -21,13 +23,13 @@ use yii\helpers\Html;use yii\web\JsExpression;use yii\web\View;
         </div>
     </div>
 </div>
-
+@if(!Helper::isRole(UserRole::ROLE_PARTNER))
 <div class="my-2">
     <button data-url="{!! Url::toRoute(['create']) !!}" id="createOrderVendor" class="btn btn-sm btn-success"><i
                 class="fe-shopping-cart"></i> Tạo phiếu xuất kho
     </button>
 </div>
-
+@endif
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'pjax' => true,
