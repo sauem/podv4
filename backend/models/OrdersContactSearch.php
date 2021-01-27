@@ -54,6 +54,9 @@ class OrdersContactSearch extends OrdersContact
 
         $this->load($params);
 
+        if(Helper::isRole(UserRole::ROLE_PARTNER)){
+            $query->where(['partner' => \Yii::$app->user->identity->username]);
+        }
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
