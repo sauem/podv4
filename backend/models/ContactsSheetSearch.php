@@ -2,6 +2,8 @@
 
 namespace backend\models;
 
+use common\helper\Helper;
+use common\models\User;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\ContactsSheet;
@@ -41,7 +43,9 @@ class ContactsSheetSearch extends ContactsSheet
     public function search($params)
     {
         $query = ContactsSheet::find();
-
+        if(Helper::isRole(UserRole::ROLE_PARTNER)){
+            $query->where(['partner_id' => \Yii::$app->user->getId()]);
+        }
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
