@@ -48,6 +48,7 @@ use backend\models\UserRole;
                         'class' => ActionColumn::class,
                         'template' => '{update}{delete}',
                         'width' => '10%',
+                        'visible' => !\common\helper\Helper::isRole(\backend\models\UserRole::ROLE_PARTNER),
                         'buttons' => [
                             'update' => function ($url) {
                                 return Component::btnUpdate($url, null, [
