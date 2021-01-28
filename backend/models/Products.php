@@ -157,7 +157,11 @@ class Products extends \common\models\BaseModel
 
     public static function LISTS()
     {
-        $all = Products::find()->all();
+        $all = Products::find();
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $all->where(['partner_id' => Yii::$app->user->getId()]);
+        }
+        $all = $all->all();
         return ArrayHelper::map($all, 'sku', 'sku');
     }
 }

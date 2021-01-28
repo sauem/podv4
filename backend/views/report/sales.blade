@@ -28,6 +28,8 @@ $this->title = 'My Yii Application';
                         ]
                     ])?>
                 </div>
+                @if(!\common\helper\Helper::isRole(\backend\models\UserRole::ROLE_PARTNER))
+
                 <div class="col-md-3 mt-1">
                     <select title="Sale..."
                             data-actions-box="true"
@@ -42,6 +44,7 @@ $this->title = 'My Yii Application';
                         @endif
                     </select>
                 </div>
+                @endif
                 <div class="col-md-3 mt-1">
                     <select title="Nguồn liên hệ"
                             data-actions-box="true"
@@ -70,6 +73,7 @@ $this->title = 'My Yii Application';
                         @endif
                     </select>
                 </div>
+                @if(!\common\helper\Helper::isRole(\backend\models\UserRole::ROLE_PARTNER))
                 <div class="col-md-3 mt-1">
                     <select title="Marketer..."
                             data-actions-box="true"
@@ -84,7 +88,7 @@ $this->title = 'My Yii Application';
                         @endif
                     </select>
                 </div>
-
+                @endif
                 <div class="col-md-3 mt-1">
                     <button type="button" onclick="searchForm()" id="searchData" class="btn btn-success"><i
                                 class="fe-search"></i> Lọc
