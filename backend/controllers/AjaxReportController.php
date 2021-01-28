@@ -157,8 +157,8 @@ class AjaxReportController extends BaseController
             if ($source) {
                 $query->andWhere(['IN', 'type', $source]);
             }
-            if (!Helper::isEmpty($product)) {
 
+            if (!Helper::isEmpty($product)) {
                 $query->leftJoin('products as P', 'P.partner_name = contacts.partner');
                 $query->leftJoin('orders_contact_sku as I', 'P.sku = I.sku');
                 $query->andWhere(['IN', 'I.sku', $product]);
@@ -205,15 +205,16 @@ class AjaxReportController extends BaseController
                 'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
             ])->groupBy('day');
         $error = "";
-        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
-            $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
-        }
+
         if (\Yii::$app->request->isPost) {
             try {
                 $query = static::saleSearch($query, \Yii::$app->request->post());
             } catch (BadRequestHttpException $e) {
                 throw new BadRequestHttpException($e->getMessage());
             }
+        }
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
         }
 
         $result = $query->asArray()->all();
