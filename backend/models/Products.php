@@ -159,7 +159,7 @@ class Products extends \common\models\BaseModel
     {
         $all = Products::find();
         if (Helper::isRole(UserRole::ROLE_PARTNER)) {
-            $all->where(['partner_id' => Yii::$app->user->getId()]);
+            $all->where(['products.partner_id' => Yii::$app->user->getId()]);
         }
         $all = $all->all();
         return ArrayHelper::map($all, 'sku', 'sku');
