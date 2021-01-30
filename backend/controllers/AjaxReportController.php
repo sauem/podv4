@@ -149,10 +149,10 @@ class AjaxReportController extends BaseController
             if (!Helper::isEmpty($time_register)) {
                 $time_register = explode(' - ', $time_register);
                 $startTime = Helper::timer(str_replace('/', '-', $time_register[0]));
-                $endTime = Helper::timer(str_replace('/', '-', $time_register[1]));
+                $endTime = Helper::timer(str_replace('/', '-', $time_register[1]),1);
                 $query->where(['between', 'contacts.register_time', $startTime, $endTime]);
             } else {
-                $query->where('FROM_UNIXTIME(contacts.register_time) >= DATE_SUB(NOW(), INTERVAL 7 DAY)');
+                $query->where('FROM_UNIXTIME(contacts.register_time) >= DATE(NOW()) - INTERVAL 1 MONTH');
             }
             if ($source) {
                 $query->andWhere(['IN', 'type', $source]);
@@ -170,9 +170,9 @@ class AjaxReportController extends BaseController
             if (!Helper::isEmpty($marketer)) {
                 if (Helper::isEmpty($product)) {
                     $query->innerJoin('products as P', 'P.partner_name = contacts.partner')
-                        ->andWhere('orders_contact.register_time >= P.marketer_rage_start AND orders_contact.register_time <= P.marketer_rage_end');
+                        ->andWhere('contacts.register_time >= P.marketer_rage_start AND contacts.register_time <= P.marketer_rage_end');
                 } else {
-                    $query->andWhere('orders_contact.register_time >= P.marketer_rage_start AND orders_contact.register_time <= P.marketer_rage_end');
+                    $query->andWhere('contacts.register_time >= P.marketer_rage_start AND contacts.register_time <= P.marketer_rage_end');
                 }
             }
 
@@ -202,8 +202,9 @@ class AjaxReportController extends BaseController
                 'SUM(IF( contacts.status = "new", 1, 0 )) as C0',
                 'SUM(orders_contact.total_bill) as revenueC8',
                 'SUM(IF(orders_contact.payment_status = "paid",1,0)) as C11',
-                'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
-            ])->groupBy('day');
+                'FROM_UNIXTIME(contacts.register_time, \'%d/%m/%Y\') day',
+            ])->where('FROM_UNIXTIME(contacts.register_time) >= DATE(NOW()) - INTERVAL 1 MONTH')
+            ->groupBy('day');
         $error = "";
 
         if (\Yii::$app->request->isPost) {

@@ -137,12 +137,15 @@ class Helper
         return $limitTimer > $now;
     }
 
-    static function timer($string)
+    static function timer($string, $plus = 0)
     {
         if (strtotime($string)) {
             return strtotime($string);
         }
         $time = \DateTime::createFromFormat('m-d-Y', $string)->format('m-d-Y');
+        if ($plus > 0) {
+            return strtotime($time . " +$plus day");
+        }
         return strtotime($time);
     }
 
