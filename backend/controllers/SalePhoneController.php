@@ -202,7 +202,7 @@ class SalePhoneController extends BaseController
     {
         $model = new OrdersContact();
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
-        $products = Products::find()->asArray()->all();
+        $products = Products::LISTS();
         $model->country = \Yii::$app->cache->get('country');
 
         if ($code !== 'new') {
