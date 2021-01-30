@@ -86,7 +86,7 @@ class AjaxReportController extends BaseController
                 'SUM(orders_contact.total_bill) as revenue_C8',
                 'SUM(IF(orders_contact.payment_status = "paid", orders_contact.total_bill ,0)) as revenue_C11',
                 'SUM(IF(orders_contact.payment_status = "crossed", orders_contact.total_bill ,0)) as revenue_C13',
-                'FROM_UNIXTIME(contacts.register_time, \'%d/%m/%Y\') day',
+                'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
             ])->groupBy('day');
         if (Helper::isRole(UserRole::ROLE_PARTNER)) {
             $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
@@ -170,9 +170,9 @@ class AjaxReportController extends BaseController
             if (!Helper::isEmpty($marketer)) {
                 if (Helper::isEmpty($product)) {
                     $query->innerJoin('products as P', 'P.partner_name = contacts.partner')
-                        ->andWhere('contacts.register_time >= P.marketer_rage_start AND contacts.register_time <= P.marketer_rage_end');
+                        ->andWhere('orders_contact.register_time >= P.marketer_rage_start AND orders_contact.register_time <= P.marketer_rage_end');
                 } else {
-                    $query->andWhere('contacts.register_time >= P.marketer_rage_start AND contacts.register_time <= P.marketer_rage_end');
+                    $query->andWhere('orders_contact.register_time >= P.marketer_rage_start AND orders_contact.register_time <= P.marketer_rage_end');
                 }
             }
 
@@ -202,7 +202,7 @@ class AjaxReportController extends BaseController
                 'SUM(IF( contacts.status = "new", 1, 0 )) as C0',
                 'SUM(orders_contact.total_bill) as revenueC8',
                 'SUM(IF(orders_contact.payment_status = "paid",1,0)) as C11',
-                'FROM_UNIXTIME(contacts.register_time, \'%d/%m/%Y\') day',
+                'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
             ])->groupBy('day');
         $error = "";
 
