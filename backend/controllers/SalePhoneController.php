@@ -207,17 +207,17 @@ class SalePhoneController extends BaseController
 
         if ($code !== 'new') {
             $contact = Contacts::findOne(['code' => $code]);
-            $country = ZipcodeCountry::findOne(['zipcode' => $contact->zipcode]);
+            if (!$contact) {
+                throw new BadRequestHttpException('Contact not founded!');
+            }
             $data = ArrayHelper::toArray($contact);
             unset($data['id']);
             $model->load($data, '');
-            if ($country) {
+            $country = ZipcodeCountry::findOne(['zipcode' => $contact->zipcode]);
+            if($country){
                 $model->city = $country->city;
                 $model->district = $country->district;
                 $model->country = $contact->country;
-            }
-            if (!$contact) {
-                throw new BadRequestHttpException('Contact not founded!');
             }
         }
         $model->items = \Yii::$app->request->post('items');
