@@ -25,11 +25,11 @@ use backend\models\UserRole;
     </div>
 </div>
 @if(!Helper::isRole(UserRole::ROLE_PARTNER))
-<div class="my-2">
-    <button data-url="{!! Url::toRoute(['create']) !!}" id="createOrderVendor" class="btn btn-sm btn-success"><i
-                class="fe-shopping-cart"></i> Tạo phiếu xuất kho
-    </button>
-</div>
+    <div class="my-2">
+        <button data-url="{!! Url::toRoute(['create']) !!}" id="createOrderVendor" class="btn btn-sm btn-success"><i
+                    class="fe-shopping-cart"></i> Tạo phiếu xuất kho
+        </button>
+    </div>
 @endif
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
@@ -42,7 +42,7 @@ use backend\models\UserRole;
     ],
     'pjaxSettings' => [
         'options' => [
-            'id' =>  'default-box',
+            'id' => 'default-box',
             'enablePushState' => false,
         ]
     ],
@@ -100,6 +100,22 @@ use backend\models\UserRole;
                 return Helper::formatCUR($model->total_bill, '', 0);
             }
         ],
+        [
+            'class' => ActionColumn::className(),
+            'template' => '{edit}',
+            'buttons' => [
+                'edit' => function ($url, $model) {
+                    return Html::a('<i class="fe-edit"></i>',
+                        Url::toRoute(['/sale-phone/update', 'code' => $model->code]),
+                            [
+                                'class' => 'btn btn-xs btn-warning',
+                                'data-pjax' => '0',
+                                'target' => '_blank'
+                            ]
+                        );
+                }
+            ]
+        ],
     ]
 ]) ?>
 <?= $view->render('../template/warehouse-view.blade')?>
@@ -149,6 +165,8 @@ $js = <<<JS
         let order = new HandleOrder();
         order.create('#vendor-modal', '#default-box', this, {ids});
     });
+
+
 JS;
 $view->registerJs($js);
 ?>

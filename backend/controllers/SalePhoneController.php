@@ -20,6 +20,7 @@ use yii\data\ActiveDataProvider;
 use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
 
 class SalePhoneController extends BaseController
 {
@@ -197,8 +198,7 @@ class SalePhoneController extends BaseController
      * @return array|string
      * @throws BadRequestHttpException
      */
-    public
-    function actionCreate($code)
+    public function actionCreate($code)
     {
         $model = new OrdersContact();
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
@@ -214,7 +214,7 @@ class SalePhoneController extends BaseController
             unset($data['id']);
             $model->load($data, '');
             $country = ZipcodeCountry::findOne(['zipcode' => $contact->zipcode]);
-            if($country){
+            if ($country) {
                 $model->city = $country->city;
                 $model->district = $country->district;
                 $model->country = $contact->country;
@@ -252,5 +252,21 @@ class SalePhoneController extends BaseController
             'contact' => isset($contact) ? $contact : null,
             'products' => $products,
         ], '<i class="fe-shopping-cart"></i> Tạo đơn hàng', $this->footer(), 'xl');
+    }
+
+    public function actionUpdate($code)
+    {
+        $model = OrdersContact::findOne(['code' => $code]);
+        if (!$model) {
+            throw new NotFoundHttpException('Order not found!');
+        }
+        $model = new OrdersContact();
+        $contact = $model->getContact();
+        $products = Products::LISTS();
+        return $this->render('create.blade', [
+            'model' => $model,
+            'products' => $products,
+            'contact' => $contact
+        ]);
     }
 }

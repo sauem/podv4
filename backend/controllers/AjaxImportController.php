@@ -38,6 +38,7 @@ class AjaxImportController extends BaseController
         $data = \Yii::$app->request->post('row');
         $model = new Contacts();
         if ($model->load($data, '')) {
+            $model->status = Helper::toLower($model->status);
             if (!$model->save()) {
                 throw new BadRequestHttpException(Helper::firstError($model));
             }
@@ -301,7 +302,7 @@ class AjaxImportController extends BaseController
             $contact->save();
             $orderId = $model->id;
             OrdersContactSku::saveItems($orderId, $items);
-            
+
             $transaction->commit();
         } catch (\Exception $exception) {
             $transaction->rollBack();
