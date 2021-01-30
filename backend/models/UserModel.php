@@ -45,7 +45,7 @@ class UserModel extends BaseModel implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password_hash', 'role', 'permission'], 'required'],
+            [['username', 'password_hash', 'role', 'permission','email'], 'required'],
             [['email', 'username'], 'unique'],
             [['service_fee'], 'number'],
             [['email'], 'email'],
