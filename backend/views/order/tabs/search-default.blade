@@ -7,18 +7,27 @@ use backend\models\Payments;
 use common\helper\Helper;
 ?>
 <?php
-$form = ActiveForm::begin();
+Pjax::begin([
+    'id' => 'search-form',
+    'clientOptions' => [
+        'method' => 'GET'
+    ]
+]);
+$form = ActiveForm::begin([
+    'method' => 'GET',
+    'options' => ['data-pjax' => true]
+]);
 ?>
 <div class="row">
     <div class="col-md-4">
-        <?= $form->field($searchModel, 'items')->widget(Select2::className(), [
+        <?= $form->field($searchModel, 'items[]')->widget(Select2::className(), [
             'data' => Products::LISTS(),
             'options' => ['placeholder' => 'Sản phẩm...'],
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
     </div>
     <div class="col-md-4">
-        <?= $form->field($searchModel, 'payment_method')->widget(Select2::className(), [
+        <?= $form->field($searchModel, 'payment_method[]')->widget(Select2::className(), [
             'data' => Payments::LISTS(),
             'options' => ['placeholder' => 'Hình thức thanh toán...'],
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
@@ -27,10 +36,21 @@ $form = ActiveForm::begin();
 
     <div class="col">
         <button class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
-        <button data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-success">
+        <a href="/order/index" data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-secondary">
             <i class="fe-trash"></i> Làm mới
-        </button>
+        </a>
     </div>
 </div>
 
-<?php ActiveForm::end(); ?>
+<?php
+ActiveForm::end();
+Pjax::end() ?>
+<?php
+$js = <<<JS
+        $("#search-form").on("pjax:end", function() {
+			$.pjax.reload({container:"#default-box"});  //Reload GridView
+		});
+JS;
+
+$view->registerJS($js);
+?>

@@ -20,8 +20,11 @@ class ContactController extends BaseController
         $model = new Contacts();
         $searchModel = new ContactsSearch();
 
-        $waitingContact = $searchModel->search(\Yii::$app->request->queryParams);
-        $waitingContact->query->andFilterWhere(['IN', 'contacts.status', [Contacts::STATUS_NEW]]);
+        $waitingContact = $searchModel->search(array_merge_recursive(\Yii::$app->request->queryParams,[
+            'ContactsSearch' => [
+                'contacts.status' => [Contacts::STATUS_NEW]
+            ]
+        ]));
         $waitingContact->query->leftJoin('contacts_assignment', 'contacts_assignment.phone = contacts.phone')
             ->andWhere('contacts_assignment.phone IS NULL')
             ->andWhere(['contacts.country' => \Yii::$app->cache->get('country')]);

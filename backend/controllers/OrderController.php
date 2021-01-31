@@ -21,17 +21,22 @@ class OrderController extends BaseController
     {
 
         $contactOrder = new OrdersContactSearch();
-        $waitShippingOrder = $contactOrder->search(array_merge(\Yii::$app->request->queryParams, [
+        $params = array_merge_recursive( [
             'OrdersContactSearch' => [
-                'status' => [OrdersContact::STATUS_NEW]
+                'status' => OrdersContact::STATUS_NEW,
             ]
-        ]));
-        $pendingShippingOrder = $contactOrder->search(array_merge(\Yii::$app->request->queryParams, [
+        ],\Yii::$app->request->queryParams);
+
+        $waitShippingOrder = $contactOrder->search($params);
+
+        $waitShippingOrder->pagination = false;
+
+        $pendingShippingOrder = $contactOrder->search(array_merge_recursive(\Yii::$app->request->queryParams, [
             'OrdersContactSearch' => [
                 'status' => [OrdersContact::STATUS_PENDING]
             ]
         ]));
-        $statusShippingOrder = $contactOrder->search(array_merge(\Yii::$app->request->queryParams, [
+        $statusShippingOrder = $contactOrder->search(array_merge_recursive(\Yii::$app->request->queryParams, [
             'OrdersContactSearch' => [
                 'status' => [
                     OrdersContact::STATUS_SHIPPED,
@@ -45,7 +50,6 @@ class OrderController extends BaseController
                 ]
             ]
         ]));
-        $waitShippingOrder->pagination = false;
         return $this->render('index.blade', [
             'waitShippingOrder' => $waitShippingOrder,
             'pendingShippingOrder' => $pendingShippingOrder,
@@ -57,7 +61,7 @@ class OrderController extends BaseController
     public function actionGetIndex()
     {
         $contactOrder = new OrdersContactSearch();
-        $waitShippingOrder = $contactOrder->search(array_merge(\Yii::$app->request->queryParams, [
+        $waitShippingOrder = $contactOrder->search(array_merge_recursive(\Yii::$app->request->queryParams, [
             'OrdersContactSearch' => [
                 'status' => [OrdersContact::STATUS_NEW]
             ]
@@ -71,7 +75,7 @@ class OrderController extends BaseController
     public function actionPending()
     {
         $searchModel = new OrdersContactSearch();
-        $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
+        $dataProvider = $searchModel->search(array_merge_recursive(\Yii::$app->request->queryParams, [
             'OrdersContactSearch' => [
                 'status' => [OrdersContact::STATUS_PENDING]
             ]
@@ -87,7 +91,7 @@ class OrderController extends BaseController
     public function actionStatus()
     {
         $searchModel = new OrdersContactSearch();
-        $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
+        $dataProvider = $searchModel->search(array_merge_recursive(\Yii::$app->request->queryParams, [
             'OrdersContactSearch' => [
                 'status' => [
                     OrdersContact::STATUS_SHIPPED,
