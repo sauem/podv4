@@ -13,44 +13,44 @@ use backend\models\UserRole;
         <div class="card-header">
             <div class="card-widgets d-flex align-items-center">
                 @if(!Helper::isRole(UserRole::ROLE_PARTNER))
-                <?php
-                echo ExportMenu::widget([
-                    'dataProvider' => $allContact,
-                    'columns' => [
-                        [
-                            'attribute' => 'register_time',
-                            'value' => function ($model) {
-                                return Helper::dateFormat($model->register_time);
-                            }
-                        ], 'code', 'phone', 'name', 'email', 'address', 'zipcode', 'option', 'note', 'partner',
-                        [
-                            'attribute' => 'status',
-                            'value' => function ($model) {
-                                return ArrayHelper::getValue(Contacts::STATUS, $model->status, '');
-                            }
-                        ],
-                        [
-                            'attribute' => 'country',
-                            'value' => function ($model) {
-                                return Helper::countryName($model->country);
-                            }
-                        ], 'type', 'category'
+                    <?php
+                    echo ExportMenu::widget([
+                        'dataProvider' => $allContact,
+                        'columns' => [
+                            [
+                                'attribute' => 'register_time',
+                                'value' => function ($model) {
+                                    return Helper::dateFormat($model->register_time);
+                                }
+                            ], 'code', 'phone', 'name', 'email', 'address', 'zipcode', 'option', 'note', 'partner',
+                            [
+                                'attribute' => 'status',
+                                'value' => function ($model) {
+                                    return ArrayHelper::getValue(Contacts::STATUS, $model->status, '');
+                                }
+                            ],
+                            [
+                                'attribute' => 'country',
+                                'value' => function ($model) {
+                                    return Helper::countryName($model->country);
+                                }
+                            ], 'type', 'category'
 
-                    ],
-                    'exportConfig' => [
-                        ExportMenu::FORMAT_TEXT => false,
-                        ExportMenu::FORMAT_HTML => false,
-                        ExportMenu::FORMAT_EXCEL => false,
-                        ExportMenu::FORMAT_PDF => false,
-                    ],
-                    'showColumnSelector' => false,
-                    'dropdownOptions' => [
-                        'label' => 'Export All',
-                        'icon' => '<i class="fe-download"></i>',
-                        'class' => 'btn btn-xs btn-outline-warning'
-                    ]
-                ])
-                ?>
+                        ],
+                        'exportConfig' => [
+                            ExportMenu::FORMAT_TEXT => false,
+                            ExportMenu::FORMAT_HTML => false,
+                            ExportMenu::FORMAT_EXCEL => false,
+                            ExportMenu::FORMAT_PDF => false,
+                        ],
+                        'showColumnSelector' => false,
+                        'dropdownOptions' => [
+                            'label' => 'Export All',
+                            'icon' => '<i class="fe-download"></i>',
+                            'class' => 'btn btn-xs btn-outline-warning'
+                        ]
+                    ])
+                    ?>
                     <a href="{!! Url::toRoute(['/import','module' => 'contact']) !!}"
                        class="waves-effect btn-sm"><i class="fe-upload"></i> Nhập file</a>
                 @endif
@@ -88,7 +88,8 @@ use backend\models\UserRole;
                     </button>
 
                     <?= $view->render('tabs/default.blade', [
-                        'dataProvider' => $waitingContact
+                        'dataProvider' => $dataProvider,
+                        'containId' => $containId
                     ])?>
                 </div>
                 <div class="tab-pane" id="tab-2">
@@ -105,18 +106,6 @@ use backend\models\UserRole;
 @section('pos_page')
     <script>
         initToggleTab();
-        $(document).on('submit', 'form#searchForm', function (event) {
-            event.preventDefault();
-            let data = $(this).serialize();
-            let action = $(this).attr('action');
-            action = `${action}?${data}`;
-            console.log(action);
-            $.pjax.reload('#contact-box', {
-                url: action,
-                replace: false,
-            });
-            return false;
-        })
     </script>
 @stop
 

@@ -49,44 +49,20 @@ class ContactsSearch extends Contacts
         ]);
         $this->load($params);
 
-        if(Helper::isRole(UserRole::ROLE_PARTNER)){
-            $query->where(['partner' => \Yii::$app->user->identity->username]);
-        }
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
-
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'register_time' => $this->register_time,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ]);
-
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $query->andFilterWhere(['partner' => \Yii::$app->user->identity->username]);
+        }
 
         $query->andFilterWhere(['like', 'contacts.code', $this->name])
-            ->andFilterWhere(['like', 'contacts.name', $this->name])
-            ->andFilterWhere(['=', 'contacts.phone', $this->phone])
-            ->andFilterWhere(['like', 'contacts.email', $this->email])
-            ->andFilterWhere(['like', 'contacts.address', $this->address])
-            ->andFilterWhere(['like', 'contacts.zipcode', $this->zipcode])
-            ->andFilterWhere(['like', 'contacts.option', $this->option])
-            ->andFilterWhere(['like', 'ip', $this->ip])
-            ->andFilterWhere(['like', 'note', $this->note])
-            ->andFilterWhere(['like', 'contacts.partner', $this->partner])
-            ->andFilterWhere(['like', 'contacts.hash_key', $this->hash_key])
-            ->andFilterWhere(['IN', 'contacts.status', $this->status])
-            ->andFilterWhere(['like', 'contacts.country', $this->country])
-            ->andFilterWhere(['like', 'utm_source', $this->utm_source])
-            ->andFilterWhere(['like', 'utm_medium', $this->utm_medium])
-            ->andFilterWhere(['like', 'utm_content', $this->utm_content])
-            ->andFilterWhere(['like', 'utm_term', $this->utm_term])
-            ->andFilterWhere(['like', 'utm_campaign', $this->utm_campaign])
-            ->andFilterWhere(['like', 'link', $this->link])
-            ->andFilterWhere(['like', 'short_link', $this->short_link]);
+            ->orFilterWhere(['like', 'contacts.name', $this->name])
+            ->orFilterWhere(['like', 'contacts.phone', $this->name])
+            ->orFilterWhere(['like', 'contacts.email', $this->name])
+            ->orFilterWhere(['like', 'contacts.partner', $this->name]);
         return $dataProvider;
     }
 }

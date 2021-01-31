@@ -5,17 +5,15 @@ use kartik\form\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\Url;
 ?>
-<?php
-\yii\widgets\Pjax::begin([
-    'enablePushState' => false,
-    'options' => ['id' => 'searchPjax']
-]);
-?>
+<?php yii\widgets\Pjax::begin([
+    'id' => 'search-contact',
+    'clientOptions' => [
+        'method' => 'GET'
+    ]
+]) ?>
 <?php $form = ActiveForm::begin([
     'method' => 'GET',
-    'action' => '/contact/index',
-    'id' => 'searchForm',
-    'options' => ['data-pjax' => true]
+    'options' => ['data-pjax' => true, 'id' =>'formContact']
 ]) ?>
 <div class="row">
     <div class="col-md-6">
@@ -25,12 +23,21 @@ use yii\helpers\Url;
         <button type="submit" class="btn btn-search btn-primary"><i
                     class="fe-search"></i> Tìm kiếm
         </button>
-        <a data-pjax="0" href="<?= Url::toRoute([Yii::$app->controller->route])?>"
-           class="btn btn-search btn-secondary"><i
+        <a href="/contact/index" data-pjax="0" type="reset" class="btn btn-search btn-secondary"><i
                     class="fe-trash"></i> Reset
         </a>
     </div>
 </div>
 <?php ActiveForm::end(); ?>
-<?php \yii\widgets\Pjax::end(); ?>
+<?php yii\widgets\Pjax::end(); ?>
 
+
+<?php
+$js = <<<JS
+        $("#search-contact").on("pjax:end", function() {
+			$.pjax.reload({container:"$containId"});  //Reload GridView
+		});
+JS;
+
+$view->registerJS($js);
+?>

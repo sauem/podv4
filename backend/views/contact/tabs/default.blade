@@ -3,23 +3,23 @@
 use common\helper\Helper;
 use kartik\grid\CheckboxColumn;
 use kartik\grid\GridView;
-use kartik\grid\ActionColumn;
 use backend\models\Contacts;
 
 ?>
     <?= GridView::widget([
     'dataProvider' => $dataProvider,
-    'pjax' => true,
     'persistResize' => true,
     'layout' => "{items}\n{summary}{pager}",
     'responsiveWrap' => false,
     'tableOptions' => [
         'class' => 'table table-sm'
     ],
-    'options' => ['id' => 'phone-box'],
+    'options' => ['id' => $containId],
+    'pjax' => true,
     'pjaxSettings' => [
+        'neverTimeout' => true,
         'options' => [
-            'id' => 'contact-box',
+            'id' => $containId,
             'enablePushState' => false,
         ]
     ],
