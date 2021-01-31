@@ -33,14 +33,15 @@ use backend\models\UserRole;
 @endif
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
-    'pjax' => true,
     'persistResize' => true,
     'layout' => '{items}{pager}',
     'responsiveWrap' => false,
     'tableOptions' => [
         'class' => 'table table-sm'
     ],
+    'pjax' => true,
     'pjaxSettings' => [
+        'neverTimeout' => true,
         'options' => [
             'id' => 'default-box',
             'enablePushState' => false,

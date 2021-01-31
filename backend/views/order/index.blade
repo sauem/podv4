@@ -5,16 +5,17 @@ use backend\models\UserRole;
 ?>
 @section('content')
 
-    <?php \yii\widgets\Pjax::begin([
-        'options' => [
-            'id' => 'default-box'
-        ]
-    ]); ?>
+
     <div class="card-box">
         @if(!Helper::isRole(UserRole::ROLE_PARTNER))
-        <a href="{{\yii\helpers\Url::toRoute(['/import','module' => 'order'])}}" class="btn btn-sm btn-warning"><i
-                    class="fe-download"></i> Import</a>
+            <a href="{{\yii\helpers\Url::toRoute(['/import','module' => 'order'])}}" class="btn btn-sm btn-warning"><i
+                        class="fe-download"></i> Import</a>
         @endif
+        <?php \yii\widgets\Pjax::begin([
+            'options' => [
+                'id' => 'count-box'
+            ]
+        ]); ?>
         <ul class="nav nav-tabs nav-bordered nav-justified">
             <li class="nav-item">
                 <a data-pjax="0" href="#tab-1" data-toggle="tab"
@@ -37,6 +38,8 @@ use backend\models\UserRole;
                 </a>
             </li>
         </ul>
+        <?php \yii\widgets\Pjax::end(); ?>
+
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
                 <?=  $view->render('tabs/default.blade', [
@@ -53,7 +56,6 @@ use backend\models\UserRole;
             </div>
         </div>
     </div>
-    <?php \yii\widgets\Pjax::end(); ?>
     {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'vendor-modal']) !!}
 @stop
 @section('pos_page')

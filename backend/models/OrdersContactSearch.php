@@ -50,6 +50,9 @@ class OrdersContactSearch extends OrdersContact
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 2
+            ]
         ]);
 
         $this->load($params);

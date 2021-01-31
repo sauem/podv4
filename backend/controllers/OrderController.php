@@ -77,6 +77,7 @@ class OrderController extends BaseController
             ]
         ]));
         $dataProvider->sort = false;
+
         return self::responseRemote('tabs/pending.blade', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel

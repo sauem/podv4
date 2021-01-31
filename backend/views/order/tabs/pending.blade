@@ -33,6 +33,7 @@ use backend\models\UserRole;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'pjax' => true,
+        'persistResize' => true,
         'options' => ['id' => 'w2'],
         # 'persistResize' => true,
         'layout' => '{items}{pager}',
@@ -41,6 +42,7 @@ use backend\models\UserRole;
             'class' => 'table table-sm',
         ],
         'pjaxSettings' => [
+            'neverTimeout' => true,
             'options' => [
                 'id' => 'pending-box',
                 'enablePushState' => false,
