@@ -21,7 +21,7 @@ class AjaxExportController extends BaseController
 
     function actionOrder()
     {
-        $ids = \Yii::$app->request->post('ids');
+        $ids = \Yii::$app->request->get('ids');
         $query = OrdersContact::find()
             ->with(['skuItems', 'warehouse', 'transporter', 'payment'])
             ->filterWhere(['IN', 'id', $ids]);

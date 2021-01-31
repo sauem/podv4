@@ -22,7 +22,29 @@ async function exportOrderSelect() {
         toastr.warning('Chọn 1 đơn hàng để thực hiện thao tác!');
         return false;
     }
-    let url = new URL('https://' + window.location.hostname + AJAX_PATH.exportOrder);
-    url.search = new URLSearchParams({ids: ids});
-    window.location.href = url;
+    swal.fire({
+        title: 'Xin chờ....',
+        onBeforeOpen: () => {
+            swal.showLoading();
+            $.ajax({
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                url: 'http://' + window.location.hostname + AJAX_PATH.exportOrder,
+                type: 'GET',
+                data: {ids: ids},
+                success: function (res) {
+                    let a = document.createElement('a');
+                    let url = window.URL.createObjectURL(res);
+                    a.href = url;
+                    a.download = 'demo.xlsx';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                    swal.close();
+                }
+            })
+        }
+    });
 }
