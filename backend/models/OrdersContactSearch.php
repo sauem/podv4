@@ -45,7 +45,12 @@ class OrdersContactSearch extends OrdersContact
     {
         $query = OrdersContact::find();
         // add conditions that should always apply here
-
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $query->innerJoin('contacts', 'contacts.code=orders_contact.code')
+                ->where([
+                    'contacts.partner' => \Yii::$app->user->identity->username
+                ]);
+        }
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -56,12 +61,7 @@ class OrdersContactSearch extends OrdersContact
             // $query->where('0=1');
             return $dataProvider;
         }
-        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
-            $query->innerJoin('contacts', 'contacts.code=orders_contact.code')
-                ->andFilterWhere([
-                    'contacts.partner' => \Yii::$app->user->identity->username
-                ]);
-        }
+
         if ($this->items) {
             $query->innerJoin('orders_contact_sku', 'orders_contact_sku.order_id = orders_contact.id')
                 ->andFilterWhere(['IN', 'orders_contact_sku.sku', $this->items]);
