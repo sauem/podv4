@@ -149,7 +149,7 @@ class AjaxReportController extends BaseController
             if (!Helper::isEmpty($time_register)) {
                 $time_register = explode(' - ', $time_register);
                 $startTime = Helper::timer(str_replace('/', '-', $time_register[0]));
-                $endTime = Helper::timer(str_replace('/', '-', $time_register[1]),1);
+                $endTime = Helper::timer(str_replace('/', '-', $time_register[1]), 1);
                 $query->where(['between', 'contacts.register_time', $startTime, $endTime]);
             } else {
                 $query->where('FROM_UNIXTIME(contacts.register_time) >= DATE(NOW()) - INTERVAL 1 MONTH');
@@ -203,9 +203,11 @@ class AjaxReportController extends BaseController
                 'SUM(orders_contact.total_bill) as revenueC8',
                 'SUM(IF(orders_contact.payment_status = "paid",1,0)) as C11',
                 'FROM_UNIXTIME(contacts.register_time, \'%d/%m/%Y\') day',
-            ])->where('FROM_UNIXTIME(contacts.register_time) >= DATE(NOW()) - INTERVAL 1 MONTH')
-            ->groupBy('day');
+            ])->groupBy('day');
         $error = "";
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $query->where(['contacts.partner' => \Yii::$app->user->identity->username]);
+        }
 
         if (\Yii::$app->request->isPost) {
             try {
@@ -213,9 +215,9 @@ class AjaxReportController extends BaseController
             } catch (BadRequestHttpException $e) {
                 throw new BadRequestHttpException($e->getMessage());
             }
-        }
-        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
-            $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
+        } else {
+            $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= DATE(NOW()) - INTERVAL 1 MONTH');
+
         }
 
         $result = $query->asArray()->all();
