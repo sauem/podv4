@@ -30,7 +30,7 @@ async function exportOrderSelect() {
                 xhrFields: {
                     responseType: 'blob'
                 },
-                url: 'http://' + window.location.hostname + AJAX_PATH.exportOrder,
+                url: 'https://' + window.location.hostname + AJAX_PATH.exportOrder,
                 type: 'GET',
                 data: {ids: ids},
                 success: function (res) {
