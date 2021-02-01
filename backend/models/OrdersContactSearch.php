@@ -20,9 +20,8 @@ class OrdersContactSearch extends OrdersContact
     public function rules()
     {
         return [
-            ['payment_method', 'number'],
             ['status', 'string'],
-            [['items'], 'safe'],
+            [['items','payment_method'], 'safe'],
         ];
     }
 
