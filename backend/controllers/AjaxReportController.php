@@ -141,7 +141,7 @@ class AjaxReportController extends BaseController
 
             $marketer = ArrayHelper::getValue($filter, 'filter.marketer', []);
             $product = ArrayHelper::getValue($filter, 'filter.product', []);
-            $source = ArrayHelper::getValue($filter, 'filter.source', []);
+            $source = ArrayHelper::getValue($filter, 'filter.contact_source', []);
             $sale = ArrayHelper::getValue($filter, 'filter.sale', []);
 
             $time_register = ArrayHelper::getValue($filter, 'filter.register_time', '');
@@ -152,16 +152,18 @@ class AjaxReportController extends BaseController
                 $endTime = Helper::timer(str_replace('/', '-', $time_register[1]), 1);
                 $query->where(['between', 'contacts.register_time', $startTime, $endTime]);
             } else {
-                $query->where('FROM_UNIXTIME(contacts.register_time) >= DATE(NOW()) - INTERVAL 1 MONTH');
+                $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
+                $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
             }
-            if ($source) {
-                $query->andWhere(['IN', 'type', $source]);
+            if (!empty($source)) {
+                $query->andWhere(['IN', 'contacts.type', $source]);
             }
 
             if (!Helper::isEmpty($product)) {
-                $query->leftJoin('products as P', 'P.partner_name = contacts.partner');
-                $query->leftJoin('orders_contact_sku as I', 'P.sku = I.sku');
-                $query->andWhere(['IN', 'I.sku', $product]);
+                $query->innerJoin('products as P', 'P.partner_name = contacts.partner');
+                $query->innerJoin('orders_contact_sku as I', 'P.sku = I.sku');
+                $query->andWhere(['I.sku' => $product]);
+               # Helper::printf($query->createCommand()->rawSql);
             }
             if (!Helper::isEmpty($sale)) {
                 $query->innerJoin('contacts_assignment', 'contacts_assignment.phone = contacts.phone');
@@ -189,6 +191,7 @@ class AjaxReportController extends BaseController
      */
     public function actionSales()
     {
+        $isEmpty = false;
         $query = Contacts::find()
             ->leftJoin('orders_contact', 'orders_contact.code = contacts.code')
             ->addSelect([
@@ -203,7 +206,8 @@ class AjaxReportController extends BaseController
                 'SUM(orders_contact.total_bill) as revenueC8',
                 'SUM(IF(orders_contact.payment_status = "paid",1,0)) as C11',
                 'FROM_UNIXTIME(contacts.register_time, \'%d/%m/%Y\') day',
-            ])->groupBy('day');
+            ])->groupBy('day')->orderBy('contacts.register_time ASC');
+
         $error = "";
         if (Helper::isRole(UserRole::ROLE_PARTNER)) {
             $query->where(['contacts.partner' => \Yii::$app->user->identity->username]);
@@ -216,11 +220,14 @@ class AjaxReportController extends BaseController
                 throw new BadRequestHttpException($e->getMessage());
             }
         } else {
-            $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= DATE(NOW()) - INTERVAL 1 MONTH');
-
+            $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
+            $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
         }
 
         $result = $query->asArray()->all();
+        if (empty($result)) {
+            $isEmpty = true;
+        }
         $result = array_map(function ($item) {
             return array_merge($item, [
                 'C8_C3' => Helper::calculate($item['C8'], $item['C3'])
@@ -245,6 +252,7 @@ class AjaxReportController extends BaseController
         $totalC11_C8 = Helper::calculate($totalC11, $totalC8);
 
         return [
+            'isEmpty' => $isEmpty,
             'labels' => $labels,
             'data' => [
                 'C8' => $C8,

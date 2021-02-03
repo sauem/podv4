@@ -10,15 +10,15 @@ function initSaleChart() {
         series: [{
             name: 'C8',
             type: 'column',
-            data: null
+            data: []
         }, {
             name: 'C3',
             type: 'column',
-            data: null
+            data: []
         }, {
             name: 'C8/C3',
             type: 'line',
-            data: null
+            data: []
         }],
         chart: {
             height: 350,
@@ -45,6 +45,11 @@ function initSaleChart() {
             horizontalAlign: 'center',
             offsetY: 10,
         },
+        xaxis: {
+            labels: {
+                rotateAlways: false
+            }
+        },
         yaxis: [
             {
                 seriesName: 'C3',
@@ -59,19 +64,24 @@ function initSaleChart() {
                     style: {
                         colors: '#008FFB',
                     },
-                    formatter: function (val) {
+                    formatter: function (val, index) {
                         return val.toFixed(0);
                     }
                 },
                 tooltip: {
-                    enabled: true
+                    // enabled: true
                 }
             },
             {
                 seriesName: 'C8',
                 axisTicks: {show: false},
                 axisBorder: {show: false},
-                labels: {show: false}
+                labels: {
+                    show: false,
+                    formatter: function (val, index) {
+                        return val.toFixed(0);
+                    }
+                }
             },
             {
                 seriesName: 'C8/C3',
@@ -190,7 +200,7 @@ function initSaleChart() {
             cache: false,
         });
     }
-    this.compile = function (labels, data) {
+    this.compile = function (labels, data, isEmpty) {
 
         let options = {
             optionsOne: {
@@ -202,30 +212,48 @@ function initSaleChart() {
                 series: [{data: data.C8}, {data: data.C6}, {data: data.C7}, {data: data.C4}, {data: data.C0}]
             },
         }
-        if (typeof labels == "undefined" || typeof labels == null || labels.length <= 0) {
+        if (isEmpty) {
+            this.setEmpty();
             return false;
         }
         chartOne.updateOptions(options.optionsOne);
         chartTwo.updateOptions(options.optionsTwo);
     }
+    this.setLoadingChart = () => {
+        $('.chart-area').append('<div class="card-disabled"><div class="card-portlets-loader"></div></div>');
+    }
+    this.removeLoadingChart = () => {
+        let load = $('.chart-area').find('.card-disabled');
+        setTimeout(function () {
+            $(load).fadeOut('fast', function () {
+                $(load).remove();
+            });
+        }, 500);
+    }
+    this.setEmpty = () => {
+        chartOne.resetSeries();
+        chartTwo.resetSeries();
+        $('#chart-one').html('No data...');
+        $('#chart-two').html('No data...');
+    }
     this.search = async function (params) {
+        this.setLoadingChart();
         try {
-            let {labels, counter, data} = await this.getData(params, 'POST');
+            let {labels, counter, data, isEmpty} = await this.getData(params, 'POST');
 
             numberCounterResult.html(counterTemplate(counter));
-            this.compile(labels, data);
+            this.compile(labels, data, isEmpty);
+            this.removeLoadingChart();
         } catch (e) {
-
+            console.log(e);
         }
     }
     this.renderView = async function (params = {}) {
         try {
-            let {labels, counter, data} = await this.getData(params);
+            let {labels, counter, data, isEmpty} = await this.getData(params);
             numberCounterResult.html(counterTemplate(counter));
-            this.compile(labels, data);
-
-        } catch
-            (e) {
+            this.compile(labels, data, isEmpty);
+        } catch (e) {
             console.log(e);
         }
     }

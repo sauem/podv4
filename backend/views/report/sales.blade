@@ -30,20 +30,20 @@ $this->title = 'My Yii Application';
                 </div>
                 @if(!\common\helper\Helper::isRole(\backend\models\UserRole::ROLE_PARTNER))
 
-                <div class="col-md-3 mt-1">
-                    <select title="Sale..."
-                            data-actions-box="true"
-                            data-live-search="true"
-                            name="filter[sale][]" class="selectpicker"
-                            multiple data-selected-text-format="count"
-                            data-style="btn-light">
-                        @if(!empty($sales))
-                            @foreach($sales as $id => $sale)
-                                <option value="{{$id}}">{{$sale}}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
+                    <div class="col-md-3 mt-1">
+                        <select title="Sale..."
+                                data-actions-box="true"
+                                data-live-search="true"
+                                name="filter[sale][]" class="selectpicker"
+                                multiple data-selected-text-format="count"
+                                data-style="btn-light">
+                            @if(!empty($sales))
+                                @foreach($sales as $id => $sale)
+                                    <option value="{{$id}}">{{$sale}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
                 @endif
                 <div class="col-md-3 mt-1">
                     <select title="Nguồn liên hệ"
@@ -74,20 +74,20 @@ $this->title = 'My Yii Application';
                     </select>
                 </div>
                 @if(!\common\helper\Helper::isRole(\backend\models\UserRole::ROLE_PARTNER))
-                <div class="col-md-3 mt-1">
-                    <select title="Marketer..."
-                            data-actions-box="true"
-                            data-live-search="true"
-                            name="filter[marketer][]" class="selectpicker"
-                            multiple data-selected-text-format="count"
-                            data-style="btn-light">
-                        @if(!empty($marketers))
-                            @foreach($marketers as $id => $name)
-                                <option value="{{$id}}">{{$name}}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
+                    <div class="col-md-3 mt-1">
+                        <select title="Marketer..."
+                                data-actions-box="true"
+                                data-live-search="true"
+                                name="filter[marketer][]" class="selectpicker"
+                                multiple data-selected-text-format="count"
+                                data-style="btn-light">
+                            @if(!empty($marketers))
+                                @foreach($marketers as $id => $name)
+                                    <option value="{{$id}}">{{$name}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
                 @endif
                 <div class="col-md-3 mt-1">
                     <button type="button" onclick="searchForm()" id="searchData" class="btn btn-success"><i
@@ -100,36 +100,43 @@ $this->title = 'My Yii Application';
             </div>
         </form>
         <hr>
-        <div class="row align-items-center">
-            <div class="col-12 text-center">
-                <h4 class="text-danger">Chỉ số</h4>
+        <div class="chart-area position-relative">
+            <div class="row align-items-center">
+                <div class="col-12 text-center">
+                    <h4 class="text-danger">Chỉ số</h4>
+                </div>
+                <div class="col-1">
+                    <p class="text-danger"><b>Chú thích</b></p>
+                </div>
+                <div class="col-2">
+                    <p><b>C3: Tổng số đơn hàng</b></p>
+                </div>
+                <div class="col-2">
+                    <p><b>C8: Tổng đơn hàng OK</b></p>
+                </div>
+                <div class="col">
+                    <p><b>C11: Tổng đơn hàng chuyển thành công</b></p>
+                </div>
+                <div class="col">
+                    <p><b>C13: Tổng đơn hàng đã chuyển tiền cho đối tác</b></p>
+                </div>
             </div>
-            <div class="col-1">
-                <p class="text-danger"><b>Chú thích</b></p>
+            <div id="sales-result" class="row align-items-center justify-content-around text-center">
             </div>
-            <div class="col-2">
-                <p><b>C3: Tổng số đơn hàng</b></p>
-            </div>
-            <div class="col-2">
-                <p><b>C8: Tổng đơn hàng OK</b></p>
-            </div>
-            <div class="col">
-                <p><b>C11: Tổng đơn hàng chuyển thành công</b></p>
-            </div>
-            <div class="col">
-                <p><b>C13: Tổng đơn hàng đã chuyển tiền cho đối tác</b></p>
-            </div>
-        </div>
-        <div id="sales-result" class="row align-items-center justify-content-around text-center">
+            <div class="sales-chart">
+                <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP C8 C3</h4>
 
-        </div>
-        <div class="sales-chart">
-            <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP C8 C3</h4>
-            <div id="chart-one" class="apex-charts"></div>
+                <div id="chart-one" class="apex-charts">
+                    <div class="card-disabled"><div class="card-portlets-loader"></div></div>
+                </div>
 
-            <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP CONTACT</h4>
-            <div id="chart-two" class="apex-charts"></div>
+                <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP CONTACT</h4>
+                <div id="chart-two" class="apex-charts">
+                    <div class="card-disabled"><div class="card-portlets-loader"></div></div>
+                </div>
+            </div>
         </div>
+
     </div>
     <?= $view->render("template/sales-template.blade")?>
 @stop
@@ -145,4 +152,4 @@ $this->title = 'My Yii Application';
         }
     </script>
 @stop
-@php($view->registerJsFile('@web/theme/js/sales-report.js',['depends' =>  \yii\web\JqueryAsset::className()]))
+@php($view->registerJsFile('@web/theme/js/sales-report.js?v=1.2',['depends' =>  \yii\web\JqueryAsset::className()]))

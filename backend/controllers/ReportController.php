@@ -27,7 +27,7 @@ class ReportController extends BaseController
         $sources = ContactsSource::LISTS();
         $products = Products::LISTS();
         $marketers = UserRole::LISTS(UserRole::ROLE_MARKETER);
-        $sales = UserRole::LISTS(UserRole::ROLE_SALE);
+        $sales = UserRole::LISTS(UserRole::ROLE_SALE,true);
 
 
         return $this->render('sales.blade', [
