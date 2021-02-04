@@ -114,8 +114,12 @@ class Products extends \common\models\BaseModel
 
     public static function find()
     {
-        return parent::find()->innerJoinWith('category')
+        $query = parent::find()->innerJoinWith('category')
             ->andFilterWhere(['=', '{{categories}}.country', Yii::$app->cache->get('country')]);
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $query->andFilterWhere(['{{products}}.partner_id' => Yii::$app->user->getId()]);
+        }
+        return $query;
     }
 
     public function afterFind()
