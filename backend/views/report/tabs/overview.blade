@@ -23,7 +23,11 @@
                 name="filter[phone][]" class="selectpicker"
                 multiple data-selected-text-format="count"
                 data-style="btn-light">
-
+            @isset($phone)
+                @foreach($phone as $phone)
+                    <option value="{{$phone}}">{{$phone}}</option>
+                @endforeach
+            @endisset
         </select>
     </div>
     <div class="col-md-3">
@@ -33,7 +37,11 @@
                 name="filter[code][]" class="selectpicker"
                 multiple data-selected-text-format="count"
                 data-style="btn-light">
-
+            @isset($code)
+                @foreach($code as $code)
+                    <option value="{{$code}}">{{$code}}</option>
+                @endforeach
+            @endisset
         </select>
     </div>
     <div class="col-md-3">
@@ -43,7 +51,8 @@
                 name="filter[payment_status][]" class="selectpicker"
                 multiple data-selected-text-format="count"
                 data-style="btn-light">
-
+            <option value="paid">Đã thanh toán</option>
+            <option value="unpayed">Chưa thanh toán</option>
         </select>
     </div>
     <div class="col-md-3 mt-2">
@@ -53,7 +62,8 @@
                 name="filter[cross_status][]" class="selectpicker"
                 multiple data-selected-text-format="count"
                 data-style="btn-light">
-
+            <option value="crossed">Đã đối soát</option>
+            <option value="uncross">Chưa đối soát</option>
         </select>
     </div>
     <div class="col-md-3 mt-2">
@@ -83,18 +93,21 @@
         <p><b>C13: Tổng đơn hàng đã chuyển tiền cho đối tác</b></p>
     </div>
 </div>
-<div class="row text-center" id="financial-overview-result"></div>
+<div class="chart-area position-relative">
+    <div class="row text-center" id="financial-overview-result"></div>
+    <div class="row">
+        <div class="col-12 text-center mt-4">
+            <h4 class="text-danger">BẢNG TỔNG HỢP C8-C11</h4>
+            <div id="chart-one" class="apex-charts">
+            </div>
 
-
-<div class="row">
-    <div class="col-12 text-center mt-4">
-        <h4 class="text-danger">BẢNG TỔNG HỢP C8-C11</h4>
-        <div id="chart-one" class="apex-charts"></div>
-
+        </div>
+        <div class="col-12 text-center mt-4">
+            <h4 class="text-danger">BẢNG TỔNG HỢP C11-C13</h4>
+            <div id="chart-two" class="apex-charts">
+            </div>
+        </div>
     </div>
-    <div class="col-12 text-center mt-4">
-        <h4 class="text-danger">BẢNG TỔNG HỢP C11-C13</h4>
-        <div id="chart-two" class="apex-charts"></div>
-    </div>
+
 </div>
 <?= $view->render('../template/financial-overview-template.blade')?>

@@ -74,9 +74,6 @@ function initFinancialChart() {
                         return SYMBOL_MARKET + nFormatter(value);
                     }
                 },
-                tooltip: {
-                    enabled: true
-                }
             },
         ]
     };
@@ -89,6 +86,17 @@ function initFinancialChart() {
             data: {task, params},
             cache: false,
         });
+    }
+    this.showLoadingChart  = () => {
+        $('.chart-area').append('<div class="card-disabled"><div class="card-portlets-loader"></div></div>');
+    }
+    this.hideLoadingChart = () => {
+        let load = $('.chart-area').find('.card-disabled');
+        setTimeout(function () {
+            $(load).fadeOut('fast', function () {
+                $(load).remove();
+            });
+        }, 500);
     }
     this.render = function () {
         const instance = this;
@@ -116,14 +124,11 @@ function initFinancialChart() {
 
                     const chartTwo = new ApexCharts(document.querySelector("#chart-two"), optionsOne);
                     chartTwo.render();
-
                     // init result
-
                     resultOverView.html(templateOverView(counter));
+                    this.hideLoadingChart();
                 } catch (e) {
-
                 }
-
             },
             topup: async function (search = {}) {
                 initPicker();

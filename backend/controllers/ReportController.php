@@ -27,7 +27,7 @@ class ReportController extends BaseController
         $sources = ContactsSource::LISTS();
         $products = Products::LISTS();
         $marketers = UserRole::LISTS(UserRole::ROLE_MARKETER);
-        $sales = UserRole::LISTS(UserRole::ROLE_SALE,true);
+        $sales = UserRole::LISTS(UserRole::ROLE_SALE, true);
 
 
         return $this->render('sales.blade', [
@@ -39,9 +39,18 @@ class ReportController extends BaseController
     }
 
     function actionFinancial()
-    {
-        return static::responseRemote("financial.blade");
-    }
+        {
+            $phone = OrdersContact::find()->addSelect('phone')->distinct('phone')
+                ->groupBy('phone')->asArray()->all();
+
+            $code = OrdersContact::find()->addSelect('code')->distinct('phone')
+                ->groupBy('code')->asArray()->all();
+
+            return static::responseRemote("financial.blade", [
+                'phone' => ArrayHelper::getColumn($phone,'phone'),
+                'code' => ArrayHelper::getColumn($code,'code'),
+            ]);
+        }
 
     function actionCrossed()
     {

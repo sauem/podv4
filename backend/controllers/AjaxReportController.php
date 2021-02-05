@@ -67,7 +67,9 @@ class AjaxReportController extends BaseController
             $cross_status = ArrayHelper::getValue($filter, 'filter.cross_status', []);
             $time_register = ArrayHelper::getValue($filter, 'filter.register_time', '');
 
+            if (!empty($phone)) {
 
+            }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
@@ -163,7 +165,7 @@ class AjaxReportController extends BaseController
                 $query->innerJoin('products as P', 'P.partner_name = contacts.partner');
                 $query->innerJoin('orders_contact_sku as I', 'P.sku = I.sku');
                 $query->andWhere(['I.sku' => $product]);
-               # Helper::printf($query->createCommand()->rawSql);
+                # Helper::printf($query->createCommand()->rawSql);
             }
             if (!Helper::isEmpty($sale)) {
                 $query->innerJoin('contacts_assignment', 'contacts_assignment.phone = contacts.phone');
