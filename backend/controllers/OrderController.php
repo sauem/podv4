@@ -81,6 +81,7 @@ class OrderController extends BaseController
             ]
         ]));
         $dataProvider->sort = false;
+        $dataProvider->pagination = false;
 
         return self::responseRemote('tabs/pending.blade', [
             'dataProvider' => $dataProvider,
