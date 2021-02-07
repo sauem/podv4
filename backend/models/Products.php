@@ -116,7 +116,7 @@ class Products extends \common\models\BaseModel
     {
         $query = parent::find()->innerJoinWith('category')
             ->andFilterWhere(['=', '{{categories}}.country', Yii::$app->cache->get('country')]);
-        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+        if (!Yii::$app instanceof Yii\console\Application && Helper::isRole(UserRole::ROLE_PARTNER)) {
             $query->andFilterWhere(['{{products}}.partner_id' => Yii::$app->user->getId()]);
         }
         return $query;

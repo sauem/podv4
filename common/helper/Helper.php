@@ -87,8 +87,8 @@ class Helper
 
     static function toLower($str)
     {
-        if(!is_string($str)){
-            return  null;
+        if (!is_string($str)) {
+            return null;
         }
         $str = trim(mb_strtolower($str));
         $str = preg_replace('/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/', 'a', $str);
@@ -177,8 +177,8 @@ class Helper
 
     static function symbol($country = null)
     {
-        $symbols = \Yii::$app->params['symbols'];
-        if (!$country) {
+        $symbols = ArrayHelper::getColumn(\Yii::$app->params, 'symbols', '');
+        if (!$country || !$symbols) {
             $country = \Yii::$app->cache->get('country');
         }
         if (!$country) {
