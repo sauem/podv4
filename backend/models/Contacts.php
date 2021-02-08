@@ -278,4 +278,9 @@ class Contacts extends \common\models\BaseModel
     {
         return $this->hasOne(UserModel::className(), ['username' => 'partner']);
     }
+
+    public function getCat()
+    {
+        return $this->hasOne(Categories::className(), ['name' => 'category']);
+    }
 }

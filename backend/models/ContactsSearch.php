@@ -62,7 +62,8 @@ class ContactsSearch extends Contacts
             ->orFilterWhere(['like', 'contacts.phone', $this->name])
             ->orFilterWhere(['like', 'contacts.email', $this->name])
             ->orFilterWhere(['like', 'contacts.partner', $this->name])
-            ->andFilterWhere(['contacts.status' => $this->status]);
+            ->andFilterWhere(['contacts.status' => $this->status])
+            ->andFilterWhere(['contacts.phone' => $this->phone]);
         return $dataProvider;
     }
 }

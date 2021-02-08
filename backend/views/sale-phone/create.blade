@@ -138,7 +138,7 @@ JS;
                             'allowClear' => true,
                             'minimumInputLength' => 0,
                             'ajax' => [
-                                'url' => Url::toRoute(['/ajax/get-list-product']),
+                                'url' => Url::toRoute(['/ajax/get-list-product', 'code' => $model->code]),
                                 'dataType' => 'json',
                                 'delay' => 250,
                                 'data' => new JsExpression('function(params) { return {name:params.term, page: params.page}; }'),

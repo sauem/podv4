@@ -142,12 +142,18 @@ class AjaxController extends BaseController
         ];
     }
 
-    function actionGetListProduct()
+    function actionGetListProduct($code = null)
     {
         $searchModel = new ProductsSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
-
-        return $dataProvider->query->with(['media', 'category', 'partner'])->asArray()->all();
+        if ($code) {
+            $contact = Contacts::findOne(['code' => $code]);
+            if ($contact) {
+                $dataProvider->query->andFilterWhere(['categories.name' => $contact->category]);
+            }
+        }
+        $dataProvider->query->with(['media', 'category', 'partner']);
+        return $dataProvider->getModels();
     }
 
     /**
