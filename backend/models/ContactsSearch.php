@@ -48,7 +48,6 @@ class ContactsSearch extends Contacts
             'query' => $query,
         ]);
         $this->load($params);
-
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -62,7 +61,8 @@ class ContactsSearch extends Contacts
             ->orFilterWhere(['like', 'contacts.name', $this->name])
             ->orFilterWhere(['like', 'contacts.phone', $this->name])
             ->orFilterWhere(['like', 'contacts.email', $this->name])
-            ->orFilterWhere(['like', 'contacts.partner', $this->name]);
+            ->orFilterWhere(['like', 'contacts.partner', $this->name])
+            ->andFilterWhere(['contacts.status' => $this->status]);
         return $dataProvider;
     }
 }

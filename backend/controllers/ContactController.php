@@ -20,9 +20,13 @@ class ContactController extends BaseController
         $model = new Contacts();
         $searchModel = new ContactsSearch();
 
-        $waitingContact = $searchModel->search(array_merge_recursive(\Yii::$app->request->queryParams,[
+        $waitingContact = $searchModel->search(array_merge_recursive(\Yii::$app->request->queryParams, [
             'ContactsSearch' => [
-                'contacts.status' => [Contacts::STATUS_NEW]
+                'status' => [
+                    Contacts::STATUS_NEW,
+                    Contacts::STATUS_PENDING,
+                    Contacts::STATUS_CALLBACK
+                ]
             ]
         ]));
         $waitingContact->query->leftJoin('contacts_assignment', 'contacts_assignment.phone = contacts.phone')
