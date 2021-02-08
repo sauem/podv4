@@ -79,7 +79,7 @@ use yii\helpers\Url;
     </script>
 @stop
 
-<?php $view->registerJsFile('@web/theme/js/financial-report.js', ['depends' => \yii\web\JqueryAsset::className()]); ?>
+<?php $view->registerJsFile('@web/theme/js/financial-report.js?v=1.4', ['depends' => \yii\web\JqueryAsset::className()]); ?>
 <?= $view->render('@backend/views/parts/dataTable.blade') ?>
 
 
