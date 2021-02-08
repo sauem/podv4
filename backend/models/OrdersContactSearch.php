@@ -16,12 +16,13 @@ class OrdersContactSearch extends OrdersContact
      * {@inheritdoc}
      */
     public $items;
+    public $register_time;
 
     public function rules()
     {
         return [
             ['status', 'string'],
-            [['items','payment_method'], 'safe'],
+            [['items', 'payment_method', 'register_time', 'warehouse_id'], 'safe'],
         ];
     }
 
@@ -43,7 +44,7 @@ class OrdersContactSearch extends OrdersContact
      */
     public function search($params)
     {
-        $query = OrdersContact::find();
+        $query = OrdersContact::find()->with(['skuItems', 'warehouse', 'transporter', 'payment']);
         // add conditions that should always apply here
         if (Helper::isRole(UserRole::ROLE_PARTNER)) {
             $query->innerJoin('contacts', 'contacts.code=orders_contact.code')
@@ -51,23 +52,37 @@ class OrdersContactSearch extends OrdersContact
                     'contacts.partner' => \Yii::$app->user->identity->username
                 ]);
         }
+
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
         $this->load($params);
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
 
         if ($this->items) {
             $query->innerJoin('orders_contact_sku', 'orders_contact_sku.order_id = orders_contact.id')
                 ->andFilterWhere(['IN', 'orders_contact_sku.sku', $this->items]);
         }
+        if ($this->register_time) {
+            $time_register = explode(' - ', $this->register_time);
+            $startTime = Helper::timer(str_replace('/', '-', $time_register[0]));
+            $endTime = Helper::timer(str_replace('/', '-', $time_register[1]), 1);
+            $query->innerJoin('contacts', 'contacts.code = orders_contact.code');
+            $query->andFilterWhere(['between', 'contacts.register_time', $startTime, $endTime]);
+        }
+
+//
+//        if (!$this->validate()) {
+//            // uncomment the following line if you do not want to return any records when validation fails
+//            // $query->where('0=1');
+//            return $dataProvider;
+//        }
+
+
         $query->andFilterWhere(['IN', '{{orders_contact}}.payment_method', $this->payment_method])
-            ->andFilterWhere(['IN', '{{orders_contact}}.status', $this->status]);
+            ->andFilterWhere(['IN', '{{orders_contact}}.status', $this->status])
+            ->andFilterWhere(['IN', '{{orders_contact}}.warehouse_id', $this->warehouse_id]);
 
         return $dataProvider;
     }

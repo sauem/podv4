@@ -9,25 +9,26 @@ use common\helper\Helper;
 <?php
 Pjax::begin([
     'id' => 'search-form',
+    'enablePushState' => false,
     'clientOptions' => [
         'method' => 'GET'
     ]
 ]);
 $form = ActiveForm::begin([
     'method' => 'GET',
-    'options' => ['data-pjax' => true]
+    'options' => ['data-pjax' => true, 'id' => 'formOrder']
 ]);
 ?>
 <div class="row">
     <div class="col-md-4">
-        <?= $form->field($searchModel, 'items[]')->widget(Select2::className(), [
+        <?= $form->field($searchModel, 'items')->widget(Select2::className(), [
             'data' => Products::LISTS(),
             'options' => ['placeholder' => 'Sản phẩm...'],
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
     </div>
     <div class="col-md-4">
-        <?= $form->field($searchModel, 'payment_method[]')->widget(Select2::className(), [
+        <?= $form->field($searchModel, 'payment_method')->widget(Select2::className(), [
             'data' => Payments::LISTS(),
             'options' => ['placeholder' => 'Hình thức thanh toán...'],
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
@@ -35,7 +36,7 @@ $form = ActiveForm::begin([
     </div>
 
     <div class="col">
-        <button class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
+        <button type="submit" class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
         <a href="/order/index" data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-secondary">
             <i class="fe-trash"></i> Làm mới
         </a>
@@ -47,8 +48,12 @@ ActiveForm::end();
 Pjax::end() ?>
 <?php
 $js = <<<JS
-        $("#search-form").on("pjax:end", function() {
-			$.pjax.reload({container:"#default-box"});  //Reload GridView
+        $("#search-form").on("pjax:end", function(e) {
+
+            let url = e.target.baseURI;
+           url = url + '?' + new URLSearchParams($('#formOrder').serialize());
+
+            $.pjax.reload({replace:false,push:false,url:url,container:"#default-box"});  //Reload GridView
 		});
 JS;
 

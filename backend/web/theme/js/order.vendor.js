@@ -16,12 +16,8 @@ function HandleOrder() {
 }
 
 async function exportOrderSelect() {
-    let ids = $('#w2').yiiGridView("getSelectedRows");
+    let params = $('#search-form').serializeArray();
 
-    if (ids.length <= 0) {
-        toastr.warning('Chọn 1 đơn hàng để thực hiện thao tác!');
-        return false;
-    }
     swal.fire({
         title: 'Xin chờ....',
         onBeforeOpen: () => {
@@ -30,9 +26,9 @@ async function exportOrderSelect() {
                 xhrFields: {
                     responseType: 'blob'
                 },
-                url: 'https://' + window.location.hostname + AJAX_PATH.exportOrder,
+                url: 'http://' + window.location.hostname + AJAX_PATH.exportOrder,
                 type: 'GET',
-                data: {ids: ids},
+                data: params,
                 success: function (res) {
                     let a = document.createElement('a');
                     let url = window.URL.createObjectURL(res);

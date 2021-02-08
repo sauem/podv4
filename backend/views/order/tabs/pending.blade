@@ -23,20 +23,12 @@ use kartik\export\ExportMenu;
                     class="fe-shopping-cart"></i> Nhập mã vận chuyển
         </a>
         <a href="javascript:;" onclick="exportOrderSelect()" class="btn btn-sm btn-info"><i
-                    class="fe-download-cloud"></i> Xuất đơn đã chọn
+                    class="fe-download-cloud"></i> Xuất đơn đã lọc
         </a>
         <?php
         echo ExportMenu::widget([
             'dataProvider' => $dataProvider,
             'columns' => [
-                [
-                    'class' => CheckboxColumn::class,
-                    'checkboxOptions' => function ($model) {
-                        $cog['data-code'] = $model->code;
-                        $cog['data-pjax'] = '0';
-                        return $cog;
-                    }
-                ],
                 [
                     'attribute' => 'code',
                     'format' => 'html',
@@ -115,13 +107,12 @@ use kartik\export\ExportMenu;
         'persistResize' => true,
         'options' => ['id' => 'w2'],
         # 'persistResize' => true,
-        'layout' => '{items}{pager}',
+        'layout' => '{items}{pager}{summary}',
         'responsiveWrap' => false,
         'tableOptions' => [
             'class' => 'table table-sm',
         ],
         'pjaxSettings' => [
-            'neverTimeout' => true,
             'options' => [
                 'id' => 'pending-box',
                 'enablePushState' => false,
@@ -129,14 +120,6 @@ use kartik\export\ExportMenu;
         ],
         'perfectScrollbar' => true,
         'columns' => [
-            [
-                'class' => CheckboxColumn::class,
-                'checkboxOptions' => function ($model) {
-                    $cog['data-code'] = $model->code;
-                    $cog['data-pjax'] = '0';
-                    return $cog;
-                }
-            ],
             [
                 'attribute' => 'code',
                 'format' => 'html',

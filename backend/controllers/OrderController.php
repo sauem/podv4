@@ -21,11 +21,11 @@ class OrderController extends BaseController
     {
 
         $contactOrder = new OrdersContactSearch();
-        $params = array_merge_recursive( [
+        $params = array_merge_recursive([
             'OrdersContactSearch' => [
                 'status' => OrdersContact::STATUS_NEW,
             ]
-        ],\Yii::$app->request->queryParams);
+        ], \Yii::$app->request->queryParams);
 
         $waitShippingOrder = $contactOrder->search($params);
 
@@ -61,11 +61,13 @@ class OrderController extends BaseController
     public function actionGetIndex()
     {
         $contactOrder = new OrdersContactSearch();
-        $waitShippingOrder = $contactOrder->search(array_merge_recursive(\Yii::$app->request->queryParams, [
+        $params = array_merge_recursive([
             'OrdersContactSearch' => [
-                'status' => [OrdersContact::STATUS_NEW]
+                'status' => OrdersContact::STATUS_NEW,
             ]
-        ]));
+        ], \Yii::$app->request->queryParams);
+        $waitShippingOrder = $contactOrder->search($params);
+
         return static::responseRemote('tabs/default.blade', [
             'dataProvider' => $waitShippingOrder,
             'searchModel' => $contactOrder
@@ -75,11 +77,14 @@ class OrderController extends BaseController
     public function actionPending()
     {
         $searchModel = new OrdersContactSearch();
-        $dataProvider = $searchModel->search(array_merge_recursive(\Yii::$app->request->queryParams, [
+
+        $params = array_merge_recursive([
             'OrdersContactSearch' => [
                 'status' => [OrdersContact::STATUS_PENDING]
             ]
-        ]));
+        ], \Yii::$app->request->queryParams);
+
+        $dataProvider = $searchModel->search($params);
         $dataProvider->sort = false;
 
         return self::responseRemote('tabs/pending.blade', [

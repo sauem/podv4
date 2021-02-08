@@ -5,9 +5,11 @@ namespace backend\controllers;
 
 
 use backend\models\OrdersContact;
+use backend\models\OrdersContactSearch;
 use common\helper\Helper;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yii2tech\spreadsheet\Spreadsheet;
 
@@ -21,14 +23,12 @@ class AjaxExportController extends BaseController
 
     function actionOrder()
     {
-        $ids = \Yii::$app->request->get('ids');
-        $query = OrdersContact::find()
-            ->with(['skuItems', 'warehouse', 'transporter', 'payment'])
-            ->filterWhere(['IN', 'id', $ids]);
+
+        $searchModel = new OrdersContactSearch();
+        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+
         $exporter = new Spreadsheet([
-            'dataProvider' => new ActiveDataProvider([
-                'query' => $query,
-            ]),
+            'dataProvider' => $dataProvider,
             'columns' => [
                 'code',
                 'name',
