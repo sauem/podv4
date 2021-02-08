@@ -68,11 +68,21 @@ class AjaxReportController extends BaseController
             $marketer = ArrayHelper::getValue($filter, 'filter.marketer', []);
             $time_register = ArrayHelper::getValue($filter, 'filter.register_time', '');
 
+            if (!Helper::isEmpty($time_register)) {
+                $time_register = explode(' - ', $time_register);
+                $startTime = Helper::timer(str_replace('/', '-', $time_register[0]));
+                $endTime = Helper::timer(str_replace('/', '-', $time_register[1]), 1);
+                $query->where(['between', 'contacts.register_time', $startTime, $endTime]);
+            } else {
+                $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
+                $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
+            }
+
+
             if (!empty($product)) {
                 $query->innerJoin('products as P', 'P.partner_name = contacts.partner');
                 $query->innerJoin('orders_contact_sku as I', 'P.sku = I.sku');
                 $query->andWhere(['I.sku' => $product]);
-                # Helper::printf($query->createCommand()->rawSql);
             }
             if (!Helper::isEmpty($sale)) {
                 $query->innerJoin('contacts_assignment', 'contacts_assignment.phone = contacts.phone');
@@ -87,15 +97,6 @@ class AjaxReportController extends BaseController
                 }
             }
 
-            if (!Helper::isEmpty($time_register)) {
-                $time_register = explode(' - ', $time_register);
-                $startTime = Helper::timer(str_replace('/', '-', $time_register[0]));
-                $endTime = Helper::timer(str_replace('/', '-', $time_register[1]), 1);
-                $query->where(['between', 'contacts.register_time', $startTime, $endTime]);
-            } else {
-                $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
-                $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
-            }
 
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
@@ -120,15 +121,11 @@ class AjaxReportController extends BaseController
             ])->groupBy('day')
             ->orderBy('contacts.register_time ASC');
         if (Helper::isRole(UserRole::ROLE_PARTNER)) {
-            $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
+            $query->where(['contacts.partner' => \Yii::$app->user->identity->username]);
         }
 
         if (\Yii::$app->request->isPost) {
-            try {
-                $query = static::financialSearch($query, \Yii::$app->request->post());
-            } catch (\Exception $exception) {
-                throw new BadRequestHttpException($exception->getMessage());
-            }
+            $query = static::financialSearch($query, \Yii::$app->request->post());
         } else {
             $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
             $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
