@@ -50,8 +50,9 @@ use yii\helpers\Url;
         <div class="tab-content">
             <div class="tab-pane active" id="tab-1">
                 <?= $view->render("tabs/overview.blade", [
-                    'phone' => $phone,
-                    'code' => $code,
+                    'products' => $products,
+                    'sales' => $sales,
+                    'marketers' => $marketers,
                 ])?>
             </div>
             <div class="tab-pane" id="tab-2">Đã đối soát</div>
@@ -67,7 +68,13 @@ use yii\helpers\Url;
         // pjax tab content
         initToggleTab();
         //init overview chart
-        new initFinancialChart().render().overview();
+        let financial = new initFinancialChart();
+        financial.render().overview();
+
+        $(document).on('click', '.financial-search', function () {
+            let data = $("#financial-form").serializeArray();
+            financial.render().search(data);
+        });
 
     </script>
 @stop

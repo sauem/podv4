@@ -39,18 +39,16 @@ class ReportController extends BaseController
     }
 
     function actionFinancial()
-        {
-            $phone = OrdersContact::find()->addSelect('phone')->distinct('phone')
-                ->groupBy('phone')->asArray()->all();
-
-            $code = OrdersContact::find()->addSelect('code')->distinct('phone')
-                ->groupBy('code')->asArray()->all();
-
-            return static::responseRemote("financial.blade", [
-                'phone' => ArrayHelper::getColumn($phone,'phone'),
-                'code' => ArrayHelper::getColumn($code,'code'),
-            ]);
-        }
+    {
+        $products = Products::LISTS();
+        $marketers = UserRole::LISTS(UserRole::ROLE_MARKETER);
+        $sales = UserRole::LISTS(UserRole::ROLE_SALE, true);
+        return static::responseRemote("financial.blade", [
+            'products' => $products,
+            'sales' => $sales,
+            'marketers' => $marketers
+        ]);
+    }
 
     function actionCrossed()
     {

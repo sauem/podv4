@@ -12,6 +12,7 @@ use backend\models\OrdersTopupSearch;
 use backend\models\UserRole;
 use common\helper\Helper;
 use Illuminate\Support\Arr;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
@@ -58,18 +59,44 @@ class AjaxReportController extends BaseController
      * @throws BadRequestHttpException
      */
 
-    static function financialSearch($query, $filter)
+    static function financialSearch(Query $query, $filter)
     {
         try {
-            $phone = ArrayHelper::getValue($filter, 'filter.phone', []);
-            $code = ArrayHelper::getValue($filter, 'filter.code', []);
-            $payment_status = ArrayHelper::getValue($filter, 'filter.payment_status', []);
-            $cross_status = ArrayHelper::getValue($filter, 'filter.cross_status', []);
+
+            $product = ArrayHelper::getValue($filter, 'filter.product', []);
+            $sale = ArrayHelper::getValue($filter, 'filter.sale', []);
+            $marketer = ArrayHelper::getValue($filter, 'filter.marketer', []);
             $time_register = ArrayHelper::getValue($filter, 'filter.register_time', '');
 
-            if (!empty($phone)) {
-
+            if (!empty($product)) {
+                $query->innerJoin('products as P', 'P.partner_name = contacts.partner');
+                $query->innerJoin('orders_contact_sku as I', 'P.sku = I.sku');
+                $query->andWhere(['I.sku' => $product]);
+                # Helper::printf($query->createCommand()->rawSql);
             }
+            if (!Helper::isEmpty($sale)) {
+                $query->innerJoin('contacts_assignment', 'contacts_assignment.phone = contacts.phone');
+                $query->andWhere(['IN', 'contacts_assignment.user_id', $sale]);
+            }
+            if (!Helper::isEmpty($marketer)) {
+                if (Helper::isEmpty($product)) {
+                    $query->innerJoin('products as P', 'P.partner_name = contacts.partner')
+                        ->andWhere('contacts.register_time >= P.marketer_rage_start AND contacts.register_time <= P.marketer_rage_end');
+                } else {
+                    $query->andWhere('contacts.register_time >= P.marketer_rage_start AND contacts.register_time <= P.marketer_rage_end');
+                }
+            }
+
+            if (!Helper::isEmpty($time_register)) {
+                $time_register = explode(' - ', $time_register);
+                $startTime = Helper::timer(str_replace('/', '-', $time_register[0]));
+                $endTime = Helper::timer(str_replace('/', '-', $time_register[1]), 1);
+                $query->where(['between', 'contacts.register_time', $startTime, $endTime]);
+            } else {
+                $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
+                $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
+            }
+
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
@@ -82,14 +109,16 @@ class AjaxReportController extends BaseController
      */
     public function actionFinancial()
     {
+        $isEmpty = false;
         $query = Contacts::find()
             ->leftJoin('orders_contact', 'orders_contact.code = contacts.code')
             ->addSelect([
                 'SUM(orders_contact.total_bill) as revenue_C8',
                 'SUM(IF(orders_contact.payment_status = "paid", orders_contact.total_bill ,0)) as revenue_C11',
                 'SUM(IF(orders_contact.payment_status = "crossed", orders_contact.total_bill ,0)) as revenue_C13',
-                'FROM_UNIXTIME(contacts.updated_at, \'%d/%m/%Y\') day',
-            ])->groupBy('day');
+                'FROM_UNIXTIME(contacts.register_time, \'%d/%m/%Y\') day',
+            ])->groupBy('day')
+            ->orderBy('contacts.register_time ASC');
         if (Helper::isRole(UserRole::ROLE_PARTNER)) {
             $query->andWhere(['contacts.partner' => \Yii::$app->user->identity->username]);
         }
@@ -100,8 +129,14 @@ class AjaxReportController extends BaseController
             } catch (\Exception $exception) {
                 throw new BadRequestHttpException($exception->getMessage());
             }
+        } else {
+            $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
+            $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
         }
         $result = $query->asArray()->all();
+        if (!$result) {
+            $isEmpty = true;
+        }
         $result = array_map(function ($item) {
             return array_merge($item, [
                 'C11_C8' => Helper::calculate($item['revenue_C11'], $item['revenue_C8']),
@@ -117,6 +152,7 @@ class AjaxReportController extends BaseController
         $total_revenue = array_sum(ArrayHelper::getColumn($result, 'revenue_C8'));
 
         return [
+            'isEmpty' => $isEmpty,
             'labels' => $labels,
             'data' => [
                 'C8' => $revenue_C8,

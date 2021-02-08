@@ -1,77 +1,76 @@
-<div class="row">
-    <div class="col-12 mb-3 text-center">
-        <h4 class="text-danger">Bộ lọc</h4>
-    </div>
-    <div class="col-md-3">
-        <?= \kartik\daterange\DateRangePicker::widget([
-            'name' => 'filter[order_time]',
-            'presetDropdown' => true,
-            'hideInput' => true,
-            'options' => ['placeholder' => 'Chọn ngày tạo đơn...'],
-            'pluginOptions' => [
-                'locale' => [
-                    'format' => 'DD/MM/YYYY',
-                    'separator' => ' - '
+<form id="financial-form">
+    <div class="row">
+        <div class="col-12 mb-3 text-center">
+            <h4 class="text-danger">Bộ lọc</h4>
+        </div>
+        <div class="col-md-3 mt-1">
+            <?= \kartik\daterange\DateRangePicker::widget([
+                'name' => 'filter[register_time]',
+                'presetDropdown' => true,
+                'hideInput' => true,
+                'options' => ['placeholder' => 'Chọn ngày ra contact...'],
+                'pluginOptions' => [
+                    'locale' => [
+                        'format' => 'DD/MM/YYYY',
+                        'separator' => ' - '
+                    ]
                 ]
-            ]
-        ])?>
+            ])?>
+        </div>
+        <div class="col-md-3 mt-1">
+            <select title="Sản phẩm"
+                    data-actions-box="true"
+                    data-live-search="true"
+                    name="filter[product][]" class="selectpicker"
+                    multiple data-selected-text-format="count"
+                    data-style="btn-light">
+                @if(!empty($products))
+                    @foreach($products as $sku => $name)
+                        <option value="{{$sku}}">{{$name}}</option>
+                    @endforeach
+                @endif
+            </select>
+        </div>
+        @if(!\common\helper\Helper::isRole(\backend\models\UserRole::ROLE_PARTNER))
+
+            <div class="col-md-3 mt-1">
+                <select title="Sale..."
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[sale][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($sales))
+                        @foreach($sales as $id => $sale)
+                            <option value="{{$id}}">{{$sale}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="col-md-3 mt-1">
+                <select title="Marketer..."
+                        data-actions-box="true"
+                        data-live-search="true"
+                        name="filter[marketer][]" class="selectpicker"
+                        multiple data-selected-text-format="count"
+                        data-style="btn-light">
+                    @if(!empty($marketers))
+                        @foreach($marketers as $id => $name)
+                            <option value="{{$id}}">{{$name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+        @endif
+
+        <div class="col-md-3 mt-2">
+            <button type="button" class="financial-search btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
+            <button data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-success"><i class="fe-trash"></i> Xoá
+            </button>
+        </div>
     </div>
-    <div class="col-md-3">
-        <select title="Số điện thoại..."
-                data-actions-box="true"
-                data-live-search="true"
-                name="filter[phone][]" class="selectpicker"
-                multiple data-selected-text-format="count"
-                data-style="btn-light">
-            @isset($phone)
-                @foreach($phone as $phone)
-                    <option value="{{$phone}}">{{$phone}}</option>
-                @endforeach
-            @endisset
-        </select>
-    </div>
-    <div class="col-md-3">
-        <select title="Contact code..."
-                data-actions-box="true"
-                data-live-search="true"
-                name="filter[code][]" class="selectpicker"
-                multiple data-selected-text-format="count"
-                data-style="btn-light">
-            @isset($code)
-                @foreach($code as $code)
-                    <option value="{{$code}}">{{$code}}</option>
-                @endforeach
-            @endisset
-        </select>
-    </div>
-    <div class="col-md-3">
-        <select title="Tình trạng thanh toán..."
-                data-actions-box="true"
-                data-live-search="true"
-                name="filter[payment_status][]" class="selectpicker"
-                multiple data-selected-text-format="count"
-                data-style="btn-light">
-            <option value="paid">Đã thanh toán</option>
-            <option value="unpayed">Chưa thanh toán</option>
-        </select>
-    </div>
-    <div class="col-md-3 mt-2">
-        <select title="Tình trạng đối soát..."
-                data-actions-box="true"
-                data-live-search="true"
-                name="filter[cross_status][]" class="selectpicker"
-                multiple data-selected-text-format="count"
-                data-style="btn-light">
-            <option value="crossed">Đã đối soát</option>
-            <option value="uncross">Chưa đối soát</option>
-        </select>
-    </div>
-    <div class="col-md-3 mt-2">
-        <button class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
-        <button data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-success"><i class="fe-trash"></i> Xoá
-        </button>
-    </div>
-</div>
+</form>
+
 <hr>
 <div class="row align-items-center">
     <div class="col-12 text-center">

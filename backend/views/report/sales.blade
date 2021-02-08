@@ -44,6 +44,20 @@ $this->title = 'My Yii Application';
                             @endif
                         </select>
                     </div>
+                    <div class="col-md-3 mt-1">
+                        <select title="Marketer..."
+                                data-actions-box="true"
+                                data-live-search="true"
+                                name="filter[marketer][]" class="selectpicker"
+                                multiple data-selected-text-format="count"
+                                data-style="btn-light">
+                            @if(!empty($marketers))
+                                @foreach($marketers as $id => $name)
+                                    <option value="{{$id}}">{{$name}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
                 @endif
                 <div class="col-md-3 mt-1">
                     <select title="Nguồn liên hệ"
@@ -73,22 +87,6 @@ $this->title = 'My Yii Application';
                         @endif
                     </select>
                 </div>
-                @if(!\common\helper\Helper::isRole(\backend\models\UserRole::ROLE_PARTNER))
-                    <div class="col-md-3 mt-1">
-                        <select title="Marketer..."
-                                data-actions-box="true"
-                                data-live-search="true"
-                                name="filter[marketer][]" class="selectpicker"
-                                multiple data-selected-text-format="count"
-                                data-style="btn-light">
-                            @if(!empty($marketers))
-                                @foreach($marketers as $id => $name)
-                                    <option value="{{$id}}">{{$name}}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                @endif
                 <div class="col-md-3 mt-1">
                     <button type="button" onclick="searchForm()" id="searchData" class="btn btn-success"><i
                                 class="fe-search"></i> Lọc
@@ -127,12 +125,16 @@ $this->title = 'My Yii Application';
                 <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP C8 C3</h4>
 
                 <div id="chart-one" class="apex-charts">
-                    <div class="card-disabled"><div class="card-portlets-loader"></div></div>
+                    <div class="card-disabled">
+                        <div class="card-portlets-loader"></div>
+                    </div>
                 </div>
 
                 <h4 class="text-danger text-center mt-4">BẢNG TỔNG HỢP CONTACT</h4>
                 <div id="chart-two" class="apex-charts">
-                    <div class="card-disabled"><div class="card-portlets-loader"></div></div>
+                    <div class="card-disabled">
+                        <div class="card-portlets-loader"></div>
+                    </div>
                 </div>
             </div>
         </div>
