@@ -5,6 +5,7 @@ use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
 use backend\models\OrdersContact;
 use common\helper\Helper;
+use kop\y2sp\ScrollPager;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use common\helper\Component;
@@ -18,88 +19,88 @@ use kartik\export\ExportMenu;
         ]) !!}
     @if(!Helper::isRole(UserRole::ROLE_PARTNER))
 
-    <div class="my-2">
-        <a href="{!! Url::toRoute(['/import','module' => 'tracking']) !!}" class="btn btn-sm btn-success"><i
-                    class="fe-shopping-cart"></i> Nhập mã vận chuyển
-        </a>
-        <a href="javascript:;" onclick="exportOrderSelect()" class="btn btn-sm btn-info"><i
-                    class="fe-download-cloud"></i> Xuất đơn đã lọc
-        </a>
-        <?php
-        echo ExportMenu::widget([
-            'dataProvider' => $dataProvider,
-            'columns' => [
-                [
-                    'attribute' => 'code',
-                    'format' => 'html',
-                    'value' => function ($model) {
-                        return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
-                    }
-                ],
-                'checking_number',
-                [
-                    'attribute' => 'warehouse_id',
-                    'format' => 'html',
-                    'value' => function ($model) {
-                        return Helper::isEmpty($model->warehouse) ? '---' : $model->warehouse->name;
-                    }
-                ],
-                [
-                    'attribute' => 'transport_id',
-                    'format' => 'html',
-                    'value' => function ($model) {
-                        return Helper::isEmpty($model->transporter) ? '---' : $model->transporter->name;
-                    }
-                ],
-                'name',
-                'phone',
-                [
-                    'label' => 'Đối tác',
-                    'format' => 'html',
-                    'value' => function ($model) {
-                        return Helper::isEmpty($model->contact) ? '---' : $model->contact->partner;
-                    }
-                ],
-                [
-                    'label' => 'sản phẩm',
-                    'width' => '200px',
-                    'headerOptions' => [
-                        'width' => '200px'
+        <div class="my-2">
+            <a href="{!! Url::toRoute(['/import','module' => 'tracking']) !!}" class="btn btn-sm btn-success"><i
+                        class="fe-shopping-cart"></i> Nhập mã vận chuyển
+            </a>
+            <a href="javascript:;" onclick="exportOrderSelect()" class="btn btn-sm btn-info"><i
+                        class="fe-download-cloud"></i> Xuất đơn đã lọc
+            </a>
+            <?php
+            echo ExportMenu::widget([
+                'dataProvider' => $dataProvider,
+                'columns' => [
+                    [
+                        'attribute' => 'code',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
+                        }
                     ],
-                    'format' => 'html',
-                    'value' => function ($model) {
-                        return Helper::printString($model);
-                    }
-                ],
-                [
-                    'attribute' => 'status',
-                    'format' => 'html',
-                    'value' => function ($model) {
-                        return OrdersContact::StatusLabel($model->status);
-                    }
-                ],
-                [
-                    'label' => 'Phí vận chuyển',
-                    'format' => 'html',
-                    'value' => function ($model) {
-                        return Helper::formatCUR($model->shipping_cost, '',0);
-                    }
-                ],
-                [
-                    'label' => 'Tổng đơn',
-                    'format' => 'html',
-                    'value' => function ($model) {
-                        return Helper::formatCUR($model->total_bill, '', 0);
-                    }
+                    'checking_number',
+                    [
+                        'attribute' => 'warehouse_id',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return Helper::isEmpty($model->warehouse) ? '---' : $model->warehouse->name;
+                        }
+                    ],
+                    [
+                        'attribute' => 'transport_id',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return Helper::isEmpty($model->transporter) ? '---' : $model->transporter->name;
+                        }
+                    ],
+                    'name',
+                    'phone',
+                    [
+                        'label' => 'Đối tác',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return Helper::isEmpty($model->contact) ? '---' : $model->contact->partner;
+                        }
+                    ],
+                    [
+                        'label' => 'sản phẩm',
+                        'width' => '200px',
+                        'headerOptions' => [
+                            'width' => '200px'
+                        ],
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return Helper::printString($model);
+                        }
+                    ],
+                    [
+                        'attribute' => 'status',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return OrdersContact::StatusLabel($model->status);
+                        }
+                    ],
+                    [
+                        'label' => 'Phí vận chuyển',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return Helper::formatCUR($model->shipping_cost, '', 0);
+                        }
+                    ],
+                    [
+                        'label' => 'Tổng đơn',
+                        'format' => 'html',
+                        'value' => function ($model) {
+                            return Helper::formatCUR($model->total_bill, '', 0);
+                        }
+                    ]
                 ]
-            ]
-        ])
-        ?>
-        <div id="result-amount-view" class="float-right">
+            ])
+            ?>
+            <div id="result-amount-view" class="float-right">
+
+            </div>
 
         </div>
-
-    </div>
     @endif
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -173,7 +174,7 @@ use kartik\export\ExportMenu;
                 'label' => 'Phí vận chuyển',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return Helper::formatCUR($model->shipping_cost, '',0);
+                    return Helper::formatCUR($model->shipping_cost, '', 0);
                 }
             ],
             [
@@ -182,8 +183,15 @@ use kartik\export\ExportMenu;
                 'value' => function ($model) {
                     return Helper::formatCUR($model->total_bill, '', 0);
                 }
-            ]
-        ]
+            ],
+        ],
+        'pager' => [
+            'class' => ScrollPager::className(),
+            'container' => '#pending-box tbody',
+            'item' => 'tr',
+            'paginationSelector' => '#pending-box .pagination',
+            'triggerTemplate' => '<tr class="ias-trigger"><td colspan="100%" style="text-align: center"><a style="cursor: pointer">{text}</a></td></tr>',
+        ],
     ]) ?>
     <?= $view->render('../template/amount-view.blade')?>
 

@@ -23,13 +23,12 @@ class OrderController extends BaseController
         $contactOrder = new OrdersContactSearch();
         $params = array_merge_recursive([
             'OrdersContactSearch' => [
-                'status' => OrdersContact::STATUS_NEW,
+                //'status' => OrdersContact::STATUS_NEW,
             ]
         ], \Yii::$app->request->queryParams);
 
         $waitShippingOrder = $contactOrder->search($params);
 
-        $waitShippingOrder->pagination = false;
 
         $pendingShippingOrder = $contactOrder->search(array_merge_recursive(\Yii::$app->request->queryParams, [
             'OrdersContactSearch' => [
@@ -67,7 +66,6 @@ class OrderController extends BaseController
             ]
         ], \Yii::$app->request->queryParams);
         $waitShippingOrder = $contactOrder->search($params);
-
         return static::responseRemote('tabs/default.blade', [
             'dataProvider' => $waitShippingOrder,
             'searchModel' => $contactOrder

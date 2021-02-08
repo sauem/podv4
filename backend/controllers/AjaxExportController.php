@@ -25,7 +25,11 @@ class AjaxExportController extends BaseController
     {
 
         $searchModel = new OrdersContactSearch();
-        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(array_merge_recursive(\Yii::$app->request->queryParams, [
+            'OrdersContactSearch' => [
+                'status' => OrdersContact::STATUS_PENDING
+            ]
+        ]));
 
         $exporter = new Spreadsheet([
             'dataProvider' => $dataProvider,

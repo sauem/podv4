@@ -16,7 +16,8 @@ function HandleOrder() {
 }
 
 async function exportOrderSelect() {
-    let params = $('#search-form').serializeArray();
+    let params = $('#formOrderPending').serialize();
+    let url = 'http://' + window.location.hostname + AJAX_PATH.exportOrder + '?' + params;
 
     swal.fire({
         title: 'Xin chờ....',
@@ -26,7 +27,7 @@ async function exportOrderSelect() {
                 xhrFields: {
                     responseType: 'blob'
                 },
-                url: 'http://' + window.location.hostname + AJAX_PATH.exportOrder,
+                url: url,
                 type: 'GET',
                 data: params,
                 success: function (res) {

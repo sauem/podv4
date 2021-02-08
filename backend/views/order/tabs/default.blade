@@ -5,7 +5,7 @@ use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
 use backend\models\OrdersContact;
 use common\helper\Helper;
-use yii\helpers\Url;
+use kop\y2sp\ScrollPager;use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\web\JsExpression;
 use yii\web\View;
@@ -46,7 +46,6 @@ use backend\models\UserRole;
             'enablePushState' => false,
         ]
     ],
-    'perfectScrollbar' => true,
     'columns' => [
         [
             'class' => CheckboxColumn::class,
@@ -107,16 +106,23 @@ use backend\models\UserRole;
                 'edit' => function ($url, $model) {
                     return Html::a('<i class="fe-edit"></i>',
                         Url::toRoute(['/sale-phone/update', 'code' => $model->code]),
-                            [
-                                'class' => 'btn btn-xs btn-warning',
-                                'data-pjax' => '0',
-                                'target' => '_blank'
-                            ]
-                        );
+                        [
+                            'class' => 'btn btn-xs btn-warning',
+                            'data-pjax' => '0',
+                            'target' => '_blank'
+                        ]
+                    );
                 }
             ]
         ],
-    ]
+    ],
+    'pager' => [
+        'class' => ScrollPager::className(),
+        'container' => '#default-box tbody',
+        'item' => 'tr',
+        'paginationSelector' => '#default-box .pagination',
+        'triggerTemplate' => '<tr class="ias-trigger"><td colspan="100%" style="text-align: center"><a style="cursor: pointer">{text}</a></td></tr>',
+    ],
 ]) ?>
 <?= $view->render('../template/warehouse-view.blade')?>
 <?= $view->render('@backend/views/parts/Modal.blade', ['id' => 'viewExpand-modal'])?>
