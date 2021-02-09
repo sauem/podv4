@@ -46,7 +46,7 @@ class WarehouseController extends BaseController
                 'P.category_id',
                 'P.sku',
                 'categories.name',
-                'SUM(IF(OC.status = "new", OCS.qty, 0)) as holdup',
+                'SUM(IF(OC.status = "new" OR OC.status = "pending" OR OC.status IS NULL, OCS.qty, 0)) as holdup',
                 'SUM(IF(OC.payment_status = "paid" OR OC.status = "paid", OCS.qty, 0)) as sole',
                 'SUM(IF(OC.payment_status = "refund" OR OC.status = "refund", OCS.qty, 0)) as refund',
                 'SUM(IF(OC.status = "broken", OCS.qty, 0)) as broken',

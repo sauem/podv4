@@ -149,3 +149,7 @@ class WarehouseTransaction extends \common\models\BaseModel
         return true;
     }
 }
+// Tạo đơn hàng -> chưa xuất hàng
+// Chưa chuyển hàng -> chờ chuyển hàng
+// Chờ chuyển hàng -> Đang vận chuyển
+// Đang vận chuyển -> hoàn

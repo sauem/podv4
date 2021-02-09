@@ -276,6 +276,9 @@ class OrdersContact extends \common\models\BaseModel
             $this->total_price = Helper::toFloat($this->total_price);
         }
         if ($insert) {
+            if (!empty($this->status)) {
+                $this->status = OrdersContact::STATUS_NEW;
+            }
             if ($this->payment_method === self::STATIC_PAYMENT_TRANSFER && Helper::isEmpty($this->bill_link)) {
                 $this->addError("bill_link", "Link hóa đơn chuyển khoản trống!");
                 return false;
