@@ -36,3 +36,43 @@ Handlebars.registerHelper("cashSource", function (val) {
             return "---";
     }
 });
+Handlebars.registerHelper('productTag', function (items) {
+    let html = '';
+    if (items.length > 0) {
+        items.map(item => {
+            html += item.sku + '*' + item.qty + ',';
+        });
+    } else {
+        html = '---';
+    }
+    return html.slice(0, -1);
+})
+Handlebars.registerHelper("orderStatus", function (status) {
+    const STATUS_NEW = 'new';
+    const STATUS_PENDING = 'pending';
+    const STATUS_SHIPPING = 'shipping';
+    const STATUS_SHIPPED = 'shipped';
+
+
+    const STATUS_PAYED = 'paid';
+    const STATUS_UNPAID = 'unpaid';
+    const STATUS_REFUND = 'refund';
+
+    const STATUS_CANCEL = 'cancel';
+    const STATUS_UNCROSS = 'uncross';
+    const STATUS_CROSSED = 'crossed';
+
+    const STATUS = {
+        [STATUS_NEW]: 'Chưa vận chuyển',
+        [STATUS_PENDING]: 'Chờ vận chuyển',
+        [STATUS_SHIPPING]: 'Đang vận chuyển',
+        [STATUS_SHIPPED]: 'Đã vận chuyển',
+        [STATUS_UNPAID]: 'Chưa thanh toán',
+        [STATUS_PAYED]: 'Đã thanh toán',
+        [STATUS_REFUND]: 'Hoàn đơn',
+        [STATUS_UNCROSS]: 'Chưa đối soát',
+        [STATUS_CROSSED]: 'Đã đối soát',
+        [STATUS_CANCEL]: 'Huỷ đơn',
+    }
+    return `<span class="badge badge-pill badge-info">${STATUS[status]}</span>`;
+});

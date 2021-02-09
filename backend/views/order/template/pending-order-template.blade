@@ -1,0 +1,17 @@
+<script id="pending-order-template" type="text/x-handlebars-template">
+    @{{#each this}}
+    <tr data-key="@{{ this.code }}">
+        <td>@{{ code }}</td>
+        <td>@{{ name }}</td>
+        <td>@{{ phone }}</td>
+        <td>@{{ partner }}</td>
+        <td>@{{ transporter.name }}</td>
+        <td>@{{ checking_number }}</td>
+        <td>@{{ warehouse.name }}</td>
+        <td><small>@{{{productTag skuItems }}}</small></td>
+        <td>@{{{orderStatus status }}}</td>
+        <td>@{{money transport_fee }}</td>
+        <td>@{{money total_bill }}</td>
+    </tr>
+    @{{/each  }}
+</script>

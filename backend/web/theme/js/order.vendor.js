@@ -45,3 +45,33 @@ async function exportOrderSelect() {
         }
     });
 }
+
+function tabOrderContent() {
+    this.resultOrder = $('#result-order-pending');
+    this.templateOrder = Handlebars.compile($('#pending-order-template').html());
+
+    this.getData = async (params = {}, url = '/order/get-pending') => {
+        return $.ajax({
+            url: url,
+            data: params,
+            cache: false,
+            type: "GET"
+        });
+    }
+    this.render = {
+        pending: async (params = {}) => {
+            try {
+                const {data, offset} = await this.getData(params);
+                if (data.length <= 0) {
+                    toastr.warning('Không còn dữ liệu!');
+                    $('.btn-load-more').hide();
+                    return false;
+                }
+                this.resultOrder.append(this.templateOrder(data));
+                return offset;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+}

@@ -26,178 +26,49 @@ use kartik\export\ExportMenu;
             <a href="javascript:;" onclick="exportOrderSelect()" class="btn btn-sm btn-info"><i
                         class="fe-download-cloud"></i> Xuất đơn đã lọc
             </a>
-            <?php
-            echo ExportMenu::widget([
-                'dataProvider' => $dataProvider,
-                'columns' => [
-                    [
-                        'attribute' => 'code',
-                        'format' => 'html',
-                        'value' => function ($model) {
-                            return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
-                        }
-                    ],
-                    'checking_number',
-                    [
-                        'attribute' => 'warehouse_id',
-                        'format' => 'html',
-                        'value' => function ($model) {
-                            return Helper::isEmpty($model->warehouse) ? '---' : $model->warehouse->name;
-                        }
-                    ],
-                    [
-                        'attribute' => 'transport_id',
-                        'format' => 'html',
-                        'value' => function ($model) {
-                            return Helper::isEmpty($model->transporter) ? '---' : $model->transporter->name;
-                        }
-                    ],
-                    'name',
-                    'phone',
-                    [
-                        'label' => 'Đối tác',
-                        'format' => 'html',
-                        'value' => function ($model) {
-                            return Helper::isEmpty($model->contact) ? '---' : $model->contact->partner;
-                        }
-                    ],
-                    [
-                        'label' => 'sản phẩm',
-                        'width' => '200px',
-                        'headerOptions' => [
-                            'width' => '200px'
-                        ],
-                        'format' => 'html',
-                        'value' => function ($model) {
-                            return Helper::printString($model);
-                        }
-                    ],
-                    [
-                        'attribute' => 'status',
-                        'format' => 'html',
-                        'value' => function ($model) {
-                            return OrdersContact::StatusLabel($model->status);
-                        }
-                    ],
-                    [
-                        'label' => 'Phí vận chuyển',
-                        'format' => 'html',
-                        'value' => function ($model) {
-                            return Helper::formatCUR($model->shipping_cost, '', 0);
-                        }
-                    ],
-                    [
-                        'label' => 'Tổng đơn',
-                        'format' => 'html',
-                        'value' => function ($model) {
-                            return Helper::formatCUR($model->total_bill, '', 0);
-                        }
-                    ]
-                ]
-            ])
-            ?>
+
             <div id="result-amount-view" class="float-right">
 
             </div>
 
         </div>
     @endif
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'pjax' => true,
-        'persistResize' => true,
-        'options' => ['id' => 'w2'],
-        # 'persistResize' => true,
-        'layout' => '{items}{pager}{summary}',
-        'responsiveWrap' => false,
-        'tableOptions' => [
-            'class' => 'table table-sm',
-        ],
-        'pjaxSettings' => [
-            'options' => [
-                'id' => 'pending-box',
-                'enablePushState' => false,
-            ]
-        ],
-        'perfectScrollbar' => true,
-        'columns' => [
-            [
-                'attribute' => 'code',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
-                }
-            ],
-            'checking_number',
-            [
-                'attribute' => 'warehouse_id',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::isEmpty($model->warehouse) ? '---' : $model->warehouse->name;
-                }
-            ],
-            [
-                'attribute' => 'transport_id',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::isEmpty($model->transporter) ? '---' : $model->transporter->name;
-                }
-            ],
-            'name',
-            'phone',
-            [
-                'label' => 'Đối tác',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::isEmpty($model->contact) ? '---' : $model->contact->partner;
-                }
-            ],
-            [
-                'label' => 'sản phẩm',
-                'width' => '200px',
-                'headerOptions' => [
-                    'width' => '200px'
-                ],
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::printString($model);
-                }
-            ],
-            [
-                'attribute' => 'status',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return OrdersContact::StatusLabel($model->status);
-                }
-            ],
-            [
-                'label' => 'Phí vận chuyển',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::formatCUR($model->shipping_cost, '', 0);
-                }
-            ],
-            [
-                'label' => 'Tổng đơn',
-                'format' => 'html',
-                'value' => function ($model) {
-                    return Helper::formatCUR($model->total_bill, '', 0);
-                }
-            ],
-        ],
-        'pager' => [
-            'class' => ScrollPager::className(),
-            'container' => '#pending-box tbody',
-            'item' => 'tr',
-            'paginationSelector' => '#pending-box .pagination',
-            'triggerTemplate' => '<tr class="ias-trigger"><td colspan="100%" style="text-align: center"><a style="cursor: pointer">{text}</a></td></tr>',
-        ],
-    ]) ?>
+    <div class="table-responsive">
+        <table id="pending-box" class="table-sm table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>Code</th>
+                <th>Khách hàng</th>
+                <th>Điện thoại</th>
+                <th>Đối tác</th>
+                <th>Đối tác vận chuyển</th>
+                <th>Tracking number</th>
+                <th>Kho hàng</th>
+                <th>Sản phẩm</th>
+                <th>Trạng thái</th>
+                <th>Phí vận chuyển</th>
+                <th>Doanh thu</th>
+            </tr>
+            </thead>
+            <tbody id="result-order-pending">
+            <tr>
+                <td colspan="11" class="text-center">Nothing showing....</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="11">
+                    <button data-offset="20" class="btn-load-more">Load more items</button>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <?= $view->render('../template/pending-order-template.blade')?>
     <?= $view->render('../template/amount-view.blade')?>
 
 @stop
 @section("pre_page")
-
     <script>
 
         $(document).on("click", "#createOrderVendor", function () {
@@ -237,6 +108,28 @@ use kartik\export\ExportMenu;
             } catch (e) {
                 console.log(e);
             }
+        });
+
+        let tabContent = new tabOrderContent();
+        tabContent.render.pending();
+        $(document).on('click', '.btn-load-more', async function (e) {
+            let loadingContent = '<div class="text-center"><div class="spinner-border text-secondary m-2" role="status"></div></div>';
+            $(this).html(loadingContent);
+            let params = $('#formOrderPending').serializeArray();
+            let offset = parseInt($(this).attr('data-offset'));
+            params = Object.assign(params, {
+                4: {
+                    name: 'offset',
+                    value: offset
+                }
+            });
+            offset = await tabContent.render.pending(params);
+            $(this).attr('data-offset', offset);
+            $(this).html('Load more items');
+        });
+        $(document).on('click', '#searchPending', function () {
+            let params = $('#formOrderPending').serializeArray();
+            tabContent.render.pending(params);
         });
 
     </script>

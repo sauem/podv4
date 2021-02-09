@@ -12,8 +12,10 @@ use backend\models\OrderStatus;
 use backend\models\WarehouseTransaction;
 use common\helper\Helper;
 use yii\db\Transaction;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class OrderController extends BaseController
 {
@@ -72,6 +74,28 @@ class OrderController extends BaseController
         ], null, null);
     }
 
+    public function actionGetPending()
+    {
+        $searchModel = new OrdersContactSearch();
+
+        $params = array_merge_recursive([
+            'OrdersContactSearch' => [
+                'status' => [OrdersContact::STATUS_PENDING]
+            ]
+        ], \Yii::$app->request->get());
+        $dataProvider = $searchModel->search($params);
+        $offset = ArrayHelper::getValue($params, 'offset', 0);
+        $dataProvider->query->offset($offset);
+        $dataProvider->query->limit(20);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+
+        return [
+            'data' => $dataProvider->query->asArray()->all(),
+            'offset' => ((int)$offset + 20),
+            'limit' => 20,
+        ];
+    }
+
     public function actionPending()
     {
         $searchModel = new OrdersContactSearch();
@@ -83,7 +107,6 @@ class OrderController extends BaseController
         ], \Yii::$app->request->queryParams);
 
         $dataProvider = $searchModel->search($params);
-        $dataProvider->sort = false;
 
         return self::responseRemote('tabs/pending.blade', [
             'dataProvider' => $dataProvider,

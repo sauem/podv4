@@ -7,18 +7,10 @@ use backend\models\Payments;
 use common\helper\Helper;
 ?>
 <?php
-Pjax::begin([
-    'id' => 'search-order-pending',
-    'enablePushState' => false,
-    'enableReplaceState' => false,
-    'clientOptions' => [
-        'method' => 'GET'
-    ]
-]);
+
 $form = ActiveForm::begin([
     'method' => 'GET',
-    'action' => \yii\helpers\Url::toRoute(['pending']),
-    'options' => ['data-pjax' => true, 'id' => 'formOrderPending']
+    'options' => ['id' => 'formOrderPending']
 ]);
 ?>
 <div class="row">
@@ -58,7 +50,7 @@ $form = ActiveForm::begin([
         ])->label(false);?>
     </div>
     <div class="col">
-        <button type="submit" form="formOrderPending" class="btn btn-success"><i class="fe-search"></i> Tìm kiếm
+        <button type="button" id="searchPending" class="btn btn-success"><i class="fe-search"></i> Tìm kiếm
         </button>
         <a href="/order/index" data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-secondary">
             <i class="fe-trash"></i> Làm mới
@@ -66,19 +58,4 @@ $form = ActiveForm::begin([
     </div>
 </div>
 
-<?php ActiveForm::end(); Pjax::end(); ?>
-
-<?php
-$js = <<<JS
-        $("#search-order-pending").on("pjax:end", function(e) {
-             console.log(e);
-            let url = e.relatedTarget.action;
-           url =  url + '?' + new URLSearchParams($('#formOrderPending').serialize());
-            console.log(url);
-
-            $.pjax.reload({replace:false,push:false,url:url,container:"#pending-box"});
-		});
-
-JS;
-$view->registerJS($js);
-?>
+<?php ActiveForm::end(); ?>

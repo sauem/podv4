@@ -31,6 +31,12 @@
 .text-18 {
   font-size: 18px; }
 
+.btn-load-more {
+  width: 100%;
+  text-align: center;
+  border: none;
+  background: none; }
+
 .card-box {
   margin-bottom: 0px; }
 
