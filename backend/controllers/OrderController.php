@@ -9,6 +9,8 @@ use backend\models\Orders;
 use backend\models\OrdersContact;
 use backend\models\OrdersContactSearch;
 use backend\models\OrderStatus;
+use backend\models\WarehouseHistories;
+use backend\models\WarehouseStorage;
 use backend\models\WarehouseTransaction;
 use common\helper\Helper;
 use yii\db\Transaction;
@@ -25,7 +27,7 @@ class OrderController extends BaseController
         $contactOrder = new OrdersContactSearch();
         $params = array_merge_recursive([
             'OrdersContactSearch' => [
-                //'status' => OrdersContact::STATUS_NEW,
+                'status' => OrdersContact::STATUS_NEW,
             ]
         ], \Yii::$app->request->queryParams);
 
@@ -167,7 +169,11 @@ class OrderController extends BaseController
                         if (!$order->save()) {
                             throw new BadRequestHttpException(Helper::firstError($order));
                         }
-                        #WarehouseTransaction::addNewHistories($order);
+                        WarehouseTransaction::checkStorage($order);
+                        WarehouseHistories::saveHistories(
+                            $order->code,
+                            $order->skuItems,
+                            WarehouseHistories::TYPE_OUTPUT);
                     }
                     $transaction->commit();
                     return static::responseSuccess();

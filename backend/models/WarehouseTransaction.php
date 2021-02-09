@@ -133,7 +133,7 @@ class WarehouseTransaction extends \common\models\BaseModel
      * @param null $order_code
      * @throws BadRequestHttpException
      */
-    public static function addNewHistories($order)
+    public static function checkStorage($order)
     {
         $skuItems = $order->skuItems;
         if (empty($skuItems)) {
@@ -143,9 +143,9 @@ class WarehouseTransaction extends \common\models\BaseModel
         foreach ($skuItems as $item) {
             $warehouse = WarehouseTransaction::findAll(['warehouse_id' => $order->warehouse_id, 'product_sku' => $item->sku]);
             if (!$warehouse) {
-                throw new BadRequestHttpException('Không tồn tại sản phẩm trong kho!');
+                throw new BadRequestHttpException("Không tồn tại sản phẩm <b class='text-warning'>{$item->sku}</b> trong kho!");
             }
-
         }
+        return true;
     }
 }

@@ -59,7 +59,7 @@ function tabOrderContent() {
         });
     }
     this.render = {
-        pending: async (params = {}) => {
+        pending: async (params = {}, search = false) => {
             try {
                 const {data, offset} = await this.getData(params);
                 if (data.length <= 0) {
@@ -67,7 +67,11 @@ function tabOrderContent() {
                     $('.btn-load-more').hide();
                     return false;
                 }
-                this.resultOrder.append(this.templateOrder(data));
+                if (search) {
+                    this.resultOrder.html(this.templateOrder(data));
+                } else {
+                    this.resultOrder.append(this.templateOrder(data));
+                }
                 return offset;
             } catch (e) {
                 console.log(e);

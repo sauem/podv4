@@ -51,9 +51,6 @@ use kartik\export\ExportMenu;
             </tr>
             </thead>
             <tbody id="result-order-pending">
-            <tr>
-                <td colspan="11" class="text-center">Nothing showing....</td>
-            </tr>
             </tbody>
             <tfoot>
             <tr>
@@ -129,7 +126,7 @@ use kartik\export\ExportMenu;
         });
         $(document).on('click', '#searchPending', function () {
             let params = $('#formOrderPending').serializeArray();
-            tabContent.render.pending(params);
+            tabContent.render.pending(params, true);
         });
 
     </script>

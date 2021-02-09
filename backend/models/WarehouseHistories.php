@@ -116,11 +116,14 @@ class WarehouseHistories extends \common\models\BaseModel
             }
 
             foreach ($items as $item) {
+
                 $sku = ArrayHelper::getValue($item, 'sku', null);
                 $qty = ArrayHelper::getValue($item, 'qty', null);
                 $price = ArrayHelper::getValue($item, 'price', null);
-
-                $model = new WarehouseHistories();
+                $model = WarehouseHistories::findOne(['code' => $orderCode, 'product_sku' => $sku]);
+                if (!$model) {
+                    $model = new WarehouseHistories();
+                }
                 $model->code = $orderCode;
                 $model->transaction_type = $type;
                 $model->product_sku = $sku;
