@@ -90,11 +90,14 @@ class OrderController extends BaseController
         $dataProvider->query->offset($offset);
         $dataProvider->query->limit(20);
         \Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = $dataProvider->query->asArray()->all();
 
         return [
-            'data' => $dataProvider->query->asArray()->all(),
+            'data' => $data,
             'offset' => ((int)$offset + 20),
             'limit' => 20,
+            'shown' => $offset . '/' . $dataProvider->getTotalCount(),
+            'max' => sizeof($data) < 20
         ];
     }
 
@@ -114,6 +117,38 @@ class OrderController extends BaseController
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel
         ]);
+    }
+
+    public function actionGetStatus()
+    {
+        $searchModel = new OrdersContactSearch();
+        $params = array_merge_recursive([
+            'OrdersContactSearch' => [
+                'status' => [
+                    OrdersContact::STATUS_SHIPPED,
+                    OrdersContact::STATUS_SHIPPING,
+                    OrdersContact::STATUS_REFUND,
+                    OrdersContact::STATUS_CANCEL,
+                    OrdersContact::STATUS_UNCROSS,
+                    OrdersContact::STATUS_CROSSED,
+                    OrdersContact::STATUS_PAYED,
+                    OrdersContact::STATUS_UNPAID
+                ]
+            ]
+        ], \Yii::$app->request->get());
+        $dataProvider = $searchModel->search($params);
+        $offset = ArrayHelper::getValue($params, 'offset', 0);
+        $dataProvider->query->offset($offset);
+        $dataProvider->query->limit(20);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = $dataProvider->query->asArray()->all();
+        return [
+            'data' => $data,
+            'offset' => ((int)$offset + 20),
+            'limit' => 20,
+            'shown' => $offset . '/' . $dataProvider->getTotalCount(),
+            'max' => sizeof($data) < 20
+        ];
     }
 
     public function actionStatus()

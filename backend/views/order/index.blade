@@ -57,10 +57,21 @@ use backend\models\UserRole;
         </div>
     </div>
     {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'vendor-modal']) !!}
+    <?= $view->render('template/status-order-template.blade')?>
+    <?= $view->render('template/pending-order-template.blade')?>
+
+@stop
+@section('js_template')
+    <script>
+        let tabContent = new tabOrderContent();
+    </script>
 @stop
 @section('pos_page')
     <script>
         initToggleTab();
+        $(document).on('click', '.btn-load-more', function (e) {
+            tabContent.render.loadMore(this);
+        });
     </script>
 @stop
 @php($view->registerJSFile('@web/theme/js/order.vendor.js?v=1.24',['depends' =>  \yii\web\JqueryAsset::className()]))

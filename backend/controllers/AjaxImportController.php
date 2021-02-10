@@ -14,6 +14,7 @@ use backend\models\OrdersRefund;
 use backend\models\Products;
 use backend\models\ProductsPrice;
 use backend\models\UserModel;
+use backend\models\WarehouseHistories;
 use backend\models\ZipcodeCountry;
 use common\helper\Helper;
 use yii\db\Transaction;
@@ -74,10 +75,10 @@ class AjaxImportController extends BaseController
     public function actionRefund()
     {
         $data = \Yii::$app->request->post('row');
-        $contact = OrdersContact::findOne(['code' => $data['code'], 'checking_number' => $data['checking_number']]);
+        $order = OrdersContact::findOne(['code' => $data['code'], 'checking_number' => $data['checking_number']]);
         $product = Products::findOne(['sku' => $data['sku']]);
         $refund = new OrdersRefund();
-        if (!$contact) {
+        if (!$order) {
             throw new BadRequestHttpException('Không tìm thấy đơn hàng!');
         }
         if (!$product) {
@@ -89,11 +90,28 @@ class AjaxImportController extends BaseController
                     'status' => OrdersContact::STATUS_REFUND,
                     'shipping_status' => OrdersContact::STATUS_REFUND,
                 ], ['code' => $refund->code]);
+                $orderItem = OrdersContactSku::findOne(['order_id' => $order->id, 'product_sku' => $product->sku]);
+                if (!$orderItem) {
+                    throw new BadRequestHttpException('Không tồn tại sản phẩm trong đơn hàng!');
+                }
+                $unitPrice = $orderItem->price / $orderItem->qty;
+                if ($refund->qty >= $orderItem->qty) {
+                    $orderItem->delete();
+                } else {
+                    $orderItem->price = ($orderItem->qty - $refund->qty) * $unitPrice;
+                    $orderItem->qty = $orderItem->qty - $refund->qty;
+                    $orderItem->save();
+                }
+                WarehouseHistories::saveHistories($order->code, [
+                    'qty' => $refund->qty,
+                    'sku' => $refund->sku,
+                    'price' => $unitPrice * $refund->qty,
+                ], WarehouseHistories::TYPE_REFUND);
             }
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
-        return Helper::firstError($contact);
+        return Helper::firstError($order);
     }
 
     /**

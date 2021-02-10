@@ -7,25 +7,29 @@ use backend\models\Payments;
 use common\helper\Helper;
 ?>
 <?php
-$form = ActiveForm::begin();
+
+$form = ActiveForm::begin([
+    'method' => 'GET',
+    'options' => ['id' => 'form-order-status']
+]);
 ?>
 <div class="row">
     <div class="col-md-3">
         <?= $form->field($searchModel, 'items')->widget(Select2::className(), [
             'data' => Products::LISTS(),
-            'options' => ['placeholder' => 'Sản phẩm...','id' => 'product-status'],
+            'options' => ['placeholder' => 'Sản phẩm...', 'id' => 'product-status'],
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
     </div>
     <div class="col-md-3">
         <?= $form->field($searchModel, 'payment_method')->widget(Select2::className(), [
             'data' => Payments::LISTS(),
-            'options' => ['placeholder' => 'Hình thức thanh toán...','id' => 'payment-status'],
+            'options' => ['placeholder' => 'Hình thức thanh toán...', 'id' => 'payment-status'],
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
     </div>
     <div class="col-md-3">
-        <?= $form->field($searchModel, 'country')->widget(DateRangePicker::className(), [
+        <?= $form->field($searchModel, 'register_time')->widget(DateRangePicker::className(), [
             'name' => 'order_time',
             'presetDropdown' => true,
             'hideInput' => true,
@@ -38,8 +42,8 @@ $form = ActiveForm::begin();
         ])->label(false);?>
     </div>
     <div class="col">
-        <button class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
-        <button data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-success">
+        <button type="button" id="searchStatus" class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
+        <button data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-secondary">
             <i class="fe-trash"></i> Làm mới
         </button>
     </div>

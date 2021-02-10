@@ -23,7 +23,7 @@ use kartik\export\ExportMenu;
             <a href="{!! Url::toRoute(['/import','module' => 'tracking']) !!}" class="btn btn-sm btn-success"><i
                         class="fe-shopping-cart"></i> Nhập mã vận chuyển
             </a>
-            <a href="javascript:;" onclick="exportOrderSelect()" class="btn btn-sm btn-info"><i
+            <a data-status="pending" href="javascript:;" onclick="exportOrderSelect(this)" class="btn btn-sm btn-info"><i
                         class="fe-download-cloud"></i> Xuất đơn đã lọc
             </a>
 
@@ -55,13 +55,12 @@ use kartik\export\ExportMenu;
             <tfoot>
             <tr>
                 <td colspan="11">
-                    <button data-offset="20" class="btn-load-more">Load more items</button>
+                    <button data-status="pending" data-offset="20" class="btn-load-more">Load more items</button>
                 </td>
             </tr>
             </tfoot>
         </table>
     </div>
-    <?= $view->render('../template/pending-order-template.blade')?>
     <?= $view->render('../template/amount-view.blade')?>
 
 @stop
@@ -107,27 +106,15 @@ use kartik\export\ExportMenu;
             }
         });
 
-        let tabContent = new tabOrderContent();
-        tabContent.render.pending();
-        $(document).on('click', '.btn-load-more', async function (e) {
-            let loadingContent = '<div class="text-center"><div class="spinner-border text-secondary m-2" role="status"></div></div>';
-            $(this).html(loadingContent);
-            let params = $('#formOrderPending').serializeArray();
-            let offset = parseInt($(this).attr('data-offset'));
-            params = Object.assign(params, {
-                4: {
-                    name: 'offset',
-                    value: offset
-                }
-            });
-            offset = await tabContent.render.pending(params);
-            $(this).attr('data-offset', offset);
-            $(this).html('Load more items');
-        });
-        $(document).on('click', '#searchPending', function () {
-            let params = $('#formOrderPending').serializeArray();
-            tabContent.render.pending(params, true);
-        });
+        $(document).ready(function () {
 
+            tabContent.render.loadItems();
+
+            $(document).on('click', '#searchPending', function () {
+                let params = $('#form-order-pending').serializeArray();
+                tabContent.render.search('pending');
+                tabContent.render.loadItems(params, true);
+            });
+        });
     </script>
 @stop
