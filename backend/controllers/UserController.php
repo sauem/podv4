@@ -77,8 +77,9 @@ class UserController extends BaseController
         try {
             if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
                 if ($model->save()) {
-                    UserRole::assignRole($model);
-                    UserRole::assignPermission($model, $model->permission);
+                    UserRole::revokePermission($model->getId());
+                    UserRole::assignRole($model, true);
+                    UserRole::assignPermission($model, $model->permission, true);
                     $transaction->commit();
                     return static::responseSuccess();
                 }

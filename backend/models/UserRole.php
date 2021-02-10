@@ -70,4 +70,15 @@ class UserRole extends UserModel
             throw new BadRequestHttpException($exception->getMessage());
         }
     }
+
+    public static function revokePermission($userId)
+    {
+        try {
+            return AuthAssignment::deleteAll([
+                'user_id' => $userId
+            ]);
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+    }
 }
