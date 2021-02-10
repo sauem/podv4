@@ -20,6 +20,8 @@ $form = ActiveForm::begin([
             'options' => ['placeholder' => 'Sản phẩm...', 'id' => 'product-status'],
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
+        <?= $form->field($searchModel, 'filter')->hiddenInput(['value' => 'status'])->label(false)?>
+
     </div>
     <div class="col-md-3">
         <?= $form->field($searchModel, 'payment_method')->widget(Select2::className(), [

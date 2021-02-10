@@ -18,7 +18,7 @@ function HandleOrder() {
 async function exportOrderSelect(e) {
     let status = $(e).data('status');
     let params = $(`#form-order-${status}`).serialize();
-    let url = 'http://' + window.location.hostname + AJAX_PATH.exportOrder + '?' + params;
+    let url = AJAX_PATH.exportOrder + '?' + params;
 
     swal.fire({
         title: 'Xin chờ....',
@@ -34,8 +34,9 @@ async function exportOrderSelect(e) {
                 success: function (res) {
                     let a = document.createElement('a');
                     let url = window.URL.createObjectURL(res);
+                    let date = new Date();
                     a.href = url;
-                    a.download = 'demo.xlsx';
+                    a.download = `order_${date.getDay()}${date.getMonth()}${date.getFullYear()}.xlsx`;
                     document.body.append(a);
                     a.click();
                     a.remove();

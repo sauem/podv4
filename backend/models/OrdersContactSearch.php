@@ -17,11 +17,12 @@ class OrdersContactSearch extends OrdersContact
      */
     public $items;
     public $register_time;
+    public $filter;
 
     public function rules()
     {
         return [
-            ['status', 'string'],
+            [['status','filter'], 'string'],
             [['items', 'payment_method', 'register_time', 'warehouse_id'], 'safe'],
         ];
     }
