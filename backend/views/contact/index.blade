@@ -1,12 +1,12 @@
 <?php
 use backend\models\Contacts;use yii\helpers\ArrayHelper;use yii\helpers\Url;
 use kartik\grid\GridView;
-use common\helper\Helper;
 use common\helper\Component;
 use kartik\grid\ActionColumn;
 use kartik\export\ExportMenu;
 use backend\models\UserModel;
 use backend\models\UserRole;
+use common\helper\Helper;
 ?>
 @section('content')
     <div class="card">
@@ -84,10 +84,11 @@ use backend\models\UserRole;
                     'containId' => '#contact-box'
                 ])?>
                 <div class="tab-pane active" id="tab-1">
+                    <?php if(Helper::isRole(UserRole::ROLE_ADMIN)){ ?>
                     <button onclick="new approvePhone().approve()" class="mb-2 btn btn-sm btn-outline-success"><i
                                 class="fe-headphones"></i> Phân số
                     </button>
-
+                    <?php  }?>
                     <?= $view->render('tabs/default.blade', [
                         'dataProvider' => $dataProvider,
                         'containId' => $containId

@@ -34,11 +34,13 @@ use backend\models\UserRole;
             </select>
         </div>
         <div class="col-md-9">
+            <?php if(Helper::isRole(UserRole::ROLE_ADMIN)){ ?>
             <button role="modal-remote"
                     href="<?= Url::toRoute(['create-topup'])?>"
                     class="btn float-right mb-3 btn-sm btn-info">
                 <i class="fe-check-square"></i> Thêm Topup
             </button>
+        <?php } ?>
         </div>
         <div class="col-12">
             <table class="table table-sm table-striped table-hover" id="topup-table">

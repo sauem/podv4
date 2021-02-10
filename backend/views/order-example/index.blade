@@ -5,11 +5,13 @@ use common\helper\Helper;
 use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
 use yii\helpers\Url;
+use backend\models\UserRole;
 ?>
 
 @section('content')
     <div class="card">
         <div class="card-header">
+            <?php if(Helper::isRole(UserRole::ROLE_ADMIN)){ ?>
             <div class="card-widgets">
                 <button role="modal-remote" data-url="<?= Url::toRoute(['create']) ?>" class="btn btn-sm btn-success">
                     <i class="fe-plus"></i> Thêm
@@ -18,6 +20,7 @@ use yii\helpers\Url;
                     <i class="fe-download"></i> Import
                 </a>
             </div>
+            <?php } ?>
             <h4 class="card-title"><i class="fe-box"></i> Mẫu đơn hàng sale</h4>
         </div>
         <div class="card-body">

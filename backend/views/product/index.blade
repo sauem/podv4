@@ -4,17 +4,20 @@ use kartik\grid\ActionColumn;
 use common\helper\Helper;
 use common\helper\Component;
 use yii\helpers\Url;
+use backend\models\UserRole;
 ?>
 @section('content')
     <div class="card">
         <div class="card-header">
             <div class="card-widgets">
+                <?php if(Helper::isRole(UserRole::ROLE_ADMIN)){ ?>
                 <button role="modal-remote" data-url="{!! Url::toRoute(['create']) !!}" class="btn btn-sm btn-success">
                     <i class="fe-plus"></i> Thêm sản phẩm
                 </button>
                 <a href="{!! Url::toRoute(['/import','module' => 'product']) !!}" class="btn btn-sm btn-success">
                     <i class="fe-plus"></i> Import
                 </a>
+                <?php  }?>
             </div>
             <h4 class="card-title">Sản phẩm</h4>
         </div>
@@ -76,6 +79,7 @@ use yii\helpers\Url;
                     ],
                     [
                         'class' => ActionColumn::class,
+                        'visible' => Helper::isRole(UserRole::ROLE_ADMIN),
                         'template' => '{update}{delete}',
                         'width' => '10%',
                         'buttons' => [
