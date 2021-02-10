@@ -3,15 +3,23 @@
 /* @var $this yii\web\View */
 
 use dosamigos\chartjs\ChartJs;
+use common\helper\Helper;
+$view->title = Helper::setting('sitename')
 
-$this->title = 'My Yii Application';
 ?>
 @section('content')
-    <div class="row">
-        <div class="col-md-3">
-            <div class="widget-rounded-circle card-box">
-                <a href="<?= \yii\helpers\Url::toRoute(['report/sales'])?>" class="text-muted mb-1 text-truncate">BÁO CÁO BÁN
-                    HÀNG</a>
+    <div class="container text-center" id="home-screen">
+        <div class="card">
+            <div class="card-header">
+                <img width="200" src="/theme/images/gsof.png" class="img-fluid">
+            </div>
+            <div class="card-body">
+                <h4 class="card-title"><?= Helper::setting('sitename')?></h4>
+                <?= Helper::setting('description')?>
+                <hr>
+                <div class="text-left">
+                    <?= Helper::setting('notify')?>
+                </div>
             </div>
         </div>
     </div>

@@ -1,12 +1,13 @@
 <?php
 
-use kartik\form\ActiveForm;
+use dosamigos\tinymce\TinyMce;use kartik\form\ActiveForm;
 use yii\bootstrap4\Html;
 use kartik\grid\GridView;
 use kartik\time\TimePicker;
 
 ?>
 @section('content')
+    <?php $form = ActiveForm::begin() ?>
     <div class="row">
         <div class="col-md-4">
             <div class="card">
@@ -14,7 +15,6 @@ use kartik\time\TimePicker;
                     <h3 class="card-title">Cài đặt hệ thống</h3>
                 </div>
                 <div class="card-body">
-                    <?php $form = ActiveForm::begin() ?>
                     <?= $form->field($model, 'callback_to_cancel_time')->textInput(['type' => 'number']) ?>
                     <?= $form->field($model, 'phone_prioritize_time')->widget(TimePicker::className(), [
                         'addon' => '<i class="fe-clock"></i>',
@@ -33,7 +33,6 @@ use kartik\time\TimePicker;
                     <div class="text-right">
                         <?= Html::submitButton("Lưu cài đặt", ['class' => 'btn btn-outline-success']) ?>
                     </div>
-                    <?php ActiveForm::end() ?>
 
                 </div>
             </div>
@@ -45,9 +44,28 @@ use kartik\time\TimePicker;
                     <?= Html::button('<i class="fa fa-undo"></i> Cập nhật', ['class' => 'saveData btn btn-sm btn-outline-success']) ?>
                 </div>
                 <div class="card-body">
-
+                    <div class="row">
+                        <div class="col-12">
+                            <?= $form->field($model, 'sitename') ?>
+                            <?= $form->field($model, 'description') ?>
+                            <?= $form->field($model, 'notify')->widget(TinyMce::className(), [
+                                'options' => ['rows' => 6],
+                                'language' => 'es',
+                                'clientOptions' => [
+                                    'plugins' => [
+                                        "advlist autolink lists link charmap print preview anchor",
+                                        "searchreplace visualblocks code fullscreen",
+                                        "insertdatetime media table contextmenu paste"
+                                    ],
+                                    'toolbar' => "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                                ]
+                            ]);?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <?php ActiveForm::end() ?>
+
 @stop
