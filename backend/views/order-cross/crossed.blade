@@ -2,13 +2,119 @@
 use backend\models\OrdersContact;
 use common\helper\Component;
 use common\helper\Helper;
-use kartik\grid\ActionColumn;
+use kartik\export\ExportMenu;use kartik\grid\ActionColumn;
 use kartik\grid\CheckboxColumn;
 use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
 @section("content")
+    <div class="mb-2">
+        <?php
+        echo ExportMenu::widget([
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                [
+                    'class' => CheckboxColumn::class,
+                    'checkboxOptions' => function ($model) {
+                        $cog['data-code'] = $model->code;
+                        $cog['value'] = $model->code;
+                        $cog['data-pjax'] = '0';
+                        return $cog;
+                    }
+                ],
+                [
+                    'attribute' => 'code',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
+                    }
+                ],
+                'checking_number',
+                'name',
+                'phone',
+                [
+                    'label' => 'Đối tác',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::isEmpty($model->contact) ? '---' : $model->contact->partner;
+                    }
+                ],
+                [
+                    'label' => 'sản phẩm',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::printString($model);
+                    }
+                ],
+                [
+                    'attribute' => 'status',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return OrdersContact::StatusLabel($model->status);
+                    }
+                ],
+                [
+                    'label' => 'Doanh thu',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::formatCUR($model->total_bill, '', 0);
+                    }
+                ],
+                [
+                    'label' => 'Phí vận chuyển',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::formatCUR($model->transport_fee, '', 0);
+                    }
+                ],
+                [
+                    'label' => 'Phí thu hộ',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::formatCUR($model->collection_fee, '', 0);
+                    }
+                ],
+                [
+                    'label' => 'Phí dịch vụ',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        if ($model->contact) {
+                            return 0;
+                        }
+                        $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                        return Helper::formatCUR($service, '', 0);
+                    }
+                ],
+                [
+                    'label' => 'doanh thu đối soát',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        if ($model->contact) {
+                            return 0;
+                        }
+                        $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                        $amount = $model->total_bill - $model->collection_fee - $service;
+                        return Helper::formatCUR($amount, '', 0);
+                    }
+                ]
+            ],
+            'exportConfig' => [
+                ExportMenu::FORMAT_TEXT => false,
+                ExportMenu::FORMAT_HTML => false,
+                ExportMenu::FORMAT_EXCEL => false,
+                ExportMenu::FORMAT_PDF => false,
+                ExportMenu::FORMAT_CSV => false,
+            ],
+            'showColumnSelector' => false,
+            'dropdownOptions' => [
+                'label' => 'Export All',
+                'icon' => '<i class="fe-download"></i>',
+                'class' => 'btn btn-xs btn-outline-warning'
+            ]
+        ])
+        ?>
+    </div>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'pjax' => true,
