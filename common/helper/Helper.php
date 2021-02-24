@@ -202,4 +202,12 @@ class Helper
         }
         return "<small>" . substr($str, 0, -2) . "</small>";
     }
+
+    static function countryNow()
+    {
+        if (!\Yii::$app->cache->get('country')) {
+            return false;
+        }
+        return \Yii::$app->cache->get('country');
+    }
 }

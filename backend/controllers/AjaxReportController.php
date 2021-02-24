@@ -96,7 +96,7 @@ class AjaxReportController extends BaseController
                     $query->andWhere('contacts.register_time >= P.marketer_rage_start AND contacts.register_time <= P.marketer_rage_end');
                 }
             }
-
+            $query->andWhere(['contacts.country' => \Yii::$app->cache->get('country')]);
 
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
@@ -212,6 +212,7 @@ class AjaxReportController extends BaseController
                     $query->andWhere('contacts.register_time >= P.marketer_rage_start AND contacts.register_time <= P.marketer_rage_end');
                 }
             }
+            $query->andWhere(['contacts.country' => \Yii::$app->cache->get('country')]);
 
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
@@ -258,7 +259,7 @@ class AjaxReportController extends BaseController
             $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
             $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
         }
-
+        Helper::printf($query->createCommand()->rawSql);
         $result = $query->asArray()->all();
         if (empty($result)) {
             $isEmpty = true;

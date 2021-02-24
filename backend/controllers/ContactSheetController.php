@@ -14,7 +14,6 @@ class ContactSheetController extends BaseController
     {
         $searchModel = new ContactsSheetSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
-
         return $this->render("index.blade", [
             'dataProvider' => $dataProvider
         ]);

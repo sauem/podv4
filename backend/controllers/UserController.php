@@ -26,6 +26,8 @@ class UserController extends BaseController
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+       # Helper::printf($dataProvider->query->createCommand()->rawSql);
+
         return $this->render('index.blade', [
             'dataProvider' => $dataProvider
         ]);

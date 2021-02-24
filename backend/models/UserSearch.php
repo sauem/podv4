@@ -2,9 +2,11 @@
 
 namespace backend\models;
 
+use common\helper\Helper;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\UserModel;
+use yii\db\Expression;
 
 /**
  * UserSearch represents the model behind the search form of `backend\models\UserModel`.
@@ -71,9 +73,11 @@ class UserSearch extends UserModel
             ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'verification_token', $this->verification_token])
-            ->andFilterWhere(['like', 'full_name', $this->full_name])
-            ->andFilterWhere(['like', 'country', $this->country]);
-
+            ->andFilterWhere(['like', 'full_name', $this->full_name]);
+        if (Helper::countryNow()) {
+            $query->andFilterWhere(['=', 'country', Helper::countryNow()]);
+            $query->orFilterWhere(['IS', 'country', new Expression('NULL')]);
+        }
         return $dataProvider;
     }
 }

@@ -119,7 +119,10 @@ class ContactController extends BaseController
     public function actionHistories()
     {
         $contactHistories = new ActiveDataProvider([
-            'query' => ContactsLogStatus::find()->orderBy('created_at DESC'),
+            'query' => ContactsLogStatus::find()
+                ->innerJoin('contacts', 'contacts.code = contacts_log_status.code')
+                ->where(['contacts.country' => \Yii::$app->cache->get('country')])
+                ->orderBy('created_at DESC'),
             'pagination' => [
                 'pageSize' => 20
             ]
