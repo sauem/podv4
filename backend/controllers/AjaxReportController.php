@@ -259,7 +259,7 @@ class AjaxReportController extends BaseController
             $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
             $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
         }
-        Helper::printf($query->createCommand()->rawSql);
+       #Helper::printf($query->createCommand()->rawSql);
         $result = $query->asArray()->all();
         if (empty($result)) {
             $isEmpty = true;
