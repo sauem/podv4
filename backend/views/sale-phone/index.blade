@@ -24,7 +24,7 @@ use yii\web\View;
                     <h5>Sale : {!! Yii::$app->user->identity->username !!}</h5>
                     <h5>{{Yii::t('app', 'today_completed')}}
                         : <?= \backend\models\ContactsAssignment::getPhoneCallDone() ?>
-                        /<?= Yii::$app->user->identity->phone_of_day ?></h5>
+                        /<?= Yii::$app->user->identity->phone_of_day ? Yii::$app->user->identity->phone_of_day : 0 ?></h5>
                 </div>
             </div>
             <div class="col-md-2 text-right">
