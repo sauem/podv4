@@ -187,8 +187,8 @@ class AjaxReportController extends BaseController
                 $endTime = Helper::timer(str_replace('/', '-', $time_register[1]), 1);
                 $query->where(['between', 'contacts.register_time', $startTime, $endTime]);
             } else {
-                #$query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
-                #$query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
+                $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
+                $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
             }
             if (!empty($source)) {
                 $query->andWhere(['IN', 'contacts.type', $source]);
@@ -256,8 +256,8 @@ class AjaxReportController extends BaseController
                 throw new BadRequestHttpException($e->getMessage());
             }
         } else {
-            #$query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
-            #$query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
+            $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
+            $query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
         }
         $result = $query->asArray()->all();
         if (empty($result)) {
