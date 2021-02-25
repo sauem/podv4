@@ -17,9 +17,6 @@ use yii\helpers\Url;
                 [
                     'attribute' => 'code',
                     'format' => 'html',
-                    'value' => function ($model) {
-                        return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
-                    }
                 ],
                 [
                     'label' => 'Mã biên bản đối soát',
@@ -96,13 +93,15 @@ use yii\helpers\Url;
                         if ($model->contact) {
                             return 0;
                         }
-                        $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
-                        #$service = $model->service_fee;
+                        #$service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                        $service = $model->service_fee;
                         $amount = $model->total_bill - $model->collection_fee - $service;
                         return Helper::formatCUR($amount, '', 0);
                     }
                 ]
             ],
+            'options' => ['id' => 'expMenu1'],
+            'target' => ExportMenu::TARGET_BLANK,
             'exportConfig' => [
                 ExportMenu::FORMAT_TEXT => false,
                 ExportMenu::FORMAT_HTML => false,

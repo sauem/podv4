@@ -42,23 +42,10 @@ use backend\models\UserRole;
                     <?php
                     echo ExportMenu::widget([
                         'dataProvider' => $dataProvider,
+                        'options' => ['id' => 'expMenu2'],
+                        'target' => ExportMenu::TARGET_BLANK,
                         'columns' => [
-                            [
-                                'class' => CheckboxColumn::class,
-                                'checkboxOptions' => function ($model) {
-                                    $cog['data-code'] = $model->code;
-                                    $cog['value'] = $model->code;
-                                    $cog['data-pjax'] = '0';
-                                    return $cog;
-                                }
-                            ],
-                            [
-                                'attribute' => 'code',
-                                'format' => 'html',
-                                'value' => function ($model) {
-                                    return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
-                                }
-                            ],
+                            'code',
                             'checking_number',
                             'name',
                             'phone',
