@@ -139,14 +139,14 @@ use yii\helpers\Url;
         ],
         'perfectScrollbar' => true,
         'columns' => [
-            [
-                'class' => CheckboxColumn::class,
-                'checkboxOptions' => function ($model) {
-                    $cog['data-code'] = $model->code;
-                    $cog['data-pjax'] = '0';
-                    return $cog;
-                }
-            ],
+//            [
+//                'class' => CheckboxColumn::class,
+//                'checkboxOptions' => function ($model) {
+//                    $cog['data-code'] = $model->code;
+//                    $cog['data-pjax'] = '0';
+//                    return $cog;
+//                }
+//            ],
             [
                 'attribute' => 'code',
                 'format' => 'html',
