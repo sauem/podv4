@@ -297,6 +297,7 @@ class OrdersContact extends \common\models\BaseModel
                 $color = 'info';
                 break;
             case self::STATUS_SHIPPING:
+            case self::STATUS_REFUND:
                 $color = 'warning';
                 break;
             default:
