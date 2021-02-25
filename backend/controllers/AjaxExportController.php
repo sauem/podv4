@@ -233,7 +233,6 @@ class AjaxExportController extends BaseController
                 'phone',
                 [
                     'label' => 'Đối tác',
-                    'format' => 'html',
                     'value' => function ($model) {
                         if (Helper::isEmpty($model->contact)) {
                             return "---";
@@ -245,19 +244,18 @@ class AjaxExportController extends BaseController
                     'label' => 'sản phẩm',
                     'format' => 'html',
                     'value' => function ($model) {
-                        return Helper::printString($model);
+                        return Helper::printString($model, true);
                     }
                 ],
                 [
                     'label' => 'Trạng thái',
                     'attribute' => 'status',
-                    'format' => 'html',
                     'value' => function ($model) {
                         $status = OrdersContact::STATUS_PAYED;
                         if ($model->shipping_status == OrdersContact::STATUS_REFUND) {
                             $status = OrdersContact::STATUS_REFUND;
                         }
-                        return OrdersContact::StatusLabel($status);
+                        return ArrayHelper::getValue(OrdersContact::STATUS, $status, '');
                     }
                 ],
                 [
@@ -302,6 +300,7 @@ class AjaxExportController extends BaseController
                 ]
             ]
         ]);
+
         $file = UPLOAD_PATH . '/order_crossed_' . time() . '.xlsx';
         $exporter->save($file);
         return \Yii::$app->response->sendFile($file)->on(Response::EVENT_AFTER_SEND, function ($event) {
