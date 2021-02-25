@@ -40,7 +40,7 @@ class OrderCrossController extends BaseController
                 'cross_status' => [OrdersContact::STATUS_CROSSED],
             ]
         ]));
-
+        $dataProvider->setSort(false);
         return static::responseRemote('crossed.blade', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel

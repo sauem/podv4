@@ -149,7 +149,8 @@ use yii\helpers\Url;
                 'attribute' => 'code',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
+                    return $model->code;
+                    #Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
                 }
             ],
             'cross_check_code',
