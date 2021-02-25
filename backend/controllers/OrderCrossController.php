@@ -42,7 +42,7 @@ class OrderCrossController extends BaseController
         ]));
         $dataProvider->setSort(false);
         return static::responseRemote('crossed.blade', [
-            'dataProvider' => $dataProvider,
+            'modelProvider' => $dataProvider,
             'searchModel' => $searchModel
         ]);
     }
