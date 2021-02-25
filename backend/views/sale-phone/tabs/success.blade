@@ -60,22 +60,24 @@ use yii\helpers\Url;
             ],
             'country',
             'type',
-//            [
-//                'class' => ActionColumn::class,
-//                'template' => '{actions}',
-//                'width' => '12%',
-//                'buttons' => [
-//                    'actions' => function ($url, $model) {
-//                        return Component::dropDown([
-//                            '<a data-key="' . $model->id . '" onclick="changeStatus(`Contacts`,`cancel`,this)"  class="dropdown-item"><i class="fe-x"></i> Hủy đơn</a>',
-//                            '<a class="dropdown-item"><i class="fe-edit"></i> Sửa</a>',
-//                            '<a class="dropdown-item"><i class="fe-lock"></i> Khóa sửa</a>',
-//
-//                        ]);
-//                    },
-//
-//                ]
-//            ]
+            [
+                'class' => ActionColumn::class,
+                'template' => '{update}',
+                'width' => '12%',
+                'buttons' => [
+                    'update' => function ($url, $model) {
+                        return Html::button('<i class="fe-edit"></i>',
+                            [
+                                'class' => 'btn btn-xs btn-warning',
+                                'data-url' => Url::toRoute(['/sale-phone/update', 'code' => $model->code]),
+                                'data-pjax' => '0',
+                                'role' => 'modal-remote',
+                            ]
+                        );
+                    },
+
+                ]
+            ]
         ]
     ]) ?>
 @stop
