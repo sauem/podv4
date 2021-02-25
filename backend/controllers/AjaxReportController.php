@@ -116,7 +116,7 @@ class AjaxReportController extends BaseController
             ->addSelect([
                 'SUM(orders_contact.total_bill) as revenue_C8',
                 'SUM(IF(orders_contact.payment_status = "paid", orders_contact.total_bill ,0)) as revenue_C11',
-                'SUM(IF(orders_contact.payment_status = "crossed", orders_contact.total_bill ,0)) as revenue_C13',
+                'SUM(IF(orders_contact.status = "crossed", orders_contact.total_bill ,0)) as revenue_C13',
                 'FROM_UNIXTIME(contacts.register_time, \'%d/%m/%Y\') day',
             ])->groupBy('day')
             ->orderBy('contacts.register_time ASC');
