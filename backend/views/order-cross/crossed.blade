@@ -149,6 +149,7 @@ use yii\helpers\Url;
                     return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
                 }
             ],
+            'cross_check_code',
             'checking_number',
             'name',
             'phone',
@@ -173,7 +174,11 @@ use yii\helpers\Url;
                 'attribute' => 'status',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return OrdersContact::StatusLabel($model->status);
+                    $status = OrdersContact::STATUS_PAYED;
+                    if ($model->status == OrdersContact::STATUS_REFUND) {
+                        $status = OrdersContact::STATUS_REFUND;
+                    }
+                    return OrdersContact::StatusLabel($status);
                 }
             ],
             [
@@ -201,8 +206,8 @@ use yii\helpers\Url;
                 'label' => 'Phí dịch vụ',
                 'format' => 'html',
                 'value' => function ($model) {
-                   # $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
-                    $service = $model->service_fee ? $model->$model  : 0;
+                    # $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                    $service = $model->service_fee ? $model->$model : 0;
                     return Helper::formatCUR($service, '', 0);
                 }
             ],
