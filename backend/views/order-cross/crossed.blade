@@ -10,7 +10,8 @@ use yii\helpers\Url;
 ?>
 @section("content")
     <div class="mb-2">
-        <button type="button" id="export-coressed" class=" btn-sm btn-warning"><i class="fe-download"></i> Export all</button>
+        <button type="button" id="export-coressed" class=" btn-sm btn-warning"><i class="fe-download"></i> Export all
+        </button>
         <?php
         //        echo ExportMenu::widget([
         //            'dataProvider' => $modelProvider,
@@ -221,7 +222,7 @@ use yii\helpers\Url;
                 'value' => function ($model) {
                     #$service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
                     $service = OrdersContact::getServiceFee($model);
-                    $amount = $model->total_bill - $model->collection_fee - $service;
+                    $amount = $model->total_bill - $model->transport_fee - $model->collection_fee - $service;
                     return Helper::formatCUR($amount, '', 0);
                 }
             ]

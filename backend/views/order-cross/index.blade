@@ -104,7 +104,7 @@ use backend\models\UserRole;
                                 'format' => 'html',
                                 'value' => function ($model) {
                                     $service = OrdersContact::getServiceFee($model);
-                                    $amount = $model->total_bill - $model->collection_fee - $service;
+                                    $amount = $model->total_bill - $model->transport_fee - $model->collection_fee - $service;
                                     return Helper::formatCUR($amount, '', 0);
                                 }
                             ]
