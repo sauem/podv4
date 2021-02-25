@@ -256,7 +256,7 @@ class AjaxReportController extends BaseController
                 throw new BadRequestHttpException($e->getMessage());
             }
         } else {
-            $query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
+            #$query->andWhere('FROM_UNIXTIME(contacts.register_time) >= (NOW() - INTERVAL 2 WEEK)');
             #$query->andWhere('FROM_UNIXTIME(contacts.register_time) <= NOW()');
         }
         $result = $query->asArray()->all();
