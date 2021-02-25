@@ -58,7 +58,7 @@ class ReportController extends BaseController
             ->where(['O.cross_status' => OrdersContact::STATUS_CROSSED])
             //->andWhere(['=', 'O.payment_status', OrdersContact::STATUS_PAYED])
             ->andWhere(['=', 'O.status', OrdersContact::STATUS_CROSSED])
-            ->orWhere(['=', 'O.status', OrdersContact::STATUS_REFUND])
+            ->orWhere(['=', 'O.shipping_status', OrdersContact::STATUS_REFUND])
             ->addSelect([
                 'id',
                 'name',
