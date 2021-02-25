@@ -15,22 +15,20 @@ use yii\helpers\Url;
             'dataProvider' => $dataProvider,
             'columns' => [
                 [
-                    'class' => CheckboxColumn::class,
-                    'checkboxOptions' => function ($model) {
-                        $cog['data-code'] = $model->code;
-                        $cog['value'] = $model->code;
-                        $cog['data-pjax'] = '0';
-                        return $cog;
-                    }
-                ],
-                [
                     'attribute' => 'code',
                     'format' => 'html',
                     'value' => function ($model) {
                         return Html::a($model->code, Url::toRoute(['view', 'code' => $model->code]), ['data-pjax' => '0']);
                     }
                 ],
-                'checking_number',
+                [
+                    'label' => 'Mã biên bản đối soát',
+                    'attribute' => 'cross_check_code',
+                ],
+                [
+                    'label' => 'Mã vận chuyển đối tác',
+                    'attribute' => 'checking_number',
+                ],
                 'name',
                 'phone',
                 [
@@ -98,8 +96,8 @@ use yii\helpers\Url;
                         if ($model->contact) {
                             return 0;
                         }
-                        # $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
-                        $service = $model->service_fee;
+                        $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                        #$service = $model->service_fee;
                         $amount = $model->total_bill - $model->collection_fee - $service;
                         return Helper::formatCUR($amount, '', 0);
                     }
@@ -139,14 +137,14 @@ use yii\helpers\Url;
         ],
         'perfectScrollbar' => true,
         'columns' => [
-//            [
-//                'class' => CheckboxColumn::class,
-//                'checkboxOptions' => function ($model) {
-//                    $cog['data-code'] = $model->code;
-//                    $cog['data-pjax'] = '0';
-//                    return $cog;
-//                }
-//            ],
+            //            [
+            //                'class' => CheckboxColumn::class,
+            //                'checkboxOptions' => function ($model) {
+            //                    $cog['data-code'] = $model->code;
+            //                    $cog['data-pjax'] = '0';
+            //                    return $cog;
+            //                }
+            //            ],
             [
                 'attribute' => 'code',
                 'format' => 'html',
@@ -227,17 +225,17 @@ use yii\helpers\Url;
                     return Helper::formatCUR($amount, '', 0);
                 }
             ]
-//            [
-//                'class' => ActionColumn::class,
-//                'template' => '{update}',
-//                'width' => '5%',
-//                'buttons' => [
-//                    'update' => function ($url, $model) {
-//                        return Component::btnUpdate($url);
-//                    },
-//
-//                ]
-//            ]
+            //            [
+            //                'class' => ActionColumn::class,
+            //                'template' => '{update}',
+            //                'width' => '5%',
+            //                'buttons' => [
+            //                    'update' => function ($url, $model) {
+            //                        return Component::btnUpdate($url);
+            //                    },
+            //
+            //                ]
+            //            ]
         ]
     ]) ?>
 @stop
