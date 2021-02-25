@@ -66,7 +66,7 @@ use backend\models\UserRole;
             tabContent.render.loadItems({}, false, 'status');
 
 
-            $(document).on('click', '#searchStaus', function () {
+            $(document).on('click', '#searchStatus', function () {
                 let params = $('#form-order-status').serializeArray();
                 tabContent.render.loadItems(params, true, 'status');
             });
