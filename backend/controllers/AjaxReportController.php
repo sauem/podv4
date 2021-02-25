@@ -117,6 +117,9 @@ class AjaxReportController extends BaseController
                 'SUM(orders_contact.total_bill) as revenue_C8',
                 'SUM(IF(orders_contact.payment_status = "paid", orders_contact.total_bill ,0)) as revenue_C11',
                 'SUM(IF(orders_contact.status = "crossed", orders_contact.total_bill ,0)) as revenue_C13',
+                'SUM(IF(orders_contact.payment_status = "paid" AND orders_contact.cross_status IS NULL, orders_contact.total_bill ,0)) as total_uncross',
+                'SUM(IF(orders_contact.shipping_status = "refund" AND orders_contact.cross_status = "crossed", orders_contact.transport_fee, 0)) as refund_crossed',
+                'SUM(IF(orders_contact.shipping_status = "refund" AND orders_contact.cross_status IS NULL, orders_contact.transport_fee, 0)) as refund_uncross',
                 'FROM_UNIXTIME(contacts.register_time, \'%d/%m/%Y\') day',
             ])->groupBy('day')
             ->orderBy('contacts.register_time ASC');
@@ -137,7 +140,7 @@ class AjaxReportController extends BaseController
         $result = array_map(function ($item) {
             return array_merge($item, [
                 'C11_C8' => Helper::calculate($item['revenue_C11'], $item['revenue_C8']),
-                'C13_C11' => Helper::calculate($item['revenue_C13'], $item['revenue_C11']),
+                'C13_C11' => Helper::calculate($item['revenue_C13'], $item['revenue_C11'])
             ]);
         }, $result);
         $labels = ArrayHelper::getColumn($result, 'day');
@@ -147,6 +150,9 @@ class AjaxReportController extends BaseController
         $C11_C8 = array_sum(ArrayHelper::getColumn($result, 'C11_C8'));
         $C13_C11 = array_sum(ArrayHelper::getColumn($result, 'C13_C11'));
         $total_revenue = array_sum(ArrayHelper::getColumn($result, 'revenue_C11'));
+        $refund_crossed = ArrayHelper::getColumn($result, 'refund_crossed');
+        $refund_uncross = ArrayHelper::getColumn($result, 'refund_uncross');
+        $total_uncross = ArrayHelper::getColumn($result, 'total_uncross');
 
         return [
             'isEmpty' => $isEmpty,
@@ -159,7 +165,9 @@ class AjaxReportController extends BaseController
             'counter' => [
                 'C11_C8' => $C11_C8,
                 'C13_C11' => $C13_C11,
-                'total_revenue' => $total_revenue
+                'total_revenue' => $total_revenue,
+                'total_crossed' => array_sum($revenue_C13) - array_sum($refund_crossed),
+                'total_uncross' => array_sum($total_uncross) - array_sum($refund_uncross),
             ]
         ];
     }
