@@ -211,4 +211,101 @@ class AjaxExportController extends BaseController
             unlink($event->data);
         }, $file);
     }
+
+    function actionCrossed()
+    {
+        $searchModel = new OrdersContactSearch();
+        $dataProvider = $searchModel->search(array_merge(\Yii::$app->request->queryParams, [
+            'OrdersContactSearch' => [
+                'status' => [OrdersContact::STATUS_CROSSED],
+                'cross_status' => [OrdersContact::STATUS_CROSSED],
+            ]
+        ]));
+
+
+        $exporter = new Spreadsheet([
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                'code',
+                'cross_check_code',
+                'checking_number',
+                'name',
+                'phone',
+                [
+                    'label' => 'Đối tác',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        if (Helper::isEmpty($model->contact)) {
+                            return "---";
+                        }
+                        return $model->contact->partner;
+                    }
+                ],
+                [
+                    'label' => 'sản phẩm',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::printString($model);
+                    }
+                ],
+                [
+                    'label' => 'Trạng thái',
+                    'attribute' => 'status',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        $status = OrdersContact::STATUS_PAYED;
+                        if ($model->shipping_status == OrdersContact::STATUS_REFUND) {
+                            $status = OrdersContact::STATUS_REFUND;
+                        }
+                        return OrdersContact::StatusLabel($status);
+                    }
+                ],
+                [
+                    'label' => 'Doanh thu',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::formatCUR($model->total_bill, '', 0);
+                    }
+                ],
+                [
+                    'label' => 'Phí vận chuyển',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::formatCUR($model->transport_fee, '', 2);
+                    }
+                ],
+                [
+                    'label' => 'Phí thu hộ',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::formatCUR($model->collection_fee, '', 0);
+                    }
+                ],
+                [
+                    'label' => 'Phí dịch vụ',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        # $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                        $service = $model->service_fee ? $model->$model : 0;
+                        return Helper::formatCUR($service, '', 0);
+                    }
+                ],
+                [
+                    'label' => 'doanh thu đối soát',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        #$service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                        $service = $model->service_fee;
+                        $amount = $model->total_bill - $model->collection_fee - $service;
+                        return Helper::formatCUR($amount, '', 0);
+                    }
+                ]
+            ]
+        ]);
+        $file = UPLOAD_PATH . '/order_crossed_' . time() . '.xlsx';
+        $exporter->save($file);
+        return \Yii::$app->response->sendFile($file)->on(Response::EVENT_AFTER_SEND, function ($event) {
+            unlink($event->data);
+        }, $file);
+    }
 }
