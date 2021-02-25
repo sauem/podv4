@@ -48,10 +48,15 @@ use yii\helpers\Url;
                     }
                 ],
                 [
+                    'label' => 'Trạng thái',
                     'attribute' => 'status',
                     'format' => 'html',
                     'value' => function ($model) {
-                        return OrdersContact::StatusLabel($model->status);
+                        $status = OrdersContact::STATUS_PAYED;
+                        if ($model->status == OrdersContact::STATUS_REFUND) {
+                            $status = OrdersContact::STATUS_REFUND;
+                        }
+                        return OrdersContact::StatusLabel($status);
                     }
                 ],
                 [
@@ -94,7 +99,7 @@ use yii\helpers\Url;
                             return 0;
                         }
                         # $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
-                        $service = $model->service_fee ? $model->service_fee : 0;
+                        $service = $model->service_fee;
                         $amount = $model->total_bill - $model->collection_fee - $service;
                         return Helper::formatCUR($amount, '', 0);
                     }
@@ -171,6 +176,7 @@ use yii\helpers\Url;
                 }
             ],
             [
+                'label' => 'Trạng thái',
                 'attribute' => 'status',
                 'format' => 'html',
                 'value' => function ($model) {
