@@ -55,24 +55,22 @@ class ReportController extends BaseController
         $query = OrdersContact::find()
             ->with(['contact', 'skuItems'])
             ->from('orders_contact as O')
-            ->where(['O.cross_status' => OrdersContact::STATUS_CROSSED])
-            //->andWhere(['=', 'O.payment_status', OrdersContact::STATUS_PAYED])
-//            ->orWhere(['=', 'O.status', OrdersContact::STATUS_CROSSED])
-//            ->orWhere(['=', 'O.shipping_status', OrdersContact::STATUS_REFUND])
+            ->where(['O.status' => OrdersContact::STATUS_CROSSED])
+            ->orWhere(['O.shipping_status' => OrdersContact::STATUS_REFUND])
             ->addSelect([
                 'id',
                 'name',
                 'code',
                 'phone',
+                'cross_status',
                 'transport_fee',
                 'collection_fee',
                 'total_bill',
                 'payment_status',
                 'status',
-                'SUM(IF(O.payment_status = "paid" , total_bill, 0)) as C11',
-            ])->asArray()->all();
-
-
+                'SUM(IF(O.payment_status = "paid", total_bill, 0)) as C11',
+            ])->groupBy(['O.code']);
+        $query = $query->asArray()->all();
         $data = static::getData($query);
 
         $C11 = array_sum(ArrayHelper::getColumn($data, 'C11'));
@@ -129,7 +127,8 @@ class ReportController extends BaseController
                 'SUM(IF(orders_contact.payment_status = "paid" , total_bill, false)) as C11',
             ])
             ->andWhere(['<>', 'orders_contact.status', OrdersContact::STATUS_CROSSED])
-            ->andWhere(['<>', 'orders_contact.payment_status', OrdersContact::STATUS_PAYED])
+            ->orWhere(['<>', 'orders_contact.payment_status', OrdersContact::STATUS_PAYED])
+            ->groupBy(['orders_contact.code'])
             ->asArray()->all();
 
         $data = static::getData($query);
