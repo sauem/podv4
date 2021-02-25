@@ -62,6 +62,25 @@ function orderSaleForm() {
             type: 'POST'
         })
     }
+    this.loadCurrentItems = async function (orderId) {
+        try {
+            const res = await $.ajax({
+                url: AJAX_PATH.loadOrderItems,
+                type: 'GET',
+                data: {orderId},
+                cache: false
+            });
+            if (res) {
+                res.map(item => {
+                    if (this.setOrderItems(item)) {
+                        this.appendTemplateItem(item);
+                    }
+                });
+            }
+        } catch (e) {
+            console.log('load items er: ', e);
+        }
+    }
     this.showWarehouse = async function () {
         try {
             const res = await $.ajax({
@@ -100,10 +119,10 @@ function orderSaleForm() {
         localStorage.setItem('order_items', JSON.stringify(ORDER_ITEMS.items));
     }
     this.removeOrderItems = function (sku) {
-        if (!ORDER_ITEMS.items.some(value => value.sku === sku)) {
-            toastr.warning('Sản phẩm không tồn tại!');
-            return false;
-        }
+        // if (!ORDER_ITEMS.items.some(value => value.sku === sku)) {
+        //     toastr.warning('Sản phẩm không tồn tại!');
+        //     return false;
+        // }
         let items = ORDER_ITEMS.items;
         ORDER_ITEMS.items = items.filter(item => item.sku !== sku);
         this.resetLocalStorage(ORDER_ITEMS);
@@ -177,6 +196,7 @@ function orderSaleForm() {
             element.val(price.format());
             this.setItemPrice(sku, price, qty);
         } catch (e) {
+            console.log('Load item price: ', e);
             console.warn(JSON.parse(e.responseText).message);
         }
     }

@@ -344,4 +344,14 @@ class AjaxController extends BaseController
         }
         return $orders[0];
     }
+
+    public function actionOrderItems()
+    {
+        $orderId = \Yii::$app->request->get('orderId');
+        $model = OrdersContact::findOne($orderId);
+        if (!$model) {
+            throw new BadRequestHttpException('Contact not found!');
+        }
+        return $model->skuItems;
+    }
 }

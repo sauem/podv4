@@ -39,7 +39,7 @@ class OrdersContactSku extends \common\models\BaseModel
             [['sku', 'qty', 'price'], 'required'],
             [['price'], 'number'],
             [['sku'], 'string', 'max' => 255],
-           // [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrdersContact::className(), 'targetAttribute' => ['order_id' => 'id']],
+            // [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrdersContact::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
     }
 
@@ -79,6 +79,33 @@ class OrdersContactSku extends \common\models\BaseModel
      * @param array $items
      * @throws BadRequestHttpException
      */
+    static function updateItems($orderId, array $items)
+    {
+        try {
+            if (empty($items)) {
+                throw new BadRequestHttpException('Không có sản phẩm nào được chọn!');
+            }
+            OrdersContactSku::deleteAll(['order_id' => $orderId]);
+            foreach ($items as $item) {
+                $product = Products::findOne(['sku' => $item['sku']]);
+                if (!$product) {
+                    throw new BadRequestHttpException("không tìm thấy sản phẩm có sẵn!");
+                }
+
+                $model = new OrdersContactSku();
+                $model->order_id = $orderId;
+                $model->sku = $item['sku'];
+                $model->price = Helper::toFloat($item['price']);
+                $model->qty = $item['qty'];
+                if (!$model->save()) {
+                    throw new BadRequestHttpException(Helper::firstError($model));
+                }
+            }
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+    }
+
     static function saveItems($orderId, $items = [])
     {
         try {
@@ -90,7 +117,7 @@ class OrdersContactSku extends \common\models\BaseModel
                 if (!$product) {
                     throw new BadRequestHttpException("không tìm thấy sản phẩm có sẵn!");
                 }
-                
+
                 $model = new OrdersContactSku();
                 $model->order_id = $orderId;
                 $model->sku = $item['sku'];

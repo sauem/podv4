@@ -1,0 +1,316 @@
+<?php
+
+use backend\models\ContactsSource;use common\helper\Helper;
+use kartik\select2\Select2;
+use yii\bootstrap\Html;
+use yii\helpers\Url;
+use backend\models\UserRole;
+use yii\web\JsExpression;
+use yii\web\View;
+use common\helper\Component;
+use backend\models\Payments;
+
+$formatJs = <<<'JS'
+window.ORDER = new orderSaleForm();
+
+function selectSku(e) {
+    ORDER.addProductItem(e.target.value);
+    e.preventDefault();
+ }
+ function formatRepo(repo) {
+    if (repo.loading) {
+        return repo.sku;
+    }
+    const {sku , size, weight ,partner, media , category } = repo;
+    let url =  media != null ? media.media.url : '/theme/images/default.jpg';
+
+    let markup = `<div class="row">`;
+        markup += `<div class="col-3"><div class="small-thumb"><img src="${url}" width="100%"></div></div>`;
+        markup += `<div class="col-9">`;
+        markup += `<b>${sku}</b>`;
+        markup += `<br>${size}cm | ${weight}gram`;
+        markup += `</div>`;
+        markup += `</div>`;
+    return '<div style="overflow:hidden;">' + markup + '</div>';
+};
+function formatRepoSelection (repo) {
+    return false;
+}
+JS;
+
+// Register the formatting script
+$view->registerJs($formatJs, View::POS_HEAD);
+
+
+$resultsJs = <<< JS
+function (data, params) {
+    params.page = params.page || 1;
+    return {
+        results: data,
+        pagination: {
+            more: (params.page * 30) < data.total_count
+        }
+    };
+}
+JS;
+?>
+@section('content')
+    @php($form = \kartik\form\ActiveForm::begin([
+    'id' =>'OrderContact',
+    'options' => [
+    'data-code' =>$model->code
+    ]
+    ]))
+    {!! $form->errorSummary($model,['class' => 'text-danger']) !!}
+    <div class="row">
+        <div class="col-md-5">
+            <h4 class="card-title"><i class="fe-user-x"></i> {!! Yii::t('app','customer_information') !!}</h4>
+            <div class="row">
+                <div class="col-12">
+                    <?= $form->field($model, 'name')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'phone')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'email')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'zipcode')->textInput(['class' => 'zipcode'])?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'address')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'district')->textInput(['class' => 'district'])?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'city')->textInput(['class' => 'city'])?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'country')->widget(Select2::className(), [
+                        'data' => Helper::countries(),
+                        'disabled' => true,
+                        'options' => ['placeholder' => 'Chose...', 'class' => 'country-select'],
+                        'pluginOptions' => ['allowClear' => true]
+                    ])?>
+                </div>
+
+                <div class="col-md-6">
+                    <?= $form->field($model, 'payment_method')->widget(Select2::className(), [
+                        'data' => Payments::LISTS(),
+                        'options' => ['placeholder' => 'Chose...', 'id' => 'payment_method'],
+                        'pluginOptions' => ['allowClear' => true]
+                    ])?>
+                </div>
+                <div class="col-md-12" id="bill_link" style="display: none">
+                    <?= $form->field($model, 'bill_link')?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'shipping_cost')->textInput([
+                        'data-toggle' => 'input-mask',
+                        'class' => "form-control",
+                        'data-mask-format' => '#,##0',
+                        'data-reverse' => 'true',
+                        'id' => 'input-shipping-cost'
+                    ])?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'order_source')->widget(Select2::className(), [
+                        'data' => ContactsSource::LISTS(),
+                        'options' => ['placeholder' => 'Chose...'],
+                        'pluginOptions' => ['allowClear' => true]
+                    ])?>
+                </div>
+                <div class="col-12">
+                    <?= $form->field($model, 'note')->textarea()?>
+                    <?= $form->field($model, 'vendor_note')->textarea()?>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-7">
+            <h4 class="card-title"><i class="fe-box"></i> {!! Yii::t('app','product') !!}</h4>
+            <div class="row">
+                <div class="col-md-7">
+                    <?= Select2::widget([
+                        'name' => 'sku',
+                        'options' => ['placeholder' => 'Chose...'],
+                        'theme' => Select2::THEME_MATERIAL,
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'minimumInputLength' => 0,
+                            'ajax' => [
+                                'url' => Url::toRoute(['/ajax/get-list-product', 'code' => $model->code]),
+                                'dataType' => 'json',
+                                'delay' => 250,
+                                'data' => new JsExpression('function(params) { return {name:params.term, page: params.page}; }'),
+                                'processResults' => new JsExpression($resultsJs),
+                                'cache' => true
+                            ],
+                            'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                            'templateResult' => new JsExpression('formatRepo'),
+                            #'templateSelection' => new JsExpression('formatRepoSelection'),
+                        ],
+                        'pluginEvents' => [
+                            "select2:select" => new JsExpression('selectSku'),
+                        ]
+                    ])?>
+                </div>
+                <div class="col-md-5">
+                    <?= "";// Html::button('Thêm sản phẩm', ['id' => 'btn-add-product', 'class' => 'btn btn-flat btn-success'])?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="mt-2 align-content-center table table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th width="50%">{{Yii::t('app','product')}}</th>
+                            <th>{{Yii::t('app','qty')}}</th>
+                            <th>{{Yii::t('app','amount')}}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="result-sku-list">
+
+                        </tbody>
+                        <tfoot>
+                        <tr class="text-center">
+                            <th colspan="2">{{Yii::t('app','amount')}}:</th>
+                            <th colspan="2">
+                                <div class="input-group">
+
+                                    <input name="total_price" id="total-price-input"
+                                           type="text"
+                                           required
+                                           value="{{$model->total_price}}"
+                                           class="form-control"
+                                           data-toggle="input-mask"
+                                           data-mask-format="#,##0"
+                                           data-reverse="true">
+                                    <div class="input-group-append">
+                                        <p class="currency-input input-group-text"><?= Helper::symbol()?></p>
+                                    </div>
+
+                                    <?= $form->field($model, 'total_price')
+                                        ->hiddenInput(['id' => 'cost_product'])->label(false)?>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr class="text-center">
+                            <th colspan="2">{{Yii::t('app','shipping_fee')}}</th>
+                            <th colspan="2"><span
+                                        id="total-ship-text">{{\common\helper\Helper::formatCUR($model->shipping_cost,'',0)}}</span>
+                            </th>
+                        </tr>
+                        <tr class="text-center">
+                            <th colspan="2">{{Yii::t('app','total_amount')}}</th>
+                            <th colspan="2">
+                                <span id="total-bill-text">{{\common\helper\Helper::formatCUR($model->total_bill,'',0)}}</span>
+                                <?= $form->field($model, 'total_bill')
+                                    ->hiddenInput(['id' => 'cost_bill'])->label(false)?>
+                            </th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <hr>
+                <div class="col-12">
+                    <h4 class="card-title"><i class="fe-archive"></i> {!! Yii::t('app','warehouse_status') !!}</h4>
+                    <table class="mt-2 align-content-center table table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th>{!! Yii::t('app','warehouse') !!}</th>
+                            <th>{!! Yii::t('app','product_type') !!}</th>
+                            <th>{!! Yii::t('app','product') !!}</th>
+                            <th>{!! Yii::t('app','available') !!}</th>
+                        </tr>
+                        </thead>
+                        <tbody id="result-warehouse-list">
+
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php if (!$contact) { ?>
+        <div class="col-12 text-right">
+            <button type="submit" class="btn btn-success btn-sm btn-select"><i
+                        class="fe-save"></i> {!! Yii::t('app','save') !!}</button>
+            <button type="button" class="cancel-order btn btn-danger btn-sm btn-select"><i
+                        class="fe-x"></i> {!! Yii::t('app','cancel') !!}
+            </button>
+        </div>
+        <?php } ?>
+    </div>
+    @php(\kartik\form\ActiveForm::end())
+    {!! $view->render('template/sku-template.blade') !!}
+    {!! $view->render('template/warehouse-template.blade') !!}
+@stop
+@section('pos_page')
+    <script>
+
+        $(document).ready(function () {
+            ORDER.loadCurrentItems("{{$model->id}}");
+
+            ORDER.renderPrevtItem();
+            ORDER.setOrderExample("{{Yii::$app->request->get('code')}}");
+            ORDER.showWarehouse();
+
+            $(document).on('change', '#payment_method', function () {
+                if ($(this).val() == 9999) {
+                    $("#bill_link").show();
+                } else {
+                    $("#bill_link").hide();
+                }
+            });
+            $(document).on('click', '#btn-add-product', function () {
+                let id = $('#product-sku').val();
+                ORDER.addProductItem(id);
+            });
+
+            $(document).on('click', '.btn-remove-product', function () {
+                let sku = $(this).data('sku');
+                ORDER.removeProductItem(sku, this);
+            });
+            $(document).on('change', '.zipcode', function () {
+                let zipcode = $(this).val();
+                ORDER.changeZipcode(zipcode);
+            });
+            $(document).on('change', '.input-product-price', function () {
+                let val = $(this).val();
+                val = val.replaceAll(',', '');
+                let sku = $(this).data('sku');
+                if (!val) {
+                    val = 0;
+                }
+                ORDER.setItemPrice(sku, toNumber(val));
+            });
+
+            $(document).on('change', '.input-product-qty', function () {
+                let qty = $(this).val() > 0 ? $(this).val() : 1;
+                let sku = $(this).data("sku");
+                let input = $("body").find(`#total-price-${sku}`);
+                ORDER.loadItemPrice(qty, sku, input);
+            });
+            $(document).on('change', '#input-shipping-cost', function () {
+                let value = $(this).val();
+                if (!value) {
+                    value = 0;
+                }
+                ORDER.setShippingCost(toNumber(value));
+            });
+
+            $(document).on('change', '#total-price-input', function () {
+                let value = $(this).val();
+                if (!value) {
+                    value = 0;
+                }
+                ORDER.setTotalPrice(toNumber(value));
+            });
+        });
+    </script>
+@stop

@@ -139,4 +139,5 @@ class WarehouseHistories extends \common\models\BaseModel
             throw new BadRequestHttpException($exception->getMessage());
         }
     }
+
 }

@@ -254,19 +254,40 @@ class SalePhoneController extends BaseController
         ], '<i class="fe-shopping-cart"></i> Tạo đơn hàng', $this->footer(), 'xl');
     }
 
+    /**
+     * @param $code
+     * @return array|string
+     * @throws BadRequestHttpException
+     */
     public function actionUpdate($code)
     {
         $model = OrdersContact::findOne(['code' => $code]);
         if (!$model) {
-            throw new NotFoundHttpException('Order not found!');
+            throw new BadRequestHttpException('Order not found!');
         }
-        $model = new OrdersContact();
         $contact = $model->getContact();
         $products = Products::LISTS();
-        return $this->render('create.blade', [
+        $trans = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
+        if (\Yii::$app->request->isPost && $model->load(\Yii::$app->request->post())) {
+            try {
+                if (!$model->save()) {
+                    throw new BadRequestHttpException(Helper::firstError($model));
+                }
+                #Contacts::updateStatus($code, $model);
+                OrdersContactSku::updateItems($model->id, \Yii::$app->request->post('items'));
+                WarehouseHistories::saveHistories($model->code, \Yii::$app->request->post('items'));
+                $trans->commit();
+                return static::responseSuccess(1, 1, 'Thao tác thành công!');
+            } catch (\Exception $exception) {
+                $trans->rollBack();
+                \Yii::$app->session->setFlash('warning', $exception->getMessage());
+                return static::responseSuccess(0, 0, $exception->getMessage());
+            }
+        }
+        return static::responseRemote('update.blade', [
             'model' => $model,
             'products' => $products,
             'contact' => $contact
-        ]);
+        ], "Sửa đơn hàng $code", $this->footer(), 'full');
     }
 }

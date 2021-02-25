@@ -106,12 +106,12 @@ use backend\models\UserRole;
             'template' => '{edit}',
             'buttons' => [
                 'edit' => function ($url, $model) {
-                    return Html::a('<i class="fe-edit"></i>',
-                        Url::toRoute(['/sale-phone/update', 'code' => $model->code]),
+                    return Html::button('<i class="fe-edit"></i>',
                         [
                             'class' => 'btn btn-xs btn-warning',
+                            'data-url' => Url::toRoute(['/sale-phone/update', 'code' => $model->code]),
                             'data-pjax' => '0',
-                            'target' => '_blank'
+                            'role' => 'modal-remote',
                         ]
                     );
                 }
@@ -128,6 +128,7 @@ use backend\models\UserRole;
 ]) ?>
 <?= $view->render('../template/warehouse-view.blade')?>
 <?= $view->render('@backend/views/parts/Modal.blade', ['id' => 'viewExpand-modal'])?>
+<?= $view->render('@backend/views/parts/Modal.blade', ['id' => 'order-update-modal'])?>
 <?php
 
 
@@ -174,6 +175,11 @@ $js = <<<JS
         order.create('#vendor-modal', '#default-box', this, {ids});
     });
 
+    $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#order-update-modal', '#default-box');
+            event.preventDefault();
+            modal.remote(this, null);
+    });
 
 JS;
 $view->registerJs($js);
