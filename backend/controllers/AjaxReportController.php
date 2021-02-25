@@ -146,7 +146,7 @@ class AjaxReportController extends BaseController
         $revenue_C13 = ArrayHelper::getColumn($result, 'revenue_C13');
         $C11_C8 = array_sum(ArrayHelper::getColumn($result, 'C11_C8'));
         $C13_C11 = array_sum(ArrayHelper::getColumn($result, 'C13_C11'));
-        $total_revenue = array_sum(ArrayHelper::getColumn($result, 'revenue_C8'));
+        $total_revenue = array_sum(ArrayHelper::getColumn($result, 'revenue_C11'));
 
         return [
             'isEmpty' => $isEmpty,
