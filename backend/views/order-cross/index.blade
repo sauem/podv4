@@ -94,10 +94,8 @@ use backend\models\UserRole;
                                 'label' => 'Phí dịch vụ',
                                 'format' => 'html',
                                 'value' => function ($model) {
-                                    if ($model->contact) {
-                                        return 0;
-                                    }
-                                    $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+
+                                    $service = OrdersContact::getServiceFee($model);
                                     return Helper::formatCUR($service, '', 0);
                                 }
                             ],
@@ -105,10 +103,7 @@ use backend\models\UserRole;
                                 'label' => 'doanh thu đối soát',
                                 'format' => 'html',
                                 'value' => function ($model) {
-                                    if ($model->contact) {
-                                        return 0;
-                                    }
-                                    $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                                    $service = OrdersContact::getServiceFee($model);
                                     $amount = $model->total_bill - $model->collection_fee - $service;
                                     return Helper::formatCUR($amount, '', 0);
                                 }
