@@ -86,7 +86,11 @@ use common\helper\Helper;use yii\helpers\ArrayHelper;
                         'label' => 'Tình trạng thanh toán C11',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return OrdersContact::StatusLabel(ArrayHelper::getValue($model, 'status'));
+                            $status = OrdersContact::STATUS_PAYED;
+                            if ($model->shipping_status == OrdersContact::STATUS_REFUND) {
+                                $status = OrdersContact::STATUS_REFUND;
+                            }
+                            return OrdersContact::StatusLabel($status);
                         }
                     ],
                     [
