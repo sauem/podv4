@@ -72,6 +72,10 @@ use backend\models\UserRole;
         $(document).on('click', '.btn-load-more', function (e) {
             tabContent.render.loadMore(this);
         });
+        $(document).on('click', '.btn-reset', function () {
+            tabContent.render.loadItems({}, true, $(this).data('status'));
+            $(this).closest('form').reset();
+        });
     </script>
 @stop
 @php($view->registerJSFile('@web/theme/js/order.vendor.js?v=1.24',['depends' =>  \yii\web\JqueryAsset::className()]))
