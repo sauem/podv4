@@ -308,4 +308,14 @@ class OrdersContact extends \common\models\BaseModel
         ]);
     }
 
+    public static function getServiceFee(OrdersContact $model)
+    {
+        $contact = $model->contact;
+        $service = $contact->partnerName->service_fee ? $contact->partnerName->service_fee : 18;
+        if (!$contact) {
+            return $model->total_bill * 0.18;
+        }
+        return $model->total_bill * ($service / 100);
+    }
+
 }

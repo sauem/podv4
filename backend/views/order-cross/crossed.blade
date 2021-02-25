@@ -211,7 +211,7 @@ use yii\helpers\Url;
                 'format' => 'html',
                 'value' => function ($model) {
                     # $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
-                    $service = $model->service_fee ? $model->$model : 0;
+                    $service = OrdersContact::getServiceFee($model);
                     return Helper::formatCUR($service, '', 0);
                 }
             ],
@@ -220,7 +220,7 @@ use yii\helpers\Url;
                 'format' => 'html',
                 'value' => function ($model) {
                     #$service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
-                    $service = $model->service_fee;
+                    $service = OrdersContact::getServiceFee($model);
                     $amount = $model->total_bill - $model->collection_fee - $service;
                     return Helper::formatCUR($amount, '', 0);
                 }
