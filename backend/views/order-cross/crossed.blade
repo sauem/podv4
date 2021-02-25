@@ -180,7 +180,7 @@ use yii\helpers\Url;
                 'format' => 'html',
                 'value' => function ($model) {
                     $status = OrdersContact::STATUS_PAYED;
-                    if ($model->status == OrdersContact::STATUS_REFUND) {
+                    if ($model->shipping_status == OrdersContact::STATUS_REFUND) {
                         $status = OrdersContact::STATUS_REFUND;
                     }
                     return OrdersContact::StatusLabel($status);
