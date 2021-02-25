@@ -201,7 +201,8 @@ use yii\helpers\Url;
                 'label' => 'Phí dịch vụ',
                 'format' => 'html',
                 'value' => function ($model) {
-                    $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                   # $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                    $service = $model->service_fee ? $model->$model  : 0;
                     return Helper::formatCUR($service, '', 0);
                 }
             ],
@@ -209,7 +210,8 @@ use yii\helpers\Url;
                 'label' => 'doanh thu đối soát',
                 'format' => 'html',
                 'value' => function ($model) {
-                    $service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                    #$service = Helper::isEmpty($model->contact->partner) ? 0 : $model->contact->partner->service_fee;
+                    $service = $model->service_fee;
                     $amount = $model->total_bill - $model->collection_fee - $service;
                     return Helper::formatCUR($amount, '', 0);
                 }
