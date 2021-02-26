@@ -69,7 +69,7 @@ class ReportController extends BaseController
                 'payment_status',
                 'shipping_status',
                 'status',
-                'SUM(IF(O.payment_status = "paid" AND O.cross_status = "crossed")) as total_crossed',
+                'SUM(IF(O.payment_status = "paid" AND O.cross_status = "crossed", total_bill ,0)) as total_crossed',
                 'SUM(IF(O.payment_status = "paid", total_bill, 0)) as C11',
                 'SUM(IF(O.shipping_status = "refund", transport_fee, 0)) as refund_transport_fee'
             ])->groupBy(['O.code']);
