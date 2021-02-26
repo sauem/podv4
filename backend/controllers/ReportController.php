@@ -63,6 +63,8 @@ class ReportController extends BaseController
                 'code',
                 'phone',
                 'cross_status',
+                'cross_check_code',
+                'remittance_date',
                 'transport_fee',
                 'collection_fee',
                 'total_bill',
