@@ -67,6 +67,7 @@ class ReportController extends BaseController
                 'collection_fee',
                 'total_bill',
                 'payment_status',
+                'shipping_status',
                 'status',
                 'SUM(IF(O.payment_status = "paid", total_bill, 0)) as C11',
                 'SUM(IF(O.shipping_status = "refund", transport_fee, 0)) as refund_transport_fee'
