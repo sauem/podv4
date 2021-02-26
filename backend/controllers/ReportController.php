@@ -127,12 +127,13 @@ class ReportController extends BaseController
                 'code',
                 'phone',
                 'transport_fee',
+                'shipping_status',
                 'collection_fee',
                 'total_bill',
                 'payment_status',
                 'SUM(IF(orders_contact.payment_status = "paid" , total_bill, false)) as C11',
             ])
-            ->andWhere(['<>', 'orders_contact.status', OrdersContact::STATUS_CROSSED])
+            ->where(['<>', 'orders_contact.cross_status', OrdersContact::STATUS_CROSSED])
             ->orWhere(['<>', 'orders_contact.payment_status', OrdersContact::STATUS_PAYED])
             ->groupBy(['orders_contact.code'])
             ->asArray()->all();
