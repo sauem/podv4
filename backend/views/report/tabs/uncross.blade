@@ -97,7 +97,7 @@ use yii\helpers\ArrayHelper;
                         'format' => 'html',
                         'value' => function ($model) {
                             $status = OrdersContact::STATUS_PAYED;
-                            if ($model->shipping_status == OrdersContact::STATUS_REFUND) {
+                            if (ArrayHelper::getValue($model, 'shipping_status') == OrdersContact::STATUS_REFUND) {
                                 $status = OrdersContact::STATUS_REFUND;
                             }
                             return OrdersContact::StatusLabel($status);
