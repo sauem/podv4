@@ -69,6 +69,7 @@ class ReportController extends BaseController
                 'payment_status',
                 'status',
                 'SUM(IF(O.payment_status = "paid", total_bill, 0)) as C11',
+                'SUM(IF(O.shipping_status = "refund", transport_fee, 0)) as refund_transport_fee'
             ])->groupBy(['O.code']);
         $query = $query->asArray()->all();
         $data = static::getData($query);
@@ -78,15 +79,16 @@ class ReportController extends BaseController
         $collection_fee = array_sum(ArrayHelper::getColumn($data, 'collection_fee'));
         $C13 = array_sum(ArrayHelper::getColumn($data, 'C13'));
         $service_fee = array_sum(ArrayHelper::getColumn($data, 'service_fee'));
+        $refund_transport_fee = ArrayHelper::getValue($data, 'refund_transport_fee', 0);
 
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Helper::isEmpty($data[0]['code']) ? [] : $data
+            'allModels' => Helper::isEmpty($data) ? [] : $data
         ]);
 
         return static::responseRemote("tabs/crossed.blade", [
             'dataProvider' => $dataProvider,
             'C11' => $C11,
-            'transport_fee' => $transport_fee,
+            'transport_fee' => $transport_fee + $refund_transport_fee,
             'collection_fee' => $collection_fee,
             'C13' => $C13,
             'service_fee' => $service_fee
