@@ -112,14 +112,16 @@ class AjaxReportController extends BaseController
     {
         $isEmpty = false;
         $query = Contacts::find()
-            ->leftJoin('orders_contact', 'orders_contact.code = contacts.code')
+            ->innerJoin('orders_contact as O', 'O.code = contacts.code')
             ->addSelect([
-                'SUM(orders_contact.total_bill) as revenue_C8',
-                'SUM(IF(orders_contact.payment_status = "paid", orders_contact.total_bill ,0)) as revenue_C11',
-                'SUM(IF(orders_contact.status = "crossed", orders_contact.total_bill ,0)) as revenue_C13',
-                'SUM(IF(orders_contact.payment_status = "paid" AND orders_contact.cross_status IS NULL, orders_contact.total_bill ,0)) as total_uncross',
-                'SUM(IF(orders_contact.shipping_status = "refund" AND orders_contact.cross_status = "crossed", orders_contact.transport_fee, 0)) as refund_crossed',
-                'SUM(IF(orders_contact.shipping_status = "refund" AND orders_contact.cross_status IS NULL, orders_contact.transport_fee, 0)) as refund_uncross',
+                'SUM(IF( O.cross_status = "crossed" AND ( O.payment_status = "paid" OR O.shipping_status = "refund"), 1, 0)) as count_C13',
+                'SUM(IF( O.cross_status IS NULL AND (O.payment_status = "paid" OR O.shipping_status = "refund"), 1, 0)) as count_C11',
+                'SUM(O.total_bill) as revenue_C8',
+                'SUM(IF(O.payment_status = "paid", O.total_bill ,0)) as revenue_C11',
+                'SUM(IF(O.cross_status = "crossed" AND O.payment_status = "paid" , O.total_bill ,0)) as revenue_C13',
+                'SUM(IF(O.payment_status = "paid" AND O.cross_status IS NULL, O.total_bill ,0)) as total_uncross',
+                'SUM(IF(O.shipping_status = "refund" AND O.cross_status = "crossed", O.transport_fee, 0)) as refund_crossed',
+                'SUM(IF(O.shipping_status = "refund" AND O.cross_status IS NULL, O.transport_fee, 0)) as refund_uncross',
                 'FROM_UNIXTIME(contacts.register_time, \'%d/%m/%Y\') day',
             ])->groupBy('day')
             ->orderBy('contacts.register_time ASC');
@@ -140,7 +142,7 @@ class AjaxReportController extends BaseController
         $result = array_map(function ($item) {
             return array_merge($item, [
                 'C11_C8' => Helper::calculate($item['revenue_C11'], $item['revenue_C8']),
-                'C13_C11' => Helper::calculate($item['revenue_C13'], $item['revenue_C11'])
+                'C13_C11' => round($item['count_C13'] / ($item['count_C13'] + $item['count_C11']) * 100, 2)
             ]);
         }, $result);
         $labels = ArrayHelper::getColumn($result, 'day');

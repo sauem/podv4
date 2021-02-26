@@ -58,6 +58,9 @@ use common\helper\Helper;use yii\helpers\ArrayHelper;
                         'label' => 'Phí thu hộ',
                         'attribute' => 'collection_fee',
                         'value' => function ($model) {
+                            if(ArrayHelper::getValue($model,'shipping_status') === OrdersContact::STATUS_REFUND){
+                                return 0;
+                            }
                             return Helper::formatCUR(ArrayHelper::getValue($model, 'collection_fee', 0), '', 0);
                         }
                     ],
@@ -71,6 +74,9 @@ use common\helper\Helper;use yii\helpers\ArrayHelper;
                     [
                         'label' => 'Phí dịch vụ (18%)',
                         'value' => function ($model) {
+                            if(ArrayHelper::getValue($model,'shipping_status') === OrdersContact::STATUS_REFUND){
+                                return 0;
+                            }
                             $service_fee = ArrayHelper::getValue($model, 'service_fee', 0);
                             return Helper::formatCUR($service_fee, '', 0);
                         }
@@ -78,6 +84,9 @@ use common\helper\Helper;use yii\helpers\ArrayHelper;
                     [
                         'label' => 'Doanh thu sau phí (C13)',
                         'value' => function ($model) {
+                            if(ArrayHelper::getValue($model,'shipping_status') === OrdersContact::STATUS_REFUND){
+                                return 0;
+                            }
                             $C13 = ArrayHelper::getValue($model, 'C13', 0);
                             return Helper::formatCUR($C13, '', 0);
                         }

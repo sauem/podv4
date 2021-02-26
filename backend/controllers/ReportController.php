@@ -44,6 +44,7 @@ class ReportController extends BaseController
         $products = Products::LISTS();
         $marketers = UserRole::LISTS(UserRole::ROLE_MARKETER);
         $sales = UserRole::LISTS(UserRole::ROLE_SALE, true);
+        
         return static::responseRemote("financial.blade", [
             'products' => $products,
             'sales' => $sales,
