@@ -16,6 +16,7 @@ use backend\models\UserRole;
 use common\helper\Helper;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\db\Expression;
 use yii\db\Transaction;
 use yii\debug\models\timeline\DataProvider;
 use yii\helpers\ArrayHelper;
@@ -72,8 +73,8 @@ class ReportController extends BaseController
                 'shipping_status',
                 'status',
                 'SUM(IF(O.payment_status = "paid" AND O.cross_status = "crossed", total_bill ,0)) as total_crossed',
-                'SUM(IF(O.payment_status = "paid", total_bill, 0)) as C11',
-                'SUM(IF(O.shipping_status = "refund", transport_fee, 0)) as refund_transport_fee'
+                'SUM(IF(O.payment_status = "paid" AND O.cross_status = "crossed", total_bill, 0)) as C11',
+                'SUM(IF(O.shipping_status = "refund" AND O.cross_status = "crossed", transport_fee, 0)) as refund_transport_fee'
             ])->groupBy(['O.code']);
         $query = $query->asArray()->all();
         $data = static::getData($query);
@@ -99,11 +100,11 @@ class ReportController extends BaseController
         ]);
     }
 
-    static function getData($query)
+    static function getData($query, $status = 'total_crossed')
     {
-        return array_map(function ($item) {
+        return array_map(function ($item) use ($status) {
             $C11 = ArrayHelper::getValue($item, 'C11', 0);
-            $total_bill = ArrayHelper::getValue($item, 'total_crossed', 0);
+            $total_bill = ArrayHelper::getValue($item, $status, 0);
             $collection_fee = ArrayHelper::getValue($item, 'collection_fee', 0);
             $transport_fee = ArrayHelper::getValue($item, 'transport_fee', 0);
             $service_fee = ArrayHelper::getValue($item, 'contact.partner.service_fee', 18);
@@ -120,31 +121,38 @@ class ReportController extends BaseController
     {
         $query = OrdersContact::find()
             ->with(['contact', 'skuItems'])
-            ->from('orders_contact')
+            ->from('orders_contact as O')
+            ->where(['O.payment_status' => OrdersContact::STATUS_PAYED])
+            ->orWhere(['O.shipping_status' => OrdersContact::STATUS_REFUND])
+            ->andWhere(['IS', 'O.cross_status', new Expression('NULL')])
             ->addSelect([
                 'id',
                 'name',
                 'code',
                 'phone',
+                'cross_status',
+                'cross_check_code',
+                'remittance_date',
                 'transport_fee',
-                'shipping_status',
                 'collection_fee',
                 'total_bill',
                 'payment_status',
-                'SUM(IF(orders_contact.payment_status = "paid" , total_bill, false)) as C11',
-            ])
-            ->where(['<>', 'orders_contact.cross_status', OrdersContact::STATUS_CROSSED])
-            ->orWhere(['<>', 'orders_contact.payment_status', OrdersContact::STATUS_PAYED])
-            ->groupBy(['orders_contact.code'])
-            ->asArray()->all();
-
-        $data = static::getData($query);
+                'shipping_status',
+                'status',
+                'SUM(IF(O.payment_status = "paid" AND O.cross_status IS NULL, total_bill ,0)) as total_uncross',
+                'SUM(IF(O.payment_status = "paid" AND O.cross_status IS NULL, total_bill, 0)) as C11',
+                'SUM(IF(O.shipping_status = "refund" AND O.cross_status IS NULL, transport_fee, 0)) as refund_transport_fee'
+            ])->groupBy(['O.code']);
+        $query = $query->asArray()->all();
+        $data = static::getData($query, 'total_uncross');
 
         $C11 = array_sum(ArrayHelper::getColumn($data, 'C11'));
         $transport_fee = array_sum(ArrayHelper::getColumn($data, 'transport_fee'));
         $collection_fee = array_sum(ArrayHelper::getColumn($data, 'collection_fee'));
         $C13 = array_sum(ArrayHelper::getColumn($data, 'C13'));
         $service_fee = array_sum(ArrayHelper::getColumn($data, 'service_fee'));
+
+        $refund_uncross = ArrayHelper::getValue($data, 'refund_uncross', 0);
 
         $dataProvider = new ArrayDataProvider([
             'allModels' => Helper::isEmpty($data) ? [] : $data
@@ -154,7 +162,7 @@ class ReportController extends BaseController
         return static::responseRemote("tabs/uncross.blade", [
             'dataProvider' => $dataProvider,
             'C11' => $C11,
-            'transport_fee' => $transport_fee,
+            'transport_fee' => $transport_fee + $refund_uncross,
             'collection_fee' => $collection_fee,
             'C13' => $C13,
             'service_fee' => $service_fee
