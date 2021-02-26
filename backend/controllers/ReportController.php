@@ -69,6 +69,7 @@ class ReportController extends BaseController
                 'payment_status',
                 'shipping_status',
                 'status',
+                'SUM(IF(O.payment_status) = "paid" AND O.cross_status = "crossed")) as total_crossed',
                 'SUM(IF(O.payment_status = "paid", total_bill, 0)) as C11',
                 'SUM(IF(O.shipping_status = "refund", transport_fee, 0)) as refund_transport_fee'
             ])->groupBy(['O.code']);
@@ -100,7 +101,7 @@ class ReportController extends BaseController
     {
         return array_map(function ($item) {
             $C11 = ArrayHelper::getValue($item, 'C11', 0);
-            $total_bill = ArrayHelper::getValue($item, 'total_bill', 0);
+            $total_bill = ArrayHelper::getValue($item, 'total_crossed', 0);
             $collection_fee = ArrayHelper::getValue($item, 'collection_fee', 0);
             $transport_fee = ArrayHelper::getValue($item, 'transport_fee', 0);
             $service_fee = ArrayHelper::getValue($item, 'contact.partner.service_fee', 18);
