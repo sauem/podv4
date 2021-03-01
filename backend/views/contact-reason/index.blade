@@ -10,7 +10,7 @@ use backend\models\UserRole;
 @section('content')
     <div class="card">
         <div class="card-header">
-            @if(!Helper::isRole(UserRole::ROLE_PARTNER))
+            @if(Helper::isRole(UserRole::ROLE_ADMIN))
             <div class="card-widgets">
                 <button role="modal-remote" data-url="{!! Url::toRoute(['create']) !!}" class="btn btn-sm btn-success">
                     <i class="fe-plus"></i> Thêm
@@ -41,7 +41,7 @@ use backend\models\UserRole;
                         'class' => ActionColumn::class,
                         'template' => '{update}{delete}',
                         'width' => '10%',
-                        'visible' => !\common\helper\Helper::isRole(\backend\models\UserRole::ROLE_PARTNER),
+                        'visible' => \common\helper\Helper::isRole(\backend\models\UserRole::ROLE_ADMIN),
                         'buttons' => [
                             'update' => function ($url) {
                                 return Component::btnUpdate($url, null, [

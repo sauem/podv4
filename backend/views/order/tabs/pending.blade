@@ -17,7 +17,7 @@ use kartik\export\ExportMenu;
     {!! $view->render('search-pending.blade',[
             'searchModel' => $searchModel
         ]) !!}
-    @if(!Helper::isRole(UserRole::ROLE_PARTNER))
+    @if(Helper::isRole(UserRole::ROLE_ADMIN))
 
         <div class="my-2">
             <a href="{!! Url::toRoute(['/import','module' => 'tracking']) !!}" class="btn btn-sm btn-success"><i

@@ -15,7 +15,7 @@ use backend\models\UserRole;
     {!! $view->render('search-status.blade',[
            'searchModel' => $searchModel
        ]) !!}
-    @if(!Helper::isRole(UserRole::ROLE_PARTNER))
+    @if(Helper::isRole(UserRole::ROLE_ADMIN))
 
         <div class="my-2 btn-group">
             <a href="{!! Url::toRoute(['/import','module' => 'refund']) !!}" class="btn btn-sm btn-outline-warning"><i

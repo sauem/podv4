@@ -7,7 +7,7 @@ use backend\models\UserRole;
 
 
     <div class="card-box">
-        @if(!Helper::isRole(UserRole::ROLE_PARTNER))
+        @if(Helper::isRole(UserRole::ROLE_ADMIN))
             <a href="{{\yii\helpers\Url::toRoute(['/import','module' => 'order'])}}" class="btn btn-sm btn-warning"><i
                         class="fe-download"></i> Import</a>
         @endif
