@@ -89,6 +89,7 @@ class AjaxImportController extends BaseController
                 OrdersContact::updateAll([
                     'status' => OrdersContact::STATUS_REFUND,
                     'shipping_status' => OrdersContact::STATUS_REFUND,
+                    'payment_status' => OrdersContact::STATUS_REFUND,
                 ], ['code' => $refund->code]);
                 $orderItem = OrdersContactSku::findOne(['order_id' => $order->id, 'product_sku' => $product->sku]);
                 if (!$orderItem) {
