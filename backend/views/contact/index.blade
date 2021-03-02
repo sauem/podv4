@@ -79,19 +79,17 @@ use common\helper\Helper;
                 </li>
             </ul>
             <div class="tab-content">
-                <?= $view->render('search.blade', [
-                    'searchModel' => $searchModel,
-                    'containId' => '#contact-box'
-                ])?>
                 <div class="tab-pane active" id="tab-1">
                     <?php if(Helper::isRole(UserRole::ROLE_ADMIN)){ ?>
                     <button onclick="new approvePhone().approve()" class="mb-2 btn btn-sm btn-outline-success"><i
                                 class="fe-headphones"></i> Phân số
                     </button>
                     <?php  }?>
+
                     <?= $view->render('tabs/default.blade', [
                         'dataProvider' => $dataProvider,
-                        'containId' => $containId
+                        'containId' => $containId,
+                        'searchModel' => $searchModel
                     ])?>
                 </div>
                 <div class="tab-pane" id="tab-2">
@@ -108,6 +106,18 @@ use common\helper\Helper;
 @section('pos_page')
     <script>
         initToggleTab();
+        $(document).on('submit', 'form#formContact', function (event) {
+            event.preventDefault();
+            let data = $(this).serialize();
+            let action = $(this).attr('action');
+            action = `${action}?${data}`;
+            console.log(action);
+            $.pjax.reload("#all-box", {
+                url: action,
+                replace: false,
+            });
+            return false;
+        })
     </script>
 @stop
 

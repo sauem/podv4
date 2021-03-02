@@ -62,7 +62,6 @@ use yii\helpers\Url;
             [
                 'label' => 'Ghi chú',
                 'format' => 'html',
-                'headerOptions' => ['width' => '200px'],
                 'value' => function ($model) {
                     if (Helper::isEmpty($model->log)) {
                         return '---';

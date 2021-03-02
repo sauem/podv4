@@ -6,6 +6,10 @@ use kartik\grid\GridView;
 use backend\models\Contacts;
 
 ?>
+ <?= $view->render('../search.blade', [
+    'searchModel' => $searchModel,
+    'containId' => $containId
+]) ?>
     <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'persistResize' => true,

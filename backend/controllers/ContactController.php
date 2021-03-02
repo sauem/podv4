@@ -48,7 +48,9 @@ class ContactController extends BaseController
         $searchModel = new ContactsSearch();
         $allContact = $searchModel->search(\Yii::$app->request->queryParams);
         return static::responseRemote('tabs/all.blade', [
-            'dataProvider' => $allContact
+            'dataProvider' => $allContact,
+            'searchModel' => $searchModel,
+            'containerId' => 'all-box'
         ], null, null);
     }
 

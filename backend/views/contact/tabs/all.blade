@@ -8,7 +8,10 @@ use backend\models\Contacts;
 
 ?>
 @section("content")
-
+    <?= $view->render('../search.blade', [
+        'searchModel' => $searchModel,
+        'containId' => $containerId
+    ])?>
     <div class="<?= Helper::isRole(UserRole::ROLE_SALE) || Helper::isRole(UserRole::ROLE_PARTNER) ? 'card card-body' : '' ?>">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,

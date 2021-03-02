@@ -13,7 +13,7 @@ use yii\helpers\Url;
 ]) ?>
 <?php $form = ActiveForm::begin([
     'method' => 'GET',
-    'options' => ['data-pjax' => true, 'id' =>'formContact']
+    'options' => ['data-pjax' => true, 'id' => 'formContact']
 ]) ?>
 <div class="row">
     <div class="col-md-6">
@@ -37,6 +37,9 @@ $js = <<<JS
         $("#search-contact").on("pjax:end", function() {
 			$.pjax.reload({container:"$containId"});  //Reload GridView
 		});
+
+
+
 JS;
 
 $view->registerJS($js);

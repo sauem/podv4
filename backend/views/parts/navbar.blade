@@ -46,6 +46,9 @@ $path = array_filter($path);
                 <?php if ($menu && sizeof($menu) > 0) { ?>
                 <?php
                 foreach ($menu as $key => $item) {
+                if ($item['url'][0] === '/contact/all' && Helper::isRole(UserRole::ROLE_ADMIN)) {
+                    continue;
+                }
                 $children = isset($item['items']) ? $item['items'] : [];
 
                 if ($children) {
