@@ -69,7 +69,7 @@ use yii\helpers\Url;
                     $html = '';
                     foreach ($model->log as $k => $log) {
 
-                        if (Helper::isEmpty($log)) {
+                        if (Helper::isEmpty($log->sale_note)) {
                             continue;
                         }
                         $html .= $k + 1 . ":$log->sale_note <br>";
