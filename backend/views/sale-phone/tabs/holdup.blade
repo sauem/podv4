@@ -68,6 +68,10 @@ use yii\helpers\Url;
                     }
                     $html = '';
                     foreach ($model->log as $k => $log) {
+
+                        if (Helper::isEmpty($log)) {
+                            continue;
+                        }
                         $html .= $k + 1 . ":$log->sale_note <br>";
                     }
                     return trim($html);
