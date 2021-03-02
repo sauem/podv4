@@ -23,7 +23,7 @@ use yii\helpers\Url;
         <button type="submit" class="btn btn-search btn-primary"><i
                     class="fe-search"></i> Tìm kiếm
         </button>
-        <a href="/contact/index" data-pjax="0" type="reset" class="btn btn-search btn-secondary"><i
+        <a href="<?= Url::toRoute([Yii::$app->controller->getRoute()])?>" data-pjax="0" type="reset" class="btn btn-search btn-secondary"><i
                     class="fe-trash"></i> Reset
         </a>
     </div>

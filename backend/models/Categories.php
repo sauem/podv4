@@ -2,6 +2,8 @@
 
 namespace backend\models;
 
+use common\helper\Helper;
+use common\models\User;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -81,7 +83,11 @@ class Categories extends \common\models\BaseModel
 
     public static function find()
     {
-        return parent::find()->where(['{{categories}}.country' => Yii::$app->cache->get('country')]);
+        $query = parent::find()->where(['{{categories}}.country' => Yii::$app->cache->get('country')]);
+        if (Helper::isRole(UserRole::ROLE_PARTNER)) {
+            $query->andWhere(['{{categories}}.partner_id' => Yii::$app->user->getId()]);
+        }
+        return $query;
     }
 
     private function generateName()

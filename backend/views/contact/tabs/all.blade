@@ -90,3 +90,21 @@ use backend\models\Contacts;
         ]) ?>
     </div>
 @stop
+<?php if(!Yii::$app->request->isAjax) {?>
+@section("pos_page")
+    <script>
+        $(document).on('submit', 'form#formContact', function (event) {
+            event.preventDefault();
+            let data = $(this).serialize();
+            let action = $(this).attr('action');
+            action = `${action}?${data}`;
+            console.log(action);
+            $.pjax.reload("#all-box", {
+                url: action,
+                replace: false,
+            });
+            return false;
+        })
+    </script>
+@stop
+<?php } ?>
