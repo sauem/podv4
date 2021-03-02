@@ -60,6 +60,20 @@ use yii\helpers\Url;
                 }
             ],
             [
+                'label' => 'Ghi chú',
+                'format' => 'html',
+                'value' => function ($model) {
+                    if (Helper::isEmpty($model->log)) {
+                        return '---';
+                    }
+                    $html = '';
+                    foreach ($model->log as $k => $log) {
+                        $html .= $k + 1 . ":$log->sale_note <br>";
+                    }
+                    return trim($html);
+                }
+            ],
+            [
                 'class' => ActionColumn::class,
                 'template' => '{order}',
                 'width' => '12%',

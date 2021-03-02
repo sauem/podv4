@@ -283,4 +283,9 @@ class Contacts extends \common\models\BaseModel
     {
         return $this->hasOne(Categories::className(), ['name' => 'category']);
     }
+
+    public function getLog()
+    {
+        return $this->hasMany(ContactsLogStatus::className(), ['phone' => 'phone']);
+    }
 }
