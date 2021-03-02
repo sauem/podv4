@@ -83,6 +83,9 @@ class Categories extends \common\models\BaseModel
 
     public static function find()
     {
+        if (Yii::$app instanceof \yii\console\Application) {
+            return parent::find();
+        }
         $query = parent::find()->where(['{{categories}}.country' => Yii::$app->cache->get('country')]);
         if (Helper::isRole(UserRole::ROLE_PARTNER)) {
             $query->andWhere(['{{categories}}.partner_id' => Yii::$app->user->getId()]);

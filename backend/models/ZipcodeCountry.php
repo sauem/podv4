@@ -60,8 +60,12 @@ class ZipcodeCountry extends \common\models\BaseModel
             'symbol' => 'Đơn vị tiền tệ',
         ];
     }
+
     public static function find()
     {
+        if (Yii::$app instanceof \yii\console\Application) {
+            return parent::find();
+        }
         if (!Helper::countryNow() || Yii::$app->user->isGuest) {
             return parent::find();
         }
