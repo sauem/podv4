@@ -15,6 +15,9 @@ $form = ActiveForm::begin([
 ?>
 <div class="row">
     <div class="col-md-3">
+        <?= $form->field($searchModel, 'name')->textInput(['placeholder' => 'code, name, phone...'])->label(false);?>
+    </div>
+    <div class="col-md-3">
         <?= $form->field($searchModel, 'items')->widget(Select2::className(), [
             'data' => Products::LISTS(),
             'options' => ['placeholder' => 'Sản phẩm...', 'id' => 'product-pending'],

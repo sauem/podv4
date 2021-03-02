@@ -18,12 +18,13 @@ class OrdersContactSearch extends OrdersContact
     public $items;
     public $register_time;
     public $filter;
+    public $name;
 
     public function rules()
     {
         return [
-            [['status','filter'], 'string'],
-            [['items', 'payment_method', 'register_time', 'warehouse_id'], 'safe'],
+            [['status', 'filter'], 'string'],
+            [['items', 'payment_method', 'register_time', 'warehouse_id', 'name'], 'safe'],
         ];
     }
 
@@ -84,7 +85,11 @@ class OrdersContactSearch extends OrdersContact
         $query->andFilterWhere(['IN', '{{orders_contact}}.payment_method', $this->payment_method])
             ->andFilterWhere(['IN', '{{orders_contact}}.status', $this->status])
             ->andFilterWhere(['IN', '{{orders_contact}}.warehouse_id', $this->warehouse_id]);
-
+        if (!empty($this->name)) {
+            $query->andFilterWhere(['LIKE', '{{orders_contact}}.name', $this->name]);
+            $query->orFilterWhere(['LIKE', '{{orders_contact}}.phone', $this->name]);
+            $query->orFilterWhere(['LIKE', '{{orders_contact}}.code', $this->name]);
+        }
         return $dataProvider;
     }
 }

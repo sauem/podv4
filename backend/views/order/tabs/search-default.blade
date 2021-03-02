@@ -1,10 +1,9 @@
 <?php
-use kartik\daterange\DateRangePicker;use kartik\select2\Select2;
+use kartik\select2\Select2;
 use yii\widgets\Pjax;
 use kartik\form\ActiveForm;
 use backend\models\Products;
 use backend\models\Payments;
-use common\helper\Helper;
 ?>
 <?php
 Pjax::begin([
@@ -20,6 +19,9 @@ $form = ActiveForm::begin([
 ]);
 ?>
 <div class="row">
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'name')->textInput(['placeholder' => 'code, name, phone...'])->label(false);?>
+    </div>
     <div class="col-md-4">
         <?= $form->field($searchModel, 'items')->widget(Select2::className(), [
             'data' => Products::LISTS(),
@@ -27,7 +29,7 @@ $form = ActiveForm::begin([
             'pluginOptions' => ['allowClear' => true, 'multiple' => true]
         ])->label(false);?>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-2">
         <?= $form->field($searchModel, 'payment_method')->widget(Select2::className(), [
             'data' => Payments::LISTS(),
             'options' => ['placeholder' => 'Hình thức thanh toán...'],
@@ -35,7 +37,7 @@ $form = ActiveForm::begin([
         ])->label(false);?>
     </div>
 
-    <div class="col">
+    <div class="col-md-3">
         <button type="submit" class="btn btn-success"><i class="fe-search"></i> Tìm kiếm</button>
         <a href="/order/index" data-toggle="tooltip" title="Xóa tìm kiếm" class="btn btn-secondary">
             <i class="fe-trash"></i> Làm mới
