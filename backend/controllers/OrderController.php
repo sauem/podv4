@@ -119,6 +119,24 @@ class OrderController extends BaseController
         ]);
     }
 
+    public function actionCancel()
+    {
+        $searchModel = new OrdersContactSearch();
+
+        $params = array_merge_recursive([
+            'OrdersContactSearch' => [
+                'status' => [OrdersContact::STATUS_CANCEL]
+            ]
+        ], \Yii::$app->request->queryParams);
+
+        $dataProvider = $searchModel->search($params);
+
+        return self::responseRemote('tabs/cancel.blade', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
+        ]);
+    }
+
     public function actionGetStatus()
     {
         $searchModel = new OrdersContactSearch();
@@ -173,6 +191,32 @@ class OrderController extends BaseController
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel
         ]);
+    }
+
+    public function actionGetCancel()
+    {
+        $searchModel = new OrdersContactSearch();
+        $params = array_merge_recursive([
+            'OrdersContactSearch' => [
+                'status' => [
+                    OrdersContact::STATUS_CANCEL,
+                ]
+            ]
+        ], \Yii::$app->request->get());
+        $dataProvider = $searchModel->search($params);
+        $offset = ArrayHelper::getValue($params, 'offset', 0);
+        $dataProvider->query->offset($offset);
+        $dataProvider->query->limit(20);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = $dataProvider->query->asArray()->all();
+        return [
+            'data' => $data,
+            'offset' => ((int)$offset + 20),
+            'limit' => 20,
+            'total' => $dataProvider->getTotalCount(),
+            'shown' => $offset . '/' . $dataProvider->getTotalCount(),
+            'max' => sizeof($data) < 20
+        ];
     }
 
     /**

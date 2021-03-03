@@ -1,6 +1,7 @@
 <script id="status-order-template" type="text/x-handlebars-template">
     @{{#each this}}
     <tr data-key="@{{ this.code }}">
+        <td><input data-code="@{{ code }}" type="checkbox" value="@{{ id }}"></td>
         <td>@{{ code }}</td>
         <td>@{{ name }}</td>
         <td>@{{ phone }}</td>

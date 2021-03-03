@@ -49,6 +49,44 @@ async function exportOrderSelect(e) {
 }
 
 function tabOrderContent() {
+    this.cancelOrder = (element) => {
+        let instance = this;
+        let status = $(element).data('status') ? $(element).data('status') : 'default';
+        let checked = [];
+        let parent = $(element).data('table') ? $(element).data('table') : '#w1';
+        $(parent + ' table tbody input[type="checkbox"]').each(function (key) {
+            if ($(this).is(':checked')) {
+                checked.push($(this).data('code'));
+            }
+            swal.fire({
+                showCancelButton: true,
+                title: 'Cảnh báo',
+                text: 'Hủy các đơn hàng đã chọn',
+            }).then(async (value) => {
+                if (value.value) {
+                    try {
+                        const res = await $.ajax({
+                            url: AJAX_PATH.cancelOrder,
+                            data: {checked},
+                            type: 'POST',
+                            cache: false
+                        });
+                        let params = $(`form-order-${status}`).serializeArray();
+                        if (status == 'default') {
+                            let url = '/order/index';
+                            url = url + '?' + new URLSearchParams($('#formOrder').serialize());
+                            $.pjax.reload({replace: false, push: false, url: url, container: "#default-box"});
+                        } else {
+                            await instance.render.loadItems(params, true, status);
+                        }
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            });
+        });
+
+    }
     this.getData = async (params = {}, status = 'pending') => {
         return $.ajax({
             url: `/order/get-${status}`,
@@ -65,6 +103,10 @@ function tabOrderContent() {
         status: {
             result: $('#result-order-status'),
             handle: Handlebars.compile($('#status-order-template').html())
+        },
+        cancel: {
+            result: $('#result-order-cancel'),
+            handle: Handlebars.compile($('#cancel-order-template').html())
         }
     }
     this.setTemplate = (data, status, max, search) => {
@@ -78,6 +120,10 @@ function tabOrderContent() {
             case 'status':
                 result = $('#result-order-status');
                 handle = Handlebars.compile($('#status-order-template').html());
+                break;
+            case 'cancel':
+                result = $('#result-order-cancel');
+                handle = Handlebars.compile($('#cancel-order-template').html());
                 break;
         }
         if (search) {
@@ -104,9 +150,11 @@ function tabOrderContent() {
                 name: 'offset',
                 value: coffset
             });
-            console.log(params);
             thiz.html(loadingContent);
-            let {offset, shown} = await this.render.loadItems(params, false, status);
+            let {offset, shown, total} = await this.render.loadItems(params, false, status);
+            if (total >= offset) {
+                return false;
+            }
             thiz.attr('data-offset', offset);
             thiz.html(`Load more items of ${shown}`);
         },

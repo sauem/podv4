@@ -354,4 +354,28 @@ class AjaxController extends BaseController
         }
         return $model->skuItems;
     }
+
+    public function actionCancelOrder()
+    {
+        $codes = \Yii::$app->request->post('checked');
+        if (empty($codes)) {
+            throw new BadRequestHttpException('Không có đơn hàng được chọn!');
+        }
+        $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
+        try {
+            OrdersContact::updateAll([
+                'status' => OrdersContact::STATUS_CANCEL,
+                'shipping_status' => OrdersContact::STATUS_CANCEL,
+            ], ['code' => $codes]);
+
+
+            $transaction->commit();
+            return [
+                'success' => 1
+            ];
+        } catch (\Exception $exception) {
+            $transaction->rollBack();
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+    }
 }

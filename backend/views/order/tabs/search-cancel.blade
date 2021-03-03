@@ -1,0 +1,66 @@
+<?php
+use backend\models\Warehouse;use kartik\daterange\DateRangePicker;use kartik\select2\Select2;
+use yii\widgets\Pjax;
+use kartik\form\ActiveForm;
+use backend\models\Products;
+use backend\models\Payments;
+use common\helper\Helper;
+?>
+<?php
+
+$form = ActiveForm::begin([
+    'method' => 'GET',
+    'options' => ['id' => 'form-order-cancel']
+]);
+?>
+<div class="row">
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'name')->textInput(['placeholder' => 'code, name, phone...'])->label(false);?>
+    </div>
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'items')->widget(Select2::className(), [
+            'data' => Products::LISTS(),
+            'options' => ['placeholder' => 'Sản phẩm...', 'id' => 'product-pending'],
+            'pluginOptions' => ['allowClear' => true, 'multiple' => true]
+        ])->label(false);?>
+        <?= $form->field($searchModel, 'filter')->hiddenInput(['value' => 'cancel'])->label(false)?>
+    </div>
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'payment_method')->widget(Select2::className(), [
+            'data' => Payments::LISTS(),
+            'options' => ['placeholder' => 'Hình thức thanh toán...', 'id' => 'payment-pending'],
+            'pluginOptions' => ['allowClear' => true, 'multiple' => true]
+        ])->label(false);?>
+    </div>
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'warehouse_id')->widget(Select2::className(), [
+            'data' => Warehouse::LISTS(),
+            'options' => ['placeholder' => 'Kho hàng...'],
+            'pluginOptions' => ['allowClear' => true, 'multiple' => true]
+        ])->label(false);?>
+    </div>
+    <div class="col-md-3">
+        <?= $form->field($searchModel, 'register_time')->widget(DateRangePicker::className(), [
+            'name' => 'order_time',
+            'presetDropdown' => true,
+            'hideInput' => true,
+            'options' => ['placeholder' => 'Ngày ra contact...'],
+            'pluginOptions' => [
+                'locale' => [
+                    'format' => 'DD/MM/YYYY',
+                    'separator' => ' - '
+                ]
+            ]
+        ])->label(false);?>
+    </div>
+    <div class="col">
+        <button type="button" id="searchCancel" class="btn btn-success"><i class="fe-search"></i> Tìm kiếm
+        </button>
+        <button type="button" data-status="cancel" data-toggle="tooltip" title="Xóa tìm kiếm"
+                class="btn-reset btn btn-secondary">
+            <i class="fe-trash"></i> Làm mới
+        </button>
+    </div>
+</div>
+
+<?php ActiveForm::end(); ?>

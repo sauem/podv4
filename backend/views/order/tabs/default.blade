@@ -30,6 +30,9 @@ use backend\models\UserRole;
         <button data-url="{!! Url::toRoute(['create']) !!}" id="createOrderVendor" class="btn btn-sm btn-success"><i
                     class="fe-shopping-cart"></i> Tạo phiếu xuất kho
         </button>
+        <button id="cancelOrder" class="btn cancelOrder btn-sm btn-secondary"><i
+                    class="fe-x"></i> Hủy đơn
+        </button>
     </div>
 @endif
 <?= GridView::widget([

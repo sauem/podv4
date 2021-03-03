@@ -37,6 +37,13 @@ use backend\models\UserRole;
                     Trạng thái chuyển hàng ({!! $statusShippingOrder->getTotalCount() !!})
                 </a>
             </li>
+            <li class="nav-item">
+                <a data-pjax="0" href="#tab-4" data-url="<?= Url::toRoute(['cancel'])?>" data-toggle="tab"
+                   aria-expanded="false"
+                   class="nav-link">
+                    Đơn hủy
+                </a>
+            </li>
         </ul>
         <?php \yii\widgets\Pjax::end(); ?>
 
@@ -48,17 +55,15 @@ use backend\models\UserRole;
                     'searchModel' => $searchModel
                 ]) ?>
             </div>
-            <div id="tab-2" class="tab-pane">
-
-            </div>
-            <div id="tab-3" class="tab-pane">
-
-            </div>
+            <div id="tab-2" class="tab-pane"></div>
+            <div id="tab-3" class="tab-pane"></div>
+            <div id="tab-4" class="tab-pane"></div>
         </div>
     </div>
     {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'vendor-modal']) !!}
     <?= $view->render('template/status-order-template.blade')?>
     <?= $view->render('template/pending-order-template.blade')?>
+    <?= $view->render('template/cancel-order-template.blade')?>
 
 @stop
 @section('js_template')
@@ -75,6 +80,9 @@ use backend\models\UserRole;
         $(document).on('click', '.btn-reset', function () {
             tabContent.render.loadItems({}, true, $(this).data('status'));
             $(this).closest('form').reset();
+        });
+        $(document).on('click', '.cancelOrder', function () {
+            tabContent.cancelOrder(this);
         });
     </script>
 @stop

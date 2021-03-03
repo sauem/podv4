@@ -1,0 +1,73 @@
+<?php
+
+use kartik\grid\CheckboxColumn;
+use kartik\grid\GridView;
+use kartik\grid\ActionColumn;
+use backend\models\OrdersContact;
+use common\helper\Helper;
+use kop\y2sp\ScrollPager;
+use yii\helpers\Url;
+use yii\helpers\Html;
+use common\helper\Component;
+use backend\models\UserRole;
+use kartik\export\ExportMenu;
+?>
+
+@section('content')
+    {!! $view->render('search-cancel.blade',[
+            'searchModel' => $searchModel
+        ]) !!}
+    @if(Helper::isRole(UserRole::ROLE_ADMIN))
+
+        <div class="my-2">
+            <a data-status="pending" href="javascript:;" onclick="exportOrderSelect(this)"
+               class="btn btn-sm btn-info"><i
+                        class="fe-download-cloud"></i> Xuất đơn đã lọc
+            </a>
+        </div>
+    @endif
+    <div class="table-responsive">
+        <table id="pending-box" class="table-sm table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Code</th>
+                <th>Khách hàng</th>
+                <th>Điện thoại</th>
+                <th>Đối tác</th>
+                <th>Đối tác vận chuyển</th>
+                <th>Tracking number</th>
+                <th>Kho hàng</th>
+                <th>Sản phẩm</th>
+                <th>Trạng thái</th>
+                <th>Phí vận chuyển</th>
+                <th>Doanh thu</th>
+            </tr>
+            </thead>
+            <tbody id="result-order-cancel">
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="11">
+                    <button data-status="cancel" data-offset="20" class="btn-load-more">Load more items</button>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <?= $view->render('../template/amount-view.blade')?>
+
+@stop
+@section("pos_page")
+    <script>
+        $(document).ready(function () {
+            tabContent.render.loadItems(null, false, 'cancel');
+
+            $(document).on('click', '#searchCancel', function () {
+                let params = $('#form-order-cancel').serializeArray();
+                tabContent.render.search('cancel');
+                tabContent.render.loadItems(params, true, 'cancel');
+            });
+        });
+    </script>
+@stop
