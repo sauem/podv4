@@ -367,8 +367,9 @@ class AjaxController extends BaseController
                 'status' => OrdersContact::STATUS_CANCEL,
                 'shipping_status' => OrdersContact::STATUS_CANCEL,
             ], ['code' => $codes]);
-
-
+            Contacts::updateAll([
+                'status' => Contacts::STATUS_CANCEL,
+            ], ['code' => $codes]);
             $transaction->commit();
             return [
                 'success' => 1
@@ -378,4 +379,5 @@ class AjaxController extends BaseController
             throw new BadRequestHttpException($exception->getMessage());
         }
     }
+
 }
