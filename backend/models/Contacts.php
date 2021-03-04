@@ -120,7 +120,8 @@ class Contacts extends \common\models\BaseModel
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->hash_key = self::generateKey($this->phone, $this->partner, $this->option, $this->country);
+            $this->hash_key = self::generateKey(
+                $this->phone, $this->partner, $this->option, $this->country, $this->register_time);
             $this->code = $this->code ? $this->code : self::generateCode($this->partner);
             if (self::isExisted($this->hash_key)) {
                 $this->addError('register_time', 'Đã tồn tại liên hệ này trong 3 ngày trước!');
@@ -148,7 +149,7 @@ class Contacts extends \common\models\BaseModel
     public static function isExisted($hash_key)
     {
         $model = Contacts::find()->where(['hash_key' => $hash_key])
-            ->andWhere('FROM_UNIXTIME(register_time) >= NOW() - INTERVAL 3 DAY')->all();
+            ->andWhere('FROM_UNIXTIME(register_time) >= NOW() - INTERVAL 4 DAY')->all();
         if ($model) {
             return true;
         }
@@ -226,12 +227,12 @@ class Contacts extends \common\models\BaseModel
         }
     }
 
-    public static function generateKey($phone, $partner, $option, $country)
+    public static function generateKey($phone, $partner, $option, $country, $time)
     {
         if (!$country) {
             $country = Yii::$app->cache->get('country');
         }
-        return md5($phone . $partner . $option . $country);
+        return md5($phone . $partner . $option . $country . $time);
     }
 
     public function getSale()
