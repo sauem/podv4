@@ -13,7 +13,7 @@ use yii\helpers\Url;
 ]) ?>
 <?php $form = ActiveForm::begin([
     'method' => 'GET',
-    'options' => ['data-pjax' => true, 'id' => 'formContact']
+    'options' => ['data-pjax' => true, 'data-box' => "#$containId", 'id' => 'formContact']
 ]) ?>
 <div class="row">
     <div class="col-md-6">
@@ -23,7 +23,8 @@ use yii\helpers\Url;
         <button type="submit" class="btn btn-search btn-primary"><i
                     class="fe-search"></i> Tìm kiếm
         </button>
-        <a href="<?= Url::toRoute([Yii::$app->controller->getRoute()])?>" data-pjax="0" type="reset" class="btn btn-search btn-secondary"><i
+        <a href="<?= Url::toRoute([Yii::$app->controller->getRoute()])?>" data-pjax="0" type="reset"
+           class="btn btn-search btn-secondary"><i
                     class="fe-trash"></i> Reset
         </a>
     </div>
@@ -37,9 +38,6 @@ $js = <<<JS
         $("#search-contact").on("pjax:end", function() {
 			$.pjax.reload({container:"$containId"});  //Reload GridView
 		});
-
-
-
 JS;
 
 $view->registerJS($js);

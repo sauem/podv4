@@ -110,10 +110,11 @@ use common\helper\Helper;
         initToggleTab();
         $(document).on('submit', 'form#formContact', function (event) {
             event.preventDefault();
+            let containId = $(this).data('box') ? $(this).data('box') : '#contact-box';
             let data = $(this).serialize();
             let action = $(this).attr('action');
             action = `${action}?${data}`;
-            $.pjax.reload("#all-box", {
+            $.pjax.reload(containId, {
                 url: action,
                 replace: false,
             });
