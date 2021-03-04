@@ -4,7 +4,7 @@ use backend\models\OrdersContact;use backend\models\UserRole;use common\helper\H
 use kartik\export\ExportMenu;use kartik\grid\CheckboxColumn;
 use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
-use backend\models\Contacts;
+use backend\models\Contacts;use yii\helpers\Html;use yii\helpers\Url;
 
 ?>
 @section("content")
@@ -86,13 +86,37 @@ use backend\models\Contacts;
                 ],
                 'type',
                 'category',
+                [
+                    'class' => ActionColumn::class,
+                    'template' => '{order}',
+                    'visible' => Helper::isRole(UserRole::ROLE_CS),
+                    'width' => '15%',
+                    'buttons' => [
+                        'order' => function ($url, $model) {
+                            return Html::button("<i class='fe-shopping-cart'></i> " . Yii::t('app', 'create_order'), [
+                                'data-pjax' => "0",
+                                'data-url' => Url::toRoute(['/sale-phone/create', 'code' => $model->code]),
+                                'role' => 'modal-remote',
+                                'class' => 'btn-xs btn btn-success createNewExistOrder'
+                            ]);
+                        },
+
+                    ]
+                ]
             ]
         ]) ?>
     </div>
+    {!! $view->render('@backend/views/parts/Modal.blade',['id' => 'order-modal' ]) !!}
+
 @stop
 <?php if(!Yii::$app->request->isAjax) {?>
 @section("pos_page")
     <script>
+        $(document).on('click', '[role="modal-remote"]', function (event) {
+            let modal = new ModalRemote('#order-modal', '#all-box');
+            event.preventDefault();
+            modal.remote(this, null);
+        });
         $(document).on('submit', 'form#formContact', function (event) {
             event.preventDefault();
             let data = $(this).serialize();
@@ -104,7 +128,9 @@ use backend\models\Contacts;
                 replace: false,
             });
             return false;
-        })
+        });
     </script>
 @stop
 <?php } ?>
+@php($view->registerJSFile('@web/theme/js/order.sale.js?v=1.7',['depends' =>  \yii\web\JqueryAsset::className()]))
+
