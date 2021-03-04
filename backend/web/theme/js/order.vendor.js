@@ -52,6 +52,7 @@ function tabOrderContent() {
     this.cancelOrder = (element) => {
         let instance = this;
         let status = $(element).data('status') ? $(element).data('status') : 'default';
+        let back = $(element).data('back') === 'undo' ? 1 : 0;
         let checked = [];
         let parent = $(element).data('table') ? $(element).data('table') : '#w1';
         $(parent + ' table tbody input[type="checkbox"]').each(function (key) {
@@ -67,7 +68,7 @@ function tabOrderContent() {
                     try {
                         const res = await $.ajax({
                             url: AJAX_PATH.cancelOrder,
-                            data: {checked},
+                            data: {checked,back},
                             type: 'POST',
                             cache: false
                         });

@@ -16,6 +16,7 @@ class UserRole extends UserModel
     const ROLE_MARKETER = 'Marketer';
     const ROLE_VENDOR = 'Vendor';
     const ROLE_PARTNER = 'Partner';
+    const ROLE_CS = 'Customer Care';
 
     const ROLES = [
         self::ROLE_ADMIN => 'Admin',
@@ -23,6 +24,7 @@ class UserRole extends UserModel
         self::ROLE_SALE => 'Sale',
         self::ROLE_VENDOR => 'Vận đơn',
         self::ROLE_PARTNER => 'Đối tác',
+        self::ROLE_CS => 'Chăm sóc khách hàng',
     ];
 
     public static function assignRole($model)

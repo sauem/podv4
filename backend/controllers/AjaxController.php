@@ -358,18 +358,33 @@ class AjaxController extends BaseController
     public function actionCancelOrder()
     {
         $codes = \Yii::$app->request->post('checked');
+        $back = \Yii::$app->request->post('back');
         if (empty($codes)) {
             throw new BadRequestHttpException('Không có đơn hàng được chọn!');
         }
         $transaction = \Yii::$app->getDb()->beginTransaction(Transaction::SERIALIZABLE);
         try {
-            OrdersContact::updateAll([
-                'status' => OrdersContact::STATUS_CANCEL,
-                'shipping_status' => OrdersContact::STATUS_CANCEL,
-            ], ['code' => $codes]);
-            Contacts::updateAll([
-                'status' => Contacts::STATUS_CANCEL,
-            ], ['code' => $codes]);
+            if ($back) {
+                OrdersContact::updateAll([
+                    'status' => OrdersContact::STATUS_NEW,
+                    'warehouse_id' => null,
+                    'transport_id' => null,
+                    'sub_transport_id' => null,
+                ], ['code' => $codes]);
+//                OrdersContact::updateAll([
+//                    'status' => OrdersContact::STATUS_CANCEL,
+//                    'shipping_status' => OrdersContact::STATUS_CANCEL,
+//                ], ['code' => $codes]);
+            } else {
+                OrdersContact::updateAll([
+                    'status' => OrdersContact::STATUS_CANCEL,
+                    'shipping_status' => OrdersContact::STATUS_CANCEL,
+                ], ['code' => $codes]);
+                Contacts::updateAll([
+                    'status' => Contacts::STATUS_CANCEL,
+                ], ['code' => $codes]);
+            }
+
             $transaction->commit();
             return [
                 'success' => 1
