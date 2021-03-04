@@ -26,9 +26,9 @@ use backend\models\UserRole;
                         <div class="form-group">
                             <?= Html::label("Tài khoản phân bổ") ?>
                             <br>
-<!--                            --><?//= Html::dropDownList("user_id", null, UserRole::LISTS(UserRole::ROLE_SALE, true), [
-//                                'class' => 'form-control select2'
-//                            ]) ?>
+                            <?= Html::dropDownList("user_id", null, UserRole::LISTS(UserRole::ROLE_SALE, true), [
+                                'class' => 'form-control select2'
+                            ]) ?>
                         </div>
                         <p>Số điện thoại được chọn</p>
                         <div id="phones-result"></div>
