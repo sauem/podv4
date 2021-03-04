@@ -1,5 +1,7 @@
 <?php
-use backend\models\Contacts;use yii\helpers\ArrayHelper;use yii\helpers\Url;
+use backend\models\Contacts;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use kartik\grid\GridView;
 use common\helper\Component;
 use kartik\grid\ActionColumn;
@@ -100,8 +102,8 @@ use common\helper\Helper;
             </div>
         </div>
     </div>
-{{--    {!! $view->render('modal/apr-modal.blade') !!}--}}
-    {!! $view->render('template/assign-phone-template.blade') !!}
+    <?= $view->render('modal/apr-modal.blade') ?>
+    <?= $view->render('template/assign-phone-template.blade') ?>
 @stop
 @section('pos_page')
     <script>
@@ -111,7 +113,6 @@ use common\helper\Helper;
             let data = $(this).serialize();
             let action = $(this).attr('action');
             action = `${action}?${data}`;
-            console.log(action);
             $.pjax.reload("#all-box", {
                 url: action,
                 replace: false,
