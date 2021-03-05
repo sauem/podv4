@@ -2,7 +2,9 @@
     @{{#each this}}
     <tr data-key="@{{ this.code }}">
         <td><input data-code="@{{ code }}" type="checkbox" value="@{{ id }}"></td>
-        <td>@{{ code }}</td>
+        <td><b>@{{ code }}</b>
+            <small> @{{dateFormat order_time }}</small>
+        </td>
         <td>@{{ name }}</td>
         <td>@{{ phone }}</td>
         <td>@{{ partner }}</td>
@@ -13,6 +15,7 @@
         <td>@{{{orderStatus status }}}</td>
         <td>@{{money transport_fee }}</td>
         <td>@{{money total_bill }}</td>
+
     </tr>
     @{{/each  }}
 </script>

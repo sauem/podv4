@@ -101,7 +101,7 @@ JS;
                     ])?>
                 </div>
                 <div class="col-md-12" id="bill_link" style="display: none">
-                    <?= $form->field($model, 'bill_link')?>
+                    <?= $form->field($model, 'bill_link')->label('Ảnh chứng từ (*)')?>
                 </div>
                 <div class="col-md-6">
                     <?= $form->field($model, 'shipping_cost')->textInput([
@@ -251,6 +251,11 @@ JS;
             ORDER.renderPrevtItem();
             ORDER.setOrderExample("{{Yii::$app->request->get('code')}}");
             ORDER.showWarehouse();
+            if ($('#payment_method').val() == 9999) {
+                $("#bill_link").show();
+            } else {
+                $("#bill_link").hide();
+            }
             $(document).on('change', '#payment_method', function () {
                 if ($(this).val() == 9999) {
                     $("#bill_link").show();

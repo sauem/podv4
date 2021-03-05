@@ -85,12 +85,21 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
                         return $model->sale_note;
                     }
                 ],
+
                 [
                     'label' => 'trạng thái',
                     'attribute' => 'status',
                     'format' => 'html',
                     'value' => function ($model) {
                         return Contacts::StatusLabel($model->status);
+                    }
+                ],
+                [
+                    'label' => 'Thời gian',
+                    'attribute' => 'created_at',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return Helper::toDate($model->created_at);
                     }
                 ],
             ]
