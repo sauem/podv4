@@ -48,7 +48,7 @@ class AppAsset extends AssetBundle
         'js/main.js',
         'js/upload.js',
         ['js/ModalRemote.js', 'async' => true],
-        'js/func.js',
+        'js/func.js?v=1.2',
     ];
     public $depends = [
         'yii\web\YiiAsset',
