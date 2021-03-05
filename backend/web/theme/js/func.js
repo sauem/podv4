@@ -163,3 +163,36 @@ function approvePhone() {
         }
     }
 }
+
+async function exportContactHistories(e) {
+
+    let url = AJAX_PATH.exportHistories;
+
+    swal.fire({
+        title: 'Xin chờ....',
+        onBeforeOpen: () => {
+            swal.showLoading();
+            $.ajax({
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                url: url,
+                type: 'GET',
+                data: {},
+                success: function (res) {
+                    let a = document.createElement('a');
+                    let url = window.URL.createObjectURL(res);
+                    let date = new Date();
+                    a.href = url;
+                    a.download = `contact_histories_${date.getDay()}${date.getMonth()}${date.getFullYear()}.xlsx`;
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                    swal.close();
+                }
+            })
+        }
+    });
+}
+

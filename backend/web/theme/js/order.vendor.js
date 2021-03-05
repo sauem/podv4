@@ -68,7 +68,7 @@ function tabOrderContent() {
                     try {
                         const res = await $.ajax({
                             url: AJAX_PATH.cancelOrder,
-                            data: {checked,back},
+                            data: {checked, back},
                             type: 'POST',
                             cache: false
                         });

@@ -3,8 +3,12 @@ use backend\models\Contacts;use common\helper\Helper;use kartik\grid\GridView;
 ?>
 @section("content")
     <div class="card-box mt-4">
-        <h5 class="text-success card-title"><i class="fe-phone-call"></i> Lịch sử tất cả liên hệ:</span>
-        </h5>
+        <div class="mb-2 d-flex justify-content-between">
+            <h5 class="text-success card-title"><i class="fe-phone-call"></i> Lịch sử tất cả liên hệ:</span>
+            </h5>
+            <button onclick="exportContactHistories(this)" class="btn btn-xs btn-warning"><i class="fe-download"></i> Export
+            </button>
+        </div>
 
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
