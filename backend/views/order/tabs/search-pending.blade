@@ -40,8 +40,12 @@ $form = ActiveForm::begin([
         ])->label(false);?>
     </div>
     <div class="col-md-3">
+        <?= $form->field($searchModel, 'order_time')->widget(\kartik\date\DatePicker::className(), [
+            'options' => ['placeholder' => 'Ngày chuyển hàng...'],
+        ])->label(false);?>
+    </div>
+    <div class="col-md-3">
         <?= $form->field($searchModel, 'register_time')->widget(DateRangePicker::className(), [
-            'name' => 'order_time',
             'presetDropdown' => true,
             'hideInput' => true,
             'options' => ['placeholder' => 'Ngày ra contact...'],

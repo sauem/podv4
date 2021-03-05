@@ -91,7 +91,7 @@ class OrderController extends BaseController
         $dataProvider->query->limit(20);
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $data = $dataProvider->query->asArray()->all();
-
+        #Helper::printf($dataProvider->query->createCommand()->rawSql);
         return [
             'data' => $data,
             'offset' => ((int)$offset + 20),

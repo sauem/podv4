@@ -17,6 +17,7 @@ class OrdersContactSearch extends OrdersContact
      */
     public $items;
     public $register_time;
+    public $order_time;
     public $filter;
     public $name;
 
@@ -24,7 +25,7 @@ class OrdersContactSearch extends OrdersContact
     {
         return [
             [['status', 'filter'], 'string'],
-            [['items', 'payment_method', 'register_time', 'warehouse_id', 'name'], 'safe'],
+            [['items', 'payment_method', 'order_time', 'register_time', 'warehouse_id', 'name'], 'safe'],
         ];
     }
 
@@ -73,7 +74,13 @@ class OrdersContactSearch extends OrdersContact
             $query->innerJoin('contacts', 'contacts.code = orders_contact.code');
             $query->andFilterWhere(['between', 'contacts.register_time', $startTime, $endTime]);
         }
-
+        if ($this->order_time) {
+            $order_time = strtotime(str_replace('/', '-', $this->order_time));
+            $day = date('d', $order_time);
+            $month = date('m', $order_time);
+            $query->andFilterWhere(['DAYOFMONTH(FROM_UNIXTIME({{orders_contact}}.order_time))' => $day]);
+            $query->andFilterWhere(["MONTH(FROM_UNIXTIME({{orders_contact}}.order_time))" => $month]);
+        }
 //
 //        if (!$this->validate()) {
 //            // uncomment the following line if you do not want to return any records when validation fails
@@ -90,6 +97,7 @@ class OrdersContactSearch extends OrdersContact
             $query->orFilterWhere(['LIKE', '{{orders_contact}}.phone', $this->name]);
             $query->orFilterWhere(['LIKE', '{{orders_contact}}.code', $this->name]);
         }
+
         return $dataProvider;
     }
 }
