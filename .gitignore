@@ -41,3 +41,4 @@ phpunit.phar
 /backend/web/robots.txt
 env.php
 uploads
+composer.lock
