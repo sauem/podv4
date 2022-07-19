@@ -17,18 +17,18 @@ return [
             ],
         ],
         'cache' => [
-            'class' => 'yii\redis\Cache',
-            #'class' => 'yii\caching\FileCache',
+            //'class' => 'yii\redis\Cache',
+            'class' => 'yii\caching\FileCache',
             'keyPrefix' => 'tcom_'
         ],
-        'redis' => [
-            'class' => 'yii\redis\Connection',
-            'hostname' => REDIS_HOST,
-            'port' => REDIS_PORT,
-            'password' => REDIS_PASS,
-            'database' => 0,
-            'retries' => 1,
-        ],
+//        'redis' => [
+//            'class' => 'yii\redis\Connection',
+//            'hostname' => REDIS_HOST,
+//            'port' => REDIS_PORT,
+//            'password' => REDIS_PASS,
+//            'database' => 0,
+//            'retries' => 1,
+//        ],
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => SQL_HOST,
