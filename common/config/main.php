@@ -8,6 +8,9 @@ return [
     'language' => 'en',
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\DbManager'
+        ],
         'i18n' => [
             'translations' => [
                 'app*' => [

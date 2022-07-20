@@ -104,6 +104,7 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'rbac/*',
+            'user/*',
             '/api/*',
             'site/login',
             'site/logout',

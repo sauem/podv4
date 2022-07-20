@@ -81,7 +81,6 @@ class SiteController extends BaseController
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
         $this->layout = 'auth.blade';
 
         $model = new LoginForm();
