@@ -16,10 +16,8 @@ return [
     'bootstrap' => ['log'],
     'layout' => 'main.blade',
     'modules' => [
-        'modules' => [
-            'api' => [
-                'class' => 'backend\modules\Api',
-            ],
+        'api' => [
+            'class' => 'backend\modules\Api',
         ],
         'gii' => [
             'class' => \yii\gii\Module::class,
@@ -104,6 +102,7 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'rbac/*',
+            '*',
             'user/*',
             '/api/*',
             'site/login',
